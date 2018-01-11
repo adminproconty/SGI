@@ -17,83 +17,83 @@
         <ul class="sidebar-menu">
             <li class="header"></li>
             <li [ngClass]="menu.menu.escritorio">
-                <a>
+                <a (click)="navegarDashboard()">
                     <i class="fa fa-dashboard"></i> 
                     <span>Escritorio</span> 
                 </a>
             </li>
             <li [ngClass]="menu.menu.administrador.clase">
-                <a>
+                <a (click)="navegarAdministrador()">
                     <i class="fa fa-wrench" aria-hidden="true"></i> 
                     <span>Administrador</span> 
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <li [ngClass]="menu.menu.administrador.hijos.empresa">
-                        <a>
+                        <a (click)="navegarEmpresa()">
                           <i class="fa fa-building" aria-hidden="true"></i> 
                           Empresa
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.administrador.hijos.locales">
-                        <a>
+                        <a (click)="navegarLocales()">
                             <i class="fa fa-sitemap" aria-hidden="true"></i> 
                             Locales
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.administrador.hijos.cuentas">
-                        <a>
+                        <a (click)="navegarCuentas()">
                             <i class="fa fa-university" aria-hidden="true"></i> 
                             Cuentas
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.administrador.hijos.iva">
-                        <a>
+                        <a (click)="navegarIva()">
                             <i class="fa fa-tasks" aria-hidden="true"></i> 
                             I.V.A.
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.administrador.hijos.roles">
-                        <a>
+                        <a (click)="navegarRoles()">
                             <i class="fa fa-suitcase" aria-hidden="true"></i> 
                             Roles
                         </a>
                     </li>
-                    <li [ngClass]="menu.menu.administrador.usuarios">
-                        <a>
+                    <li [ngClass]="menu.menu.administrador.hijos.usuarios">
+                        <a (click)="navegarUsuarios()">
                             <i class="fa fa-users" aria-hidden="true"></i> 
                             Usarios
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.administrador.hijos.empleados">
-                        <a>
-                            <i class="fa fa-address-card" aria-hidden="true"></i> 
+                        <a (click)="navegarEmpleados()">
+                            <i class="fa fa-user" aria-hidden="true"></i> 
                             Empleados
                         </a>
                     </li>
                 </ul>
             </li>
             <li [ngClass]="menu.menu.ingresos.clase">
-                <a>
+                <a (click)="navegarIngresos()">
                     <i class="fa fa-money" aria-hidden="true"></i> 
                     <span>Ingresos</span> 
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <li [ngClass]="menu.menu.ingresos.hijos.clientes">
-                        <a>
+                        <a (click)="navegarClientes()">
                             <i class="fa fa-male" aria-hidden="true"></i> 
                             Clientes
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.ingresos.hijos.facturas">
-                        <a>
+                        <a (click)="navegarFacturas()">
                             <i class="fa fa-folder-o" aria-hidden="true"></i> 
                             Facturas
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.ingresos.hijos.ingresos">
-                        <a>
+                        <a (click)="navegarIngresosIngresos()">
                             <i class="fa fa-money" aria-hidden="true"></i> 
                             Ingresos
                         </a>
@@ -101,26 +101,26 @@
                 </ul>
             </li>
             <li [ngClass]="menu.menu.egresos.clase">
-                <a>
+                <a (click)="navegarEgresos()">
                     <i class="fa fa-external-link" aria-hidden="true"></i> 
                     <span>Egresos</span> 
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <li [ngClass]="menu.menu.egresos.hijos.proveedores">
-                        <a>
+                        <a (click)="navegarProveedores()">
                             <i class="fa fa-truck" aria-hidden="true"></i> 
                             Proveedores
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.egresos.hijos.compras">
-                        <a>
+                        <a (click)="navegarCompras()">
                             <i class="fa fa-cart-plus" aria-hidden="true"></i> 
                             Compras
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.egresos.hijos.egresos">
-                        <a>
+                        <a (click)="navegarEgresosEgresos()">
                             <i class="fa fa-external-link" aria-hidden="true"></i> 
                             Egresos
                         </a>
@@ -128,44 +128,44 @@
                 </ul>
             </li>
             <li [ngClass]="menu.menu.contabilidad.clase">
-                <a>
+                <a (click)="navegarContabilidad()">
                     <i class="fa fa-check-square-o" aria-hidden="true"></i> 
                     <span>Contabilidad</span> 
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <li [ngClass]="menu.menu.contabilidad.hijos.asientos">
-                        <a>
+                        <a (click)="navegarAsientos()">
                             <i class="fa fa-list" aria-hidden="true"></i> 
                             Asientos
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.contabilidad.hijos.plan">
-                        <a>
+                        <a (click)="navegarPlan()">
                             <i class="fa fa-indent" aria-hidden="true"></i> 
                             Plan de Cuentas
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.contabilidad.hijos.mayores">
-                        <a>
+                        <a (click)="navegarMayores()">
                             <i class="fa fa-calculator" aria-hidden="true"></i> 
                             Mayores
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.contabilidad.hijos.nuevo">
-                        <a>
+                        <a (click)="navegarNuevo()">
                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i> 
                             Nuevo Diario
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.contabilidad.hijos.bancos">
-                        <a>
+                        <a (click)="navegarBancos()">
                             <i class="fa fa-university" aria-hidden="true"></i> 
                             Bancos
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.contabilidad.hijos.activos">
-                        <a>
+                        <a (click)="navegarActivos()">
                             <i class="fa fa-line-chart" aria-hidden="true"></i> 
                             Activos Fijos
                         </a>
@@ -173,20 +173,20 @@
                 </ul>
             </li>
             <li [ngClass]="menu.menu.impuestos.clase">
-                <a>
+                <a (click)="navegarImpuestos()">
                     <i class="fa fa-cc" aria-hidden="true"></i> 
                     <span>Impuestos</span> 
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
-                    <li [ngClass]="menu.menu.impuestos.retenciones">
-                        <a>
+                    <li [ngClass]="menu.menu.impuestos.hijos.retenciones">
+                        <a (click)="navegarRetenciones()">
                             <i class="fa fa-ban" aria-hidden="true"></i> 
                             Retenciones
                         </a>
                     </li>
-                    <li [ngClass]="menu.menu.impuestos.iva">
-                        <a>
+                    <li [ngClass]="menu.menu.impuestos.hijos.iva">
+                        <a (click)="navegarImpuestosIva()">
                             <i class="fa fa-tasks" aria-hidden="true"></i> 
                             Resumen de I.V.A
                         </a>
@@ -194,89 +194,89 @@
                 </ul>
             </li>
             <li [ngClass]="menu.menu.reportes.clase">
-                <a>
+                <a (click)="navegarReportes()">
                     <i class="fa fa-area-chart" aria-hidden="true"></i> 
                     <span>Reportes</span> 
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <li [ngClass]="menu.menu.reportes.hijos.dashboard">
-                        <a>
+                        <a (click)="navegarReportesDashboard()">
                             <i class="fa fa-flag" aria-hidden="true"></i> 
                             Dashboard
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.reportes.hijos.epg">
-                        <a>
+                        <a (click)="navegarEpg()">
                             <i class="fa fa-flag" aria-hidden="true"></i> 
                             EPG
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.reportes.hijos.centro">
-                        <a>
+                        <a (click)="navegarCentro()">
                             <i class="fa fa-flag" aria-hidden="true"></i> 
                             EPG Centro Costos
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.reportes.hijos.balances">
-                        <a>
+                        <a (click)="navegarBalances()">
                             <i class="fa fa-flag" aria-hidden="true"></i> 
                             Balance General
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.reportes.hijos.reportes">
-                        <a>
+                        <a (click)="navegarReportesReportes()">
                             <i class="fa fa-flag" aria-hidden="true"></i> 
                             Reportes
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.reportes.hijos.presupuestos">
-                        <a>
+                        <a (click)="navegarPresupuestos()">
                             <i class="fa fa-flag" aria-hidden="true"></i> 
                             EPG Presupuestos
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.reportes.hijos.totales">
-                        <a>
+                        <a (click)="navegarTotales()">
                             <i class="fa fa-flag" aria-hidden="true"></i> 
                             EPG con Totales
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.reportes.hijos.movimientos">
-                        <a>
+                        <a (click)="navegarMovimientos()">
                             <i class="fa fa-flag" aria-hidden="true"></i> 
-                            Balance General Movimientos
+                            BG Movimientos
                         </a>
                     </li>
                 </ul>
             </li>
             <li [ngClass]="menu.menu.inventario.clase">
-                <a>
+                <a (click)="navegarInventario()">
                     <i class="fa fa-cubes" aria-hidden="true"></i> 
                     <span>Inventario</span> 
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <li [ngClass]="menu.menu.inventario.hijos.productos">
-                        <a>
+                        <a (click)="navegarProductos()">
                             <i class="fa fa-list-alt" aria-hidden="true"></i> 
                             Lista de Productos
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.inventario.hijos.requision">
-                        <a>
+                        <a (click)="navegarRequision()">
                             <i class="fa fa-check-circle-o" aria-hidden="true"></i> 
                             Requisión
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.inventario.hijos.fisico">
-                        <a>
+                        <a (click)="navegarFisico()">
                             <i class="fa fa-cube" aria-hidden="true"></i> 
                             Físico
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.inventario.hijos.cardex">
-                        <a>
+                        <a (click)="navegarCardex()">
                             <i class="fa fa-heart" aria-hidden="true"></i> 
                             Cardex
                         </a>
