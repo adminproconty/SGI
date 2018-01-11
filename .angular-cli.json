@@ -20,10 +20,12 @@
       "prefix": "app",
       "styles": [
         "styles.css",
-        "assets/css/bootstrap.min.css",
         "assets/css/font-awesome.min.css",
-        "assets/css/form-elements.css",
-        "assets/css/style.css"
+        "assets/css/AdminLTE.min.css",
+        "assets/css/_all-skins.min.css",
+        "assets/css/bootstrap.min.css",
+        "assets/css/dataTables.bootstrap.min.css",
+        "assets/js/swat/sweet/lib/sweet-alert.css"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",

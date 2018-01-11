@@ -7,6 +7,9 @@ import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
+import { ModalModule } from 'ngx-bootstrap';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -21,17 +24,25 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { HTTP_INTERCEPTORS } from '@angular/common/http'; 
 
 import { AppComponent } from './app.component';
+import { HeaderComponent } from './header/header.component';
+import { NavegationComponent } from './navegation/navegation.component';
+
+import { NavegationProvider } from './navegation/navegation.provider';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HeaderComponent,
+    NavegationComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     HttpModule,
     TranslationsModule,
+    ModalModule.forRoot(),
+    BsDropdownModule.forRoot(),
     AngularFontAwesomeModule,
     TranslateModule.forRoot({
       loader: {
@@ -41,7 +52,9 @@ import { AppComponent } from './app.component';
       }
     }) 
   ],
-  providers: [],
+  providers: [
+    NavegationProvider
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

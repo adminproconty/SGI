@@ -1,0 +1,294 @@
+<!-- Left side column. contains the logo and sidebar -->
+<aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- Sidebar user panel -->
+        <div class="user-panel">
+            <div class="pull-left image">
+              <img src="" class="img-circle" alt="User Image">
+            </div>
+            <div class="pull-left info">
+              <p>Empleado</p>
+              <a><i class="fa fa-circle text-success"></i>Online</a>
+            </div>
+        </div>
+
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <ul class="sidebar-menu">
+            <li class="header"></li>
+            <li [ngClass]="menu.menu.escritorio">
+                <a>
+                    <i class="fa fa-dashboard"></i> 
+                    <span>Escritorio</span> 
+                </a>
+            </li>
+            <li [ngClass]="menu.menu.administrador.clase">
+                <a>
+                    <i class="fa fa-wrench" aria-hidden="true"></i> 
+                    <span>Administrador</span> 
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li [ngClass]="menu.menu.administrador.hijos.empresa">
+                        <a>
+                          <i class="fa fa-building" aria-hidden="true"></i> 
+                          Empresa
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.administrador.hijos.locales">
+                        <a>
+                            <i class="fa fa-sitemap" aria-hidden="true"></i> 
+                            Locales
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.administrador.hijos.cuentas">
+                        <a>
+                            <i class="fa fa-university" aria-hidden="true"></i> 
+                            Cuentas
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.administrador.hijos.iva">
+                        <a>
+                            <i class="fa fa-tasks" aria-hidden="true"></i> 
+                            I.V.A.
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.administrador.hijos.roles">
+                        <a>
+                            <i class="fa fa-suitcase" aria-hidden="true"></i> 
+                            Roles
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.administrador.usuarios">
+                        <a>
+                            <i class="fa fa-users" aria-hidden="true"></i> 
+                            Usarios
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.administrador.hijos.empleados">
+                        <a>
+                            <i class="fa fa-address-card" aria-hidden="true"></i> 
+                            Empleados
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li [ngClass]="menu.menu.ingresos.clase">
+                <a>
+                    <i class="fa fa-money" aria-hidden="true"></i> 
+                    <span>Ingresos</span> 
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li [ngClass]="menu.menu.ingresos.hijos.clientes">
+                        <a>
+                            <i class="fa fa-male" aria-hidden="true"></i> 
+                            Clientes
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.ingresos.hijos.facturas">
+                        <a>
+                            <i class="fa fa-folder-o" aria-hidden="true"></i> 
+                            Facturas
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.ingresos.hijos.ingresos">
+                        <a>
+                            <i class="fa fa-money" aria-hidden="true"></i> 
+                            Ingresos
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li [ngClass]="menu.menu.egresos.clase">
+                <a>
+                    <i class="fa fa-external-link" aria-hidden="true"></i> 
+                    <span>Egresos</span> 
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li [ngClass]="menu.menu.egresos.hijos.proveedores">
+                        <a>
+                            <i class="fa fa-truck" aria-hidden="true"></i> 
+                            Proveedores
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.egresos.hijos.compras">
+                        <a>
+                            <i class="fa fa-cart-plus" aria-hidden="true"></i> 
+                            Compras
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.egresos.hijos.egresos">
+                        <a>
+                            <i class="fa fa-external-link" aria-hidden="true"></i> 
+                            Egresos
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li [ngClass]="menu.menu.contabilidad.clase">
+                <a>
+                    <i class="fa fa-check-square-o" aria-hidden="true"></i> 
+                    <span>Contabilidad</span> 
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li [ngClass]="menu.menu.contabilidad.hijos.asientos">
+                        <a>
+                            <i class="fa fa-list" aria-hidden="true"></i> 
+                            Asientos
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.contabilidad.hijos.plan">
+                        <a>
+                            <i class="fa fa-indent" aria-hidden="true"></i> 
+                            Plan de Cuentas
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.contabilidad.hijos.mayores">
+                        <a>
+                            <i class="fa fa-calculator" aria-hidden="true"></i> 
+                            Mayores
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.contabilidad.hijos.nuevo">
+                        <a>
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> 
+                            Nuevo Diario
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.contabilidad.hijos.bancos">
+                        <a>
+                            <i class="fa fa-university" aria-hidden="true"></i> 
+                            Bancos
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.contabilidad.hijos.activos">
+                        <a>
+                            <i class="fa fa-line-chart" aria-hidden="true"></i> 
+                            Activos Fijos
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li [ngClass]="menu.menu.impuestos.clase">
+                <a>
+                    <i class="fa fa-cc" aria-hidden="true"></i> 
+                    <span>Impuestos</span> 
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li [ngClass]="menu.menu.impuestos.retenciones">
+                        <a>
+                            <i class="fa fa-ban" aria-hidden="true"></i> 
+                            Retenciones
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.impuestos.iva">
+                        <a>
+                            <i class="fa fa-tasks" aria-hidden="true"></i> 
+                            Resumen de I.V.A
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li [ngClass]="menu.menu.reportes.clase">
+                <a>
+                    <i class="fa fa-area-chart" aria-hidden="true"></i> 
+                    <span>Reportes</span> 
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li [ngClass]="menu.menu.reportes.hijos.dashboard">
+                        <a>
+                            <i class="fa fa-flag" aria-hidden="true"></i> 
+                            Dashboard
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.reportes.hijos.epg">
+                        <a>
+                            <i class="fa fa-flag" aria-hidden="true"></i> 
+                            EPG
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.reportes.hijos.centro">
+                        <a>
+                            <i class="fa fa-flag" aria-hidden="true"></i> 
+                            EPG Centro Costos
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.reportes.hijos.balances">
+                        <a>
+                            <i class="fa fa-flag" aria-hidden="true"></i> 
+                            Balance General
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.reportes.hijos.reportes">
+                        <a>
+                            <i class="fa fa-flag" aria-hidden="true"></i> 
+                            Reportes
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.reportes.hijos.presupuestos">
+                        <a>
+                            <i class="fa fa-flag" aria-hidden="true"></i> 
+                            EPG Presupuestos
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.reportes.hijos.totales">
+                        <a>
+                            <i class="fa fa-flag" aria-hidden="true"></i> 
+                            EPG con Totales
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.reportes.hijos.movimientos">
+                        <a>
+                            <i class="fa fa-flag" aria-hidden="true"></i> 
+                            Balance General Movimientos
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li [ngClass]="menu.menu.inventario.clase">
+                <a>
+                    <i class="fa fa-cubes" aria-hidden="true"></i> 
+                    <span>Inventario</span> 
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li [ngClass]="menu.menu.inventario.hijos.productos">
+                        <a>
+                            <i class="fa fa-list-alt" aria-hidden="true"></i> 
+                            Lista de Productos
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.inventario.hijos.requision">
+                        <a>
+                            <i class="fa fa-check-circle-o" aria-hidden="true"></i> 
+                            Requisión
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.inventario.hijos.fisico">
+                        <a>
+                            <i class="fa fa-cube" aria-hidden="true"></i> 
+                            Físico
+                        </a>
+                    </li>
+                    <li [ngClass]="menu.menu.inventario.hijos.cardex">
+                        <a>
+                            <i class="fa fa-heart" aria-hidden="true"></i> 
+                            Cardex
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a>
+                    <i class="fa fa-power-off" aria-hidden="true"></i> 
+                    <span>Cerrar Sesión</span> 
+                </a>
+            </li>
+        </ul>
+    </section>
+</aside>
