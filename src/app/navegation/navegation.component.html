@@ -17,7 +17,7 @@
         <ul class="sidebar-menu">
             <li class="header"></li>
             <li [ngClass]="menu.menu.escritorio">
-                <a (click)="navegarDashboard()">
+                <a [routerLink]="['']" (click)="navegarDashboard()">
                     <i class="fa fa-dashboard"></i> 
                     <span>Escritorio</span> 
                 </a>
@@ -30,13 +30,13 @@
                 </a>
                 <ul class="treeview-menu">
                     <li [ngClass]="menu.menu.administrador.hijos.empresa">
-                        <a (click)="navegarEmpresa()">
+                        <a [routerLink]="['/administrador/empresa']" (click)="navegarEmpresa()">
                           <i class="fa fa-building" aria-hidden="true"></i> 
                           Empresa
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.administrador.hijos.locales">
-                        <a (click)="navegarLocales()">
+                        <a [routerLink]="['/administrador/locales']" (click)="navegarLocales()">
                             <i class="fa fa-sitemap" aria-hidden="true"></i> 
                             Locales
                         </a>

@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { AppRoutingModule } from './app.routing';
 
 import { TranslationsModule } from "./translation/translation.module";
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
@@ -26,17 +27,41 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { NavegationComponent } from './navegation/navegation.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { EmpresaComponent } from './administrador/empresa/empresa.component';
+import { LocalesComponent } from './administrador/locales/locales.component';
 
 import { NavegationProvider } from './navegation/navegation.provider';
+
+import {  DxCheckBoxModule,
+          DxSelectBoxModule,
+          DxNumberBoxModule,
+          DxButtonModule,
+          DxFormModule,
+          DxFormComponent,
+          DxTextBoxModule,
+          DxValidatorModule,
+          DxDataGridModule } from 'devextreme-angular';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    NavegationComponent
+    NavegationComponent,
+    DashboardComponent,
+    EmpresaComponent,
+    LocalesComponent
   ],
   imports: [
+    DxCheckBoxModule,
+    DxSelectBoxModule,
+    DxNumberBoxModule,
+    DxButtonModule,
+    DxFormModule,
+    DxTextBoxModule,
+    DxValidatorModule,
+    DxDataGridModule,
     BrowserModule,
     HttpClientModule,
     HttpModule,
@@ -44,13 +69,14 @@ import { NavegationProvider } from './navegation/navegation.provider';
     ModalModule.forRoot(),
     BsDropdownModule.forRoot(),
     AngularFontAwesomeModule,
+    AppRoutingModule,
     TranslateModule.forRoot({
       loader: {
           provide: TranslateLoader,
           useFactory: (createTranslateLoader),
           deps: [HttpClient]
       }
-    }) 
+    })
   ],
   providers: [
     NavegationProvider
