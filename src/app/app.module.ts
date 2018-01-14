@@ -57,7 +57,7 @@ import {  DxCheckBoxModule,
     DashboardComponent,
     EmpresaComponent,
     LocalesComponent,
-    CuentasComponent
+    CuentasComponent,
     IvaComponent,
     RolesComponent
   ],
