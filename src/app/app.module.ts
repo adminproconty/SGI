@@ -31,6 +31,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { EmpresaComponent } from './administrador/empresa/empresa.component';
 import { LocalesComponent } from './administrador/locales/locales.component';
 import { CuentasComponent } from './administrador/cuentas/cuentas.component';
+import { IvaComponent } from './administrador/iva/iva.component';
+import { RolesComponent } from './administrador/roles/roles.component';
 
 import { NavegationProvider } from './navegation/navegation.provider';
 
@@ -43,6 +45,7 @@ import {  DxCheckBoxModule,
           DxTextBoxModule,
           DxValidatorModule,
           DxDataGridModule,
+          DxTreeListModule } from 'devextreme-angular';
           DxSwitchModule } from 'devextreme-angular';
 
 
@@ -55,6 +58,8 @@ import {  DxCheckBoxModule,
     EmpresaComponent,
     LocalesComponent,
     CuentasComponent
+    IvaComponent,
+    RolesComponent
   ],
   imports: [
     DxCheckBoxModule,
@@ -66,6 +71,7 @@ import {  DxCheckBoxModule,
     DxValidatorModule,
     DxDataGridModule,
     DxSwitchModule,
+    DxTreeListModule,
     BrowserModule,
     HttpClientModule,
     HttpModule,
