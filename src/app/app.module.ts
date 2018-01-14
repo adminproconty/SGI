@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app.routing';
 
-import { TranslationsModule } from "./translation/translation.module";
+import { TranslationsModule } from './translation/translation.module';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 
@@ -22,7 +22,7 @@ export function createTranslateLoader(http: HttpClient) {
 
 import { HttpModule } from '@angular/http';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { HTTP_INTERCEPTORS } from '@angular/common/http'; 
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -30,6 +30,7 @@ import { NavegationComponent } from './navegation/navegation.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { EmpresaComponent } from './administrador/empresa/empresa.component';
 import { LocalesComponent } from './administrador/locales/locales.component';
+import { CuentasComponent } from './administrador/cuentas/cuentas.component';
 
 import { NavegationProvider } from './navegation/navegation.provider';
 
@@ -41,7 +42,8 @@ import {  DxCheckBoxModule,
           DxFormComponent,
           DxTextBoxModule,
           DxValidatorModule,
-          DxDataGridModule } from 'devextreme-angular';
+          DxDataGridModule,
+          DxSwitchModule } from 'devextreme-angular';
 
 
 @NgModule({
@@ -51,7 +53,8 @@ import {  DxCheckBoxModule,
     NavegationComponent,
     DashboardComponent,
     EmpresaComponent,
-    LocalesComponent
+    LocalesComponent,
+    CuentasComponent
   ],
   imports: [
     DxCheckBoxModule,
@@ -62,6 +65,7 @@ import {  DxCheckBoxModule,
     DxTextBoxModule,
     DxValidatorModule,
     DxDataGridModule,
+    DxSwitchModule,
     BrowserModule,
     HttpClientModule,
     HttpModule,

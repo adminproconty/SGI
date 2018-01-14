@@ -1,0 +1,206 @@
+<div class="row">
+  <div class="col-md-12">
+      <div class="box">
+          <div class="box-header with-border">
+              <h3 class="box-title">Lista de Cuentas</h3>
+          </div>
+          <div class="box-body">
+              <div class="row">
+                  <div class="col-md-12">
+                      <div class="col-sm-14" id="VerForm" style="display: block;">
+                          <button class="btn btn-success" style="margin-bottom: 40px;" (click)="openModal(template)">
+                              <i class="fa fa-plus"></i>
+                              Nueva
+                          </button>
+
+                          <div id="VerListado" class="dataTables_wrapper form-inline dt-bootstrap">
+                              <dx-data-grid
+                                  id="gridContainer"
+                                  [dataSource]="cuentas"
+                                  [noDataText]="noDataText"
+                                  keyExpr="ID"
+                                  [allowColumnReordering]="true"
+                                  (onRowUpdating)="editar($event)"
+                                  (onRowRemoving)="eliminar($event)">
+                                  <dxo-paging [pageSize]="10"></dxo-paging>
+                <dxo-pager
+                  infoText="Mostrando {0} to {1} de {2} locales"
+                  [showInfo]="true"
+                  [showNavigationButtons]="true">
+                                  </dxo-pager>
+                                  <dxo-editing
+                                      mode="row"
+                                      [allowUpdating]="true"
+                                      [allowDeleting]="true"
+                                      [texts]="{
+                                              cancelAllChanges: cancelAllChanges,
+                                              cancelRowChanges: cancelRowChanges,
+                                              confirmDeleteMessage: confirmDeleteMessage,
+                                              deleteRow: deleteRow,
+                                              editRow: editRow,
+                                              saveAllChanges: saveAllChanges,
+                                              saveRowChanges: saveRowChanges,
+                                              undeleteRow: undeleteRow,
+                                              validationCancelChanges: validationCancelChanges
+                                          }">
+                                  </dxo-editing>
+                                  <dxo-search-panel placeholder="Buscar..." [visible]="true"></dxo-search-panel>
+                              </dx-data-grid>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<ng-template #template>
+  <div class="modal-body">
+      <div class="row">
+          <div class="col-md-12">
+              <div class="col-sm-14" id="VerForm" style="display: block;">
+                  <form name="frmSucursal" id="frmSucursal" (submit)="guardar()">
+                      <div class="row">
+                          <div class="col-md-12 left">
+                              <div class="form-group">
+                                  <label>Nombre:
+                                      <span class="required">*</span>
+                                  </label>
+                                  <dx-text-box
+                                          class="form-control"
+                                          name="nombre">
+                                      <dx-validator>
+                                          <dxi-validation-rule type="required" message="Nombre es requerida"></dxi-validation-rule>
+                                      </dx-validator>
+                                  </dx-text-box>
+                              </div>
+                          </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-md-12 left">
+                          <div class="form-group">
+                            <label style="margin-right: 10px;" *ngIf="verBanco">¿Bancaria?</label>
+                            <dx-switch *ngIf="verBanco"
+                              [value]="esBanco"
+                              (onValueChanged)="cambio($event, 'banco')"></dx-switch>
+                            <label style="margin-right: 10px;" *ngIf="verElectronica">¿Electrónica?</label>
+                            <dx-switch *ngIf="verElectronica"
+                              [value]="esElectronica"
+                              (onValueChanged)="cambio($event, 'electronica')"></dx-switch>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row" *ngIf="esBanco">
+                        <div class="col-md-12 left">
+                            <div class="form-group">
+                                <label>Número de cuenta:
+                                    <span class="required">*</span>
+                                </label>
+                                <dx-text-box
+                                        class="form-control"
+                                        name="numero"
+                                        mode="number">
+                                    <dx-validator>
+                                        <dxi-validation-rule type="required" message="Número de cuenta es requerida"></dxi-validation-rule>
+                                    </dx-validator>
+                                </dx-text-box>
+                            </div>
+                        </div>
+                      </div>
+
+                      <div class="row" *ngIf="esBanco">
+                        <div class="col-md-12 left">
+                            <div class="form-group">
+                                <label>Banco:
+                                    <span class="required">*</span>
+                                </label>
+                                <dx-text-box
+                                        class="form-control"
+                                        name="banco">
+                                    <dx-validator>
+                                        <dxi-validation-rule type="required" message="Nombre del banco es requerido"></dxi-validation-rule>
+                                    </dx-validator>
+                                </dx-text-box>
+                            </div>
+                        </div>
+                      </div>
+
+                      <div class="row" *ngIf="esBanco">
+                        <div class="col-md-12 left">
+                            <div class="form-group">
+                                <label>Tipo de cuenta:
+                                    <span class="required">*</span>
+                                </label>
+                                <dx-text-box
+                                        class="form-control"
+                                        name="tipo_cuenta">
+                                    <dx-validator>
+                                        <dxi-validation-rule type="required" message="Tipo de cuenta es requerida"></dxi-validation-rule>
+                                    </dx-validator>
+                                </dx-text-box>
+                            </div>
+                        </div>
+                      </div>
+
+                      <div class="row" *ngIf="esBanco">
+                        <div class="col-md-12 left">
+                            <div class="form-group">
+                                <label>Saldo Inicial:
+                                    <span class="required">*</span>
+                                </label>
+                                <dx-text-box
+                                        class="form-control"
+                                        name="tipo_cuenta"
+                                        mask="$00000.00">
+                                    <dx-validator>
+                                        <dxi-validation-rule type="required" message="Saldo inicial es requerido"></dxi-validation-rule>
+                                    </dx-validator>
+                                </dx-text-box>
+                            </div>
+                        </div>
+                      </div>
+
+                      <div class="row" *ngIf="esBanco">
+                        <div class="col-md-12 left">
+                            <div class="form-group">
+                                <label>Correo Electrónico:
+                                    <span class="required">*</span>
+                                </label>
+                                <dx-text-box
+                                        class="form-control"
+                                        name="correo_cuenta"
+                                        mode="email">
+                                    <dx-validator>
+                                        <dxi-validation-rule type="required" message="Correo electrónico es requerido"></dxi-validation-rule>
+                                    </dx-validator>
+                                </dx-text-box>
+                            </div>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
+                          <dx-button
+                              text="Guardar"
+                              icon="save"
+                              type="success"
+                              [useSubmitBehavior]="true"
+                              class="btn btn-success pull-right">
+                          </dx-button>
+                          <dx-button
+                              icon="fa fa-remove"
+                              type="danger"
+                              (click)="cancelar()"
+                              class="btn btn-danger pull-right"
+                              text="Cancelar"
+                              style="margin-right: 5px;">
+                          </dx-button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+</ng-template>

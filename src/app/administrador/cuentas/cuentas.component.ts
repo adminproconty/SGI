@@ -5,11 +5,11 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { NavegationProvider } from '../../navegation/navegation.provider';
 
 @Component({
-  selector: 'app-locales',
-  templateUrl: 'locales.component.html',
-  styleUrls: ['locales.component.css']
+  selector: 'app-cuentas',
+  templateUrl: 'cuentas.component.html',
+  styleUrls: ['cuentas.component.css']
 })
-export class LocalesComponent implements OnInit {
+export class CuentasComponent implements OnInit {
   noDataText: string;
   cancelAllChanges: string;
   cancelRowChanges: string;
@@ -21,13 +21,17 @@ export class LocalesComponent implements OnInit {
   undeleteRow: string;
   validationCancelChanges: string;
   modalRef: BsModalRef;
-  phonePattern: any;
-  phoneRules: any;
   backClick: boolean;
 
+  cuentas: any = [];
+  esBanco: boolean;
+  esElectronica: boolean;
+  verBanco: boolean;
+  verElectronica: boolean;
+
   constructor(
-      private navegation: NavegationProvider,
-      private modalService: BsModalService) {
+    private navegation: NavegationProvider,
+    private modalService: BsModalService) {
     this.navegation.setMenu(
       {
         escritorio: '',
@@ -35,8 +39,8 @@ export class LocalesComponent implements OnInit {
             clase: 'active treeview',
             hijos: {
                 empresa: '',
-                locales: 'active',
-                cuentas: '',
+                locales: '',
+                cuentas: 'active',
                 iva: '',
                 roles: '',
                 usuarios: '',
@@ -114,11 +118,11 @@ export class LocalesComponent implements OnInit {
     this.saveRowChanges = 'Guardar los cambios de la tupla';
     this.undeleteRow = 'No eliminar';
     this.validationCancelChanges = 'Cancelar los cambios';
-    this.phonePattern = /^\+\s*1\s*\(\s*[02-9]\d{2}\)\s*\d{3}\s*-\s*\d{4}$/;
-    this.phoneRules = {
-      X: /[02-9]/
-    };
     this.backClick = false;
+    this.esBanco = false;
+    this.esElectronica = false;
+    this.verElectronica = true;
+    this.verBanco = true;
   }
 
   openModal(template: TemplateRef<any>) {
@@ -143,4 +147,25 @@ export class LocalesComponent implements OnInit {
   eliminar(e) {
     console.log('eliminar', e);
   }
+
+  cambio(e, tipo) {
+    if (tipo == 'banco') {
+      if (e.value == true) {
+        this.esBanco = true;
+        this.verElectronica = false;
+      } else {
+        this.esBanco = false;
+        this.verElectronica = true;
+      }
+    } else {
+      if (e.value == false) {
+        this.esElectronica = false;
+        this.verBanco = true;
+      } else {
+        this.esElectronica = true;
+        this.verBanco = false;
+      }
+    }
+  }
+
 }
