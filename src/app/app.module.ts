@@ -45,7 +45,7 @@ import {  DxCheckBoxModule,
           DxTextBoxModule,
           DxValidatorModule,
           DxDataGridModule,
-          DxTreeListModule } from 'devextreme-angular';
+          DxTreeListModule,
           DxSwitchModule } from 'devextreme-angular';
 
 

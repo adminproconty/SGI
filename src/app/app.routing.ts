@@ -24,14 +24,12 @@ const routes: Routes = [
             }, {
               path: 'cuentas',
               component: CuentasComponent
-                path: 'locales',
-                component: LocalesComponent
             }, {
-                path: 'iva',
-                component: IvaComponent
+              path: 'iva',
+              component: IvaComponent
             }, {
-                path: 'roles',
-                component: RolesComponent
+              path: 'roles',
+              component: RolesComponent
             }
         ]
     }
