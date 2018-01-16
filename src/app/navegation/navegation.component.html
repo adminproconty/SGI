@@ -48,13 +48,13 @@
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.administrador.hijos.iva">
-                        <a (click)="navegarIva()">
+                        <a [routerLink]="['/administrador/iva']" (click)="navegarIva()">
                             <i class="fa fa-tasks" aria-hidden="true"></i> 
                             I.V.A.
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.administrador.hijos.roles">
-                        <a (click)="navegarRoles()">
+                        <a [routerLink]="['/administrador/roles']" (click)="navegarRoles()">
                             <i class="fa fa-suitcase" aria-hidden="true"></i> 
                             Roles
                         </a>
