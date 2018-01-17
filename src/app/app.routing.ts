@@ -4,6 +4,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { EmpresaComponent } from './administrador/empresa/empresa.component';
 import { LocalesComponent } from './administrador/locales/locales.component';
+import { CuentasComponent } from './administrador/cuentas/cuentas.component';
+import { IvaComponent } from './administrador/iva/iva.component';
+import { RolesComponent } from './administrador/roles/roles.component';
 
 const routes: Routes = [
     {
@@ -13,11 +16,20 @@ const routes: Routes = [
         path: 'administrador',
         children: [
             {
-                path: 'empresa',
-                component: EmpresaComponent
+              path: 'empresa',
+              component: EmpresaComponent
             }, {
-                path: 'locales',
-                component: LocalesComponent
+              path: 'locales',
+              component: LocalesComponent
+            }, {
+              path: 'cuentas',
+              component: CuentasComponent
+            }, {
+              path: 'iva',
+              component: IvaComponent
+            }, {
+              path: 'roles',
+              component: RolesComponent
             }
         ]
     }

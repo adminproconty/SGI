@@ -1,15 +1,15 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, TemplateRef, OnInit } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 import { NavegationProvider } from '../../navegation/navegation.provider';
 
 @Component({
-  selector: 'app-locales',
-  templateUrl: 'locales.component.html',
-  styleUrls: ['locales.component.css']
+  selector: 'app-iva',
+  templateUrl: 'iva.component.html',
+  styleUrls: ['iva.component.css']
 })
-export class LocalesComponent implements OnInit {
+export class IvaComponent implements OnInit {
   noDataText: string;
   cancelAllChanges: string;
   cancelRowChanges: string;
@@ -21,8 +21,6 @@ export class LocalesComponent implements OnInit {
   undeleteRow: string;
   validationCancelChanges: string;
   modalRef: BsModalRef;
-  phonePattern: any;
-  phoneRules: any;
   backClick: boolean;
 
   constructor(
@@ -35,9 +33,9 @@ export class LocalesComponent implements OnInit {
             clase: 'active treeview',
             hijos: {
                 empresa: '',
-                locales: 'active',
+                locales: '',
                 cuentas: '',
-                iva: '',
+                iva: 'active',
                 roles: '',
                 usuarios: '',
                 empleados: ''
@@ -114,10 +112,6 @@ export class LocalesComponent implements OnInit {
     this.saveRowChanges = 'Guardar los cambios de la tupla';
     this.undeleteRow = 'No eliminar';
     this.validationCancelChanges = 'Cancelar los cambios';
-    this.phonePattern = /^\+\s*1\s*\(\s*[02-9]\d{2}\)\s*\d{3}\s*-\s*\d{4}$/;
-    this.phoneRules = {
-      X: /[02-9]/
-    };
     this.backClick = false;
   }
 
@@ -143,4 +137,5 @@ export class LocalesComponent implements OnInit {
   eliminar(e) {
     console.log('eliminar', e);
   }
+
 }
