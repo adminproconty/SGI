@@ -60,7 +60,7 @@
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.administrador.hijos.usuarios">
-                        <a (click)="navegarUsuarios()">
+                        <a [routerLink]="['/administrador/usuarios']" (click)="navegarUsuarios()">
                             <i class="fa fa-users" aria-hidden="true"></i>
                             Usarios
                         </a>

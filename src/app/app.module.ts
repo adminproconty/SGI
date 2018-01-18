@@ -33,6 +33,8 @@ import { LocalesComponent } from './administrador/locales/locales.component';
 import { CuentasComponent } from './administrador/cuentas/cuentas.component';
 import { IvaComponent } from './administrador/iva/iva.component';
 import { RolesComponent } from './administrador/roles/roles.component';
+import { UsuariosComponent } from './administrador/usuarios/usuarios.component';
+import { EmpleadosComponent } from './administrador/empleados/empleados.component';
 
 import { NavegationProvider } from './navegation/navegation.provider';
 
@@ -59,7 +61,9 @@ import {  DxCheckBoxModule,
     LocalesComponent,
     CuentasComponent,
     IvaComponent,
-    RolesComponent
+    RolesComponent,
+    UsuariosComponent,
+    EmpleadosComponent
   ],
   imports: [
     DxCheckBoxModule,

@@ -7,6 +7,8 @@ import { LocalesComponent } from './administrador/locales/locales.component';
 import { CuentasComponent } from './administrador/cuentas/cuentas.component';
 import { IvaComponent } from './administrador/iva/iva.component';
 import { RolesComponent } from './administrador/roles/roles.component';
+import { UsuariosComponent } from './administrador/usuarios/usuarios.component';
+import { EmpleadosComponent } from './administrador/empleados/empleados.component';
 
 const routes: Routes = [
     {
@@ -30,6 +32,12 @@ const routes: Routes = [
             }, {
               path: 'roles',
               component: RolesComponent
+            }, {
+              path: 'usuarios',
+              component: UsuariosComponent
+            }, {
+              path: 'empleados',
+              component: EmpleadosComponent
             }
         ]
     }
