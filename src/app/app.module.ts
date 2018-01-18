@@ -35,6 +35,7 @@ import { IvaComponent } from './administrador/iva/iva.component';
 import { RolesComponent } from './administrador/roles/roles.component';
 import { UsuariosComponent } from './administrador/usuarios/usuarios.component';
 import { EmpleadosComponent } from './administrador/empleados/empleados.component';
+import { ClientesComponent } from './ingresos/clientes/clientes.component';
 
 import { NavegationProvider } from './navegation/navegation.provider';
 
@@ -48,7 +49,8 @@ import {  DxCheckBoxModule,
           DxValidatorModule,
           DxDataGridModule,
           DxTreeListModule,
-          DxSwitchModule } from 'devextreme-angular';
+          DxSwitchModule
+        } from 'devextreme-angular';
 
 
 @NgModule({
@@ -63,7 +65,8 @@ import {  DxCheckBoxModule,
     IvaComponent,
     RolesComponent,
     UsuariosComponent,
-    EmpleadosComponent
+    EmpleadosComponent,
+    ClientesComponent
   ],
   imports: [
     DxCheckBoxModule,

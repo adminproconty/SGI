@@ -81,7 +81,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <li [ngClass]="menu.menu.ingresos.hijos.clientes">
-                        <a (click)="navegarClientes()">
+                        <a [routerLink]="['/ingresos/clientes']" (click)="navegarClientes()">
                             <i class="fa fa-male" aria-hidden="true"></i>
                             Clientes
                         </a>
