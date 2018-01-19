@@ -38,6 +38,7 @@ import { EmpleadosComponent } from './administrador/empleados/empleados.componen
 import { ClientesComponent } from './ingresos/clientes/clientes.component';
 import { IngresosComponent } from './ingresos/ingresos/ingresos.component';
 import { ProveedoresComponent } from './egresos/proveedores/proveedores.component';
+import { EgresosComponent } from './egresos/egresos/egresos.component';
 
 import { NavegationProvider } from './navegation/navegation.provider';
 
@@ -72,7 +73,8 @@ import {  DxCheckBoxModule,
     EmpleadosComponent,
     ClientesComponent,
     IngresosComponent,
-    ProveedoresComponent
+    ProveedoresComponent,
+    EgresosComponent
   ],
   imports: [
     DxCheckBoxModule,

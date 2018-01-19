@@ -120,7 +120,7 @@
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.egresos.hijos.egresos">
-                        <a (click)="navegarEgresosEgresos()">
+                        <a (click)="navegarEgresosEgresos()" [routerLink]="['/egresos/egresos']">
                             <i class="fa fa-external-link" aria-hidden="true"></i>
                             Egresos
                         </a>
