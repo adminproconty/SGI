@@ -50,7 +50,9 @@ import {  DxCheckBoxModule,
           DxValidatorModule,
           DxDataGridModule,
           DxTreeListModule,
-          DxSwitchModule
+          DxSwitchModule,
+          DxDateBoxModule,
+          DxTabsModule
         } from 'devextreme-angular';
 
 
@@ -81,6 +83,8 @@ import {  DxCheckBoxModule,
     DxDataGridModule,
     DxSwitchModule,
     DxTreeListModule,
+    DxDateBoxModule,
+    DxTabsModule,
     BrowserModule,
     HttpClientModule,
     HttpModule,
