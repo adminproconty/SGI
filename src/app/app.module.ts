@@ -36,6 +36,7 @@ import { RolesComponent } from './administrador/roles/roles.component';
 import { UsuariosComponent } from './administrador/usuarios/usuarios.component';
 import { EmpleadosComponent } from './administrador/empleados/empleados.component';
 import { ClientesComponent } from './ingresos/clientes/clientes.component';
+import { IngresosComponent } from './ingresos/ingresos/ingresos.component';
 
 import { NavegationProvider } from './navegation/navegation.provider';
 
@@ -66,7 +67,8 @@ import {  DxCheckBoxModule,
     RolesComponent,
     UsuariosComponent,
     EmpleadosComponent,
-    ClientesComponent
+    ClientesComponent,
+    IngresosComponent
   ],
   imports: [
     DxCheckBoxModule,

@@ -10,6 +10,7 @@ import { RolesComponent } from './administrador/roles/roles.component';
 import { UsuariosComponent } from './administrador/usuarios/usuarios.component';
 import { EmpleadosComponent } from './administrador/empleados/empleados.component';
 import { ClientesComponent } from './ingresos/clientes/clientes.component';
+import { IngresosComponent } from './ingresos/ingresos/ingresos.component';
 
 const routes: Routes = [
     {
@@ -47,6 +48,9 @@ const routes: Routes = [
         {
           path: 'clientes',
           component: ClientesComponent
+        }, {
+          path: 'ingresos',
+          component: IngresosComponent
         }
       ]
     }
