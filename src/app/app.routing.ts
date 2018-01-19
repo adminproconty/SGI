@@ -11,6 +11,7 @@ import { UsuariosComponent } from './administrador/usuarios/usuarios.component';
 import { EmpleadosComponent } from './administrador/empleados/empleados.component';
 import { ClientesComponent } from './ingresos/clientes/clientes.component';
 import { IngresosComponent } from './ingresos/ingresos/ingresos.component';
+import { ProveedoresComponent } from './egresos/proveedores/proveedores.component';
 
 const routes: Routes = [
     {
@@ -53,6 +54,14 @@ const routes: Routes = [
           component: IngresosComponent
         }
       ]
+    }, {
+      path: 'egresos',
+      children: [
+        {
+          path: 'proveedores',
+          component: ProveedoresComponent
+        }
+      ]
     }
 ];
 
@@ -62,3 +71,4 @@ const routes: Routes = [
 })
 
 export class AppRoutingModule { }
+

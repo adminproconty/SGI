@@ -108,7 +108,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <li [ngClass]="menu.menu.egresos.hijos.proveedores">
-                        <a (click)="navegarProveedores()">
+                        <a (click)="navegarProveedores()" [routerLink]="['/egresos/proveedores']">
                             <i class="fa fa-truck" aria-hidden="true"></i>
                             Proveedores
                         </a>

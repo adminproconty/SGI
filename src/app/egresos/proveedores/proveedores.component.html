@@ -1,0 +1,191 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title">Lista de Proveedores</h3>
+      </div>
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="col-sm-14" id="VerForm" style="display: block;">
+              <button class="btn btn-success" style="margin-bottom: 40px;" (click)="openModal(template)">
+                <i class="fa fa-plus"></i>
+                Nuevo
+              </button>
+
+              <div id="VerListado" class="dataTables_wrapper form-inline dt-bootstrap">
+                <dx-data-grid
+                    id="gridContainer"
+                    [dataSource]="proveedores"
+                    [noDataText]="noDataText"
+                    keyExpr="ID"
+                    [allowColumnReordering]="true"
+                    (onRowUpdating)="editar($event)"
+                    (onRowRemoving)="eliminar($event)">
+                  <dxo-paging [pageSize]="10"></dxo-paging>
+                  <dxo-pager
+                      infoText="Mostrando {0} to {1} de {2} proveedores"
+                      [showInfo]="true"
+                      [showNavigationButtons]="true">
+                  </dxo-pager>
+                  <dxo-editing
+                      mode="row"
+                      [allowUpdating]="true"
+                      [allowDeleting]="true"
+                      [texts]="{
+                        cancelAllChanges: cancelAllChanges,
+                        cancelRowChanges: cancelRowChanges,
+                        confirmDeleteMessage: confirmDeleteMessage,
+                        deleteRow: deleteRow,
+                        editRow: editRow,
+                        saveAllChanges: saveAllChanges,
+                        saveRowChanges: saveRowChanges,
+                        undeleteRow: undeleteRow,
+                        validationCancelChanges: validationCancelChanges
+                      }">
+                  </dxo-editing>
+                  <dxo-search-panel placeholder="Buscar..." [visible]="true"></dxo-search-panel>
+                </dx-data-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #template>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-sm-14" id="VerForm" style="display: block;">
+                    <form name="frmSucursal" id="frmSucursal" (submit)="guardar()">
+                        <div class="row">
+                            <div class="col-md-12 left">
+                                <div class="form-group">
+                                    <label>Tipo de Documento:
+                                        <span class="required">*</span>
+                                    </label>
+                                    <dx-select-box
+                                        [dataSource]="tipoDocumentos"
+                                        displayExpr="nombre"
+                                        valueExpr="id"
+                                        placeholder="Seleccione el tipo de documento">
+                                    </dx-select-box>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 left">
+                                <div class="form-group">
+                                    <label>Documento de Identidad:
+                                        <span class="required">*</span>
+                                    </label>
+                                    <dx-text-box
+                                        class="form-control"
+                                        mode="number">
+                                        <dx-validator>
+                                            <dxi-validation-rule type="required" message="Documento de identidad es requerido"></dxi-validation-rule>
+                                        </dx-validator>
+                                    </dx-text-box>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 left">
+                                <div class="form-group">
+                                    <label>Nombre y Apellido (Razón Social):
+                                        <span class="required">*</span>
+                                    </label>
+                                    <dx-text-box
+                                        class="form-control"
+                                        name="nombre">
+                                        <dx-validator>
+                                            <dxi-validation-rule type="required" message="Nombre es requerido"></dxi-validation-rule>
+                                        </dx-validator>
+                                    </dx-text-box>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 left">
+                                <div class="form-group">
+                                    <label>Dirección:
+                                        <span class="required">*</span>
+                                    </label>
+                                    <dx-text-box
+                                        class="form-control"
+                                        name="direccion">
+                                        <dx-validator>
+                                            <dxi-validation-rule type="required" message="Dirección es requerida"></dxi-validation-rule>
+                                        </dx-validator>
+                                    </dx-text-box>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 left">
+                                <div class="form-group">
+                                    <label>
+                                        Correo Electrónico:
+                                    </label>
+                                    <dx-text-box
+                                        class="form-control"
+                                        name="email"
+                                        mode="email">
+                                        <dx-validator>
+                                            <dxi-validation-rule type="email" message="No cumple el formato de correo electrónico"></dxi-validation-rule>
+                                        </dx-validator>
+                                    </dx-text-box>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 left">
+                                <div class="form-group">
+                                    <label>Número Celular:
+                                        <span class="required">*</span>
+                                    </label>
+                                    <dx-text-box class="form-control"
+                                            mask="(X00) 000-0000"
+                                            [maskRules]="phoneRules"
+                                            maskInvalidMessage="No cumple con el formato telefónico celular"
+                                            [useMaskedValue]="true"
+                                            name="celular">
+                                        <dx-validator>
+                                            <dxi-validation-rule type="required" message="Teléfono celular es requerido"></dxi-validation-rule>
+                                        </dx-validator>
+                                    </dx-text-box>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
+                            <dx-button
+                                text="Guardar"
+                                icon="save"
+                                type="success"
+                                [useSubmitBehavior]="true"
+                                class="btn btn-success pull-right">
+                            </dx-button>
+                            <dx-button
+                                icon="fa fa-remove"
+                                type="danger"
+                                (click)="cancelar()"
+                                class="btn btn-danger pull-right"
+                                text="Cancelar"
+                                style="margin-right: 5px;">
+                            </dx-button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
