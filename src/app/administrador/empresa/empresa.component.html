@@ -1,4 +1,12 @@
 <div class="row">
+  <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+    <div *ngFor="let alert of alerts">
+      <alert [type]="alert.type" [dismissible]="dismissible">{{ alert.msg }}</alert>
+    </div>
+  </div>
+</div>
+
+<div class="row">
     <div class="col-md-12">
         <div class="box">
             <div class="box-header with-border">
@@ -8,15 +16,16 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="col-sm-14" id="VerForm" style="display: block;">
-                            <form name="frmSucursal" id="frmSucursal" (submit)="guardar()">
+                            <form name="frmSucursal" id="frmSucursal">
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
                                         <div class="form-group">
-                                            <label>Nombre Comercial: 
+                                            <label>Nombre Comercial:
                                                 <span class="required">*</span>
                                             </label>
                                             <dx-text-box class="form-control"
-                                                name="nombre_comercial">
+                                                name="nombre_comercial"
+                                                [(value)]="empresa.nombre_comercial">
                                                 <dx-validator>
                                                     <dxi-validation-rule type="required" message="Nombre comercial es requerido"></dxi-validation-rule>
                                                 </dx-validator>
@@ -26,11 +35,12 @@
 
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
                                         <div class="form-group">
-                                            <label>Nombre Legal: 
+                                            <label>Nombre Legal:
                                                 <span class="required">*</span>
                                             </label>
                                             <dx-text-box class="form-control"
-                                                name="nombre_legal">
+                                                name="nombre_legal"
+                                                [(value)]="empresa.nombre_legal">
                                                 <dx-validator>
                                                     <dxi-validation-rule type="required" message="Nombre legal es requerido"></dxi-validation-rule>
                                                 </dx-validator>
@@ -42,12 +52,13 @@
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
                                         <div class="form-group">
-                                            <label>Correo Electrónico: 
+                                            <label>Correo Electrónico:
                                                 <span class="required">*</span>
                                             </label>
                                             <dx-text-box class="form-control"
                                                 mode="email"
-                                                name="email">
+                                                name="email"
+                                                [(value)]="empresa.email">
                                                 <dx-validator>
                                                     <dxi-validation-rule type="email"></dxi-validation-rule>
                                                     <dxi-validation-rule type="required" message="Correo electrónico es requerido"></dxi-validation-rule>
@@ -55,15 +66,16 @@
                                             </dx-text-box>
                                         </div>
                                     </div>
-    
+
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
                                         <div class="form-group">
-                                            <label>RUC: 
+                                            <label>RUC:
                                                 <span class="required">*</span>
                                             </label>
                                             <dx-text-box class="form-control"
                                                 mode="number"
-                                                name="ruc">
+                                                name="ruc"
+                                                [(value)]="empresa.RUC">
                                                 <dx-validator>
                                                     <dxi-validation-rule type="required" message="RUC es requerido"></dxi-validation-rule>
                                                 </dx-validator>
@@ -75,14 +87,15 @@
                                 <div class="row">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 left">
                                         <div class="form-group">
-                                            <label>Dirección: 
+                                            <label>Dirección:
                                                 <span class="required">*</span>
                                             </label>
                                             <dx-text-box class="form-control"
-                                                    name="email">
-                                                <dx-validator>
-                                                    <dxi-validation-rule type="required" message="Dirección es requerida"></dxi-validation-rule>
-                                                </dx-validator>
+                                                name="direccion"
+                                                [(value)]="empresa.direccion">
+                                              <dx-validator>
+                                                  <dxi-validation-rule type="required" message="Dirección es requerida"></dxi-validation-rule>
+                                              </dx-validator>
                                             </dx-text-box>
                                         </div>
                                     </div>
@@ -91,7 +104,7 @@
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
                                         <div class="form-group">
-                                            <label>Teléfono Convencional: 
+                                            <label>Teléfono Convencional:
                                                 <span class="required">*</span>
                                             </label>
                                             <dx-text-box class="form-control"
@@ -99,17 +112,18 @@
                                                     [maskRules]="phoneRules"
                                                     maskInvalidMessage="No cumple con el formato telefónico convencional"
                                                     [useMaskedValue]="true"
-                                                    name="telefono">
+                                                    name="telefono"
+                                                    [(value)]="empresa.telefono">
                                                 <dx-validator>
                                                     <dxi-validation-rule type="required" message="Teléfono convencional es requerido"></dxi-validation-rule>
                                                 </dx-validator>
                                             </dx-text-box>
                                         </div>
                                     </div>
-        
+
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
                                         <div class="form-group">
-                                            <label>Teléfono Celular: 
+                                            <label>Teléfono Celular:
                                                 <span class="required">*</span>
                                             </label>
                                             <dx-text-box class="form-control"
@@ -117,7 +131,8 @@
                                                     [maskRules]="phoneRules"
                                                     maskInvalidMessage="No cumple con el formato telefónico celular"
                                                     [useMaskedValue]="true"
-                                                    name="celular">
+                                                    name="celular"
+                                                    [(value)]="empresa.celular">
                                                 <dx-validator>
                                                     <dxi-validation-rule type="required" message="Teléfono celular es requerido"></dxi-validation-rule>
                                                 </dx-validator>
@@ -127,12 +142,12 @@
                                 </div>
 
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
-                                    <dx-button 
+                                    <dx-button [disabled]="guardando"
                                         text="Guardar"
-                                        icon="save" 
-                                        type="success" 
-                                        [useSubmitBehavior]="true" 
-                                        class="btn btn-success pull-right">
+                                        icon="save"
+                                        type="success"
+                                        class="btn btn-success pull-right"
+                                        (onClick)="guardar()">
                                     </dx-button>
                                 </div>
                             </form>

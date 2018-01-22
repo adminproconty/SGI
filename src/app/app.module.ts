@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app.routing';
+import { ULRProvider } from './providers/url.providers';
 
 import { TranslationsModule } from './translation/translation.module';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
@@ -10,6 +11,7 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 import { ModalModule } from 'ngx-bootstrap';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { AlertModule } from 'ngx-bootstrap/alert';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -41,6 +43,9 @@ import { ProveedoresComponent } from './egresos/proveedores/proveedores.componen
 import { EgresosComponent } from './egresos/egresos/egresos.component';
 
 import { NavegationProvider } from './navegation/navegation.provider';
+import { EmpresaProvider } from './administrador/empresa/empresa.provider';
+import { DatosEmpresaProvider } from './providers/datos.empresa.provider';
+import { LocalesProvider } from './administrador/locales/locales.provider';
 
 import {  DxCheckBoxModule,
           DxSelectBoxModule,
@@ -54,7 +59,9 @@ import {  DxCheckBoxModule,
           DxTreeListModule,
           DxSwitchModule,
           DxDateBoxModule,
-          DxTabsModule
+          DxTabsModule,
+          DxLoadIndicatorModule,
+          DxTemplateModule
         } from 'devextreme-angular';
 
 
@@ -89,12 +96,15 @@ import {  DxCheckBoxModule,
     DxTreeListModule,
     DxDateBoxModule,
     DxTabsModule,
+    DxLoadIndicatorModule,
+    DxTemplateModule,
     BrowserModule,
     HttpClientModule,
     HttpModule,
     TranslationsModule,
     ModalModule.forRoot(),
     BsDropdownModule.forRoot(),
+    AlertModule.forRoot(),
     AngularFontAwesomeModule,
     AppRoutingModule,
     TranslateModule.forRoot({
@@ -106,7 +116,11 @@ import {  DxCheckBoxModule,
     })
   ],
   providers: [
-    NavegationProvider
+    NavegationProvider,
+    ULRProvider,
+    EmpresaProvider,
+    DatosEmpresaProvider,
+    LocalesProvider
   ],
   bootstrap: [AppComponent]
 })
