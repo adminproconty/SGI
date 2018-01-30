@@ -25,4 +25,20 @@ export class ULRProvider {
     return this.dominio + 'locales/update.php';
   }
 
+  public getAllTipoCuentas() {
+    return this.dominio + 'tipo_cuentas/getall.php';
+  }
+
+  public getAllCuentas() {
+    return this.dominio + 'cuentas/getall.php';
+  }
+
+  public insertCuenta() {
+    return this.dominio + 'cuentas/insert.php';
+  }
+
+  public updateCuenta() {
+    return this.dominio + 'cuentas/update.php';
+  }
+
 }

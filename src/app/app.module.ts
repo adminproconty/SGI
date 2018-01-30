@@ -46,6 +46,7 @@ import { NavegationProvider } from './navegation/navegation.provider';
 import { EmpresaProvider } from './administrador/empresa/empresa.provider';
 import { DatosEmpresaProvider } from './providers/datos.empresa.provider';
 import { LocalesProvider } from './administrador/locales/locales.provider';
+import { CuentasProvider } from './administrador/cuentas/cuentas.provider';
 
 import {  DxCheckBoxModule,
           DxSelectBoxModule,
@@ -120,7 +121,8 @@ import {  DxCheckBoxModule,
     ULRProvider,
     EmpresaProvider,
     DatosEmpresaProvider,
-    LocalesProvider
+    LocalesProvider,
+    CuentasProvider
   ],
   bootstrap: [AppComponent]
 })
