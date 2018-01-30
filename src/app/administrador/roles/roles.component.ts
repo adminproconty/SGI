@@ -1,6 +1,7 @@
 import { Component, TemplateRef, OnInit } from '@angular/core';
 
 import { NavegationProvider } from '../../navegation/navegation.provider';
+import { RolesProvider } from './roles.provider';
 
 @Component({
   selector: 'app-roles',
@@ -20,8 +21,13 @@ export class RolesComponent implements OnInit {
   validationCancelChanges: string;
   arbolPermisos: any = [];
   selectedRowKeys: any[] = [];
+  nuevo: any = {};
+  alerts: any = [];
+  roles: any = [];
 
-  constructor(private navegation: NavegationProvider) {
+  constructor(
+    private navegation: NavegationProvider,
+    private service: RolesProvider) {
     this.navegation.setMenu(
       {
         escritorio: '',
@@ -99,15 +105,19 @@ export class RolesComponent implements OnInit {
 
   ngOnInit() {
     this.noDataText = 'No hay data';
-    this.cancelAllChanges = 'Cancelar todos los cambios';
-    this.cancelRowChanges = 'Cancelar cambios en la tupla';
+    this.cancelAllChanges = 'Cancelar';
+    this.cancelRowChanges = 'Cancelar';
     this.confirmDeleteMessage = 'Todos los registros a este local serán borrados también, ¿está seguro?';
     this.deleteRow = 'Eliminar';
     this.editRow = 'Editar';
-    this.saveAllChanges = 'Guardar todos los cambios';
-    this.saveRowChanges = 'Guardar los cambios de la tupla';
+    this.saveAllChanges = 'Guardar';
+    this.saveRowChanges = 'Guardar';
     this.undeleteRow = 'No eliminar';
-    this.validationCancelChanges = 'Cancelar los cambios';
+    this.validationCancelChanges = 'Cancelar';
+    this.service.all().subscribe(resp => {
+      console.log('roles', resp.data);
+      this.roles = resp.data;
+    });
     this.arbolPermisos = [
         {
             ID: 1,
@@ -119,14 +129,79 @@ export class RolesComponent implements OnInit {
             Full_Name: 'Empresa'
         }
     ];
+    this.nuevo = {
+      nombre: '',
+    descripcion: ''
+    };
   }
 
-  guardar() {}
+  guardar(e) {
+    e.preventDefault();
+    const aGuardar = {
+      empresa_id: 1,
+      nombre: this.nuevo.nombre,
+      descripcion: this.nuevo.descripcion
+    };
+    console.log('a guardar', aGuardar);
+    this.service.insert(aGuardar).subscribe(resp => {
+      console.log('guardado', resp);
+      if (resp['_body'] === 'true') {
+        this.ngOnInit();
+        this.alerts.push(
+          {
+            type: 'success',
+            msg: 'Guardado exitoso'
+          }
+        );
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+      }
+    });
+  }
 
   cancelar() {}
 
   editar(e) {
-    console.log('editar', e);
+    const aEditar = {
+      id: e.oldData.id,
+      nombre: '',
+      descripcion: ''
+    };
+    if (e.newData.nombre) {
+      aEditar.nombre = e.newData.nombre;
+    } else {
+      aEditar.nombre = e.oldData.nombre;
+    }
+    if (e.newData.descripcion) {
+      aEditar.descripcion = e.newData.descripcion;
+    } else {
+      aEditar.descripcion = e.oldData.descripcion;
+    }
+    console.log('a editar', aEditar);
+    this.service.update(aEditar).subscribe(resp => {
+      console.log('editar', resp['_body']);
+      if (resp['_body'] === 'true') {
+        this.ngOnInit();
+        this.alerts.push(
+          {
+            type: 'success',
+            msg: 'Modificado exitosamente'
+          }
+        );
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+      }
+    });
   }
 
   eliminar(e) {

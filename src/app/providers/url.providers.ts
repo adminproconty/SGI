@@ -49,4 +49,16 @@ export class ULRProvider {
     return this.dominio + 'iva/insert.php';
   }
 
+  public getAllRoles() {
+    return this.dominio + 'roles/getall.php';
+  }
+
+  public insertRol() {
+    return this.dominio + 'roles/insert.php';
+  }
+
+  public updateRol() {
+    return this.dominio + 'roles/update.php';
+  }
+
 }
