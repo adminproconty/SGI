@@ -1,4 +1,12 @@
 <div class="row">
+    <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+      <div *ngFor="let alert of alerts">
+        <alert [type]="alert.type" [dismissible]="true">{{ alert.msg }}</alert>
+      </div>
+    </div>
+  </div>
+
+<div class="row">
     <div class="col-md-12">
         <div class="box">
             <div class="box-header with-border">
@@ -14,7 +22,7 @@
                             </button>
 
                             <div id="VerListado" class="dataTables_wrapper form-inline dt-bootstrap">
-                                <dx-data-grid 
+                                <dx-data-grid
                                     id="gridContainer"
                                     [noDataText]="noDataText"
                                     keyExpr="ID"
@@ -22,10 +30,10 @@
                                     (onRowUpdating)="editar($event)"
                                     (onRowRemoving)="eliminar($event)">
                                     <dxo-paging [pageSize]="10"></dxo-paging>
-									<dxo-pager
-										infoText="Mostrando {0} to {1} de {2} I.V.A."
-										[showInfo]="true"
-										[showNavigationButtons]="true">
+									                  <dxo-pager
+										                  infoText="Mostrando {0} to {1} de {2} I.V.A."
+										                  [showInfo]="true"
+										                  [showNavigationButtons]="true">
                                     </dxo-pager>
                                     <dxo-editing
                                         mode="row"
@@ -59,39 +67,59 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="col-sm-14" id="VerForm" style="display: block;">
-                    <form name="frmSucursal" id="frmSucursal" (submit)="guardar()">
+                    <form name="frmSucursal" id="frmSucursal" (submit)="guardar($event)">
                         <div class="row">
                             <div class="col-md-12 left">
                                 <div class="form-group">
-                                    <label>Valor (%): 
+                                    <label>Nombre:
                                         <span class="required">*</span>
                                     </label>
                                     <dx-text-box class="form-control"
                                             name="nombre"
-                                            mode="nomber">
+                                            [(value)]="nuevo.nombre">
+                                        <dx-validator>
+                                            <dxi-validation-rule type="required" message="Nombre es requerido"></dxi-validation-rule>
+                                        </dx-validator>
+                                    </dx-text-box>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 left">
+                                <div class="form-group">
+                                    <label>Valor (%):
+                                        <span class="required">*</span>
+                                    </label>
+                                    <dx-text-box class="form-control"
+                                            name="valor"
+                                            mode="float"
+                                            [(value)]="nuevo.valor">
                                         <dx-validator>
                                             <dxi-validation-rule type="required" message="Valor es requerido"></dxi-validation-rule>
                                         </dx-validator>
                                     </dx-text-box>
                                 </div>
                             </div>
-                        </div>                       
+                        </div>
 
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
-                            <dx-button 
+                            <dx-button
                                 text="Guardar"
-                                icon="save" 
-                                type="success" 
-                                [useSubmitBehavior]="true" 
-                                class="btn btn-success pull-right">
+                                icon="save"
+                                type="success"
+                                [useSubmitBehavior]="true"
+                                class="btn btn-success pull-right"
+                                [disabled]="guardando">
                             </dx-button>
-                            <dx-button 
-                                icon="fa fa-remove" 
+                            <dx-button
+                                icon="fa fa-remove"
                                 type="danger"
-                                (click)="cancelar()" 
-                                class="btn btn-danger pull-right" 
+                                (click)="cancelar()"
+                                class="btn btn-danger pull-right"
                                 text="Cancelar"
-                                style="margin-right: 5px;">
+                                style="margin-right: 5px;"
+                                [disabled]="guardando">
                             </dx-button>
                         </div>
                     </form>

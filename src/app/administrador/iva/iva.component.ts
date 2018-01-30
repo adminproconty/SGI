@@ -3,6 +3,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 import { NavegationProvider } from '../../navegation/navegation.provider';
+import { IvaProvider } from './iva.provider';
 
 @Component({
   selector: 'app-iva',
@@ -22,10 +23,14 @@ export class IvaComponent implements OnInit {
   validationCancelChanges: string;
   modalRef: BsModalRef;
   backClick: boolean;
+  nuevo: any = {};
+  alerts: any = [];
+  guardando: boolean;
 
   constructor(
       private navegation: NavegationProvider,
-      private modalService: BsModalService) {
+      private modalService: BsModalService,
+      private service: IvaProvider) {
     this.navegation.setMenu(
       {
         escritorio: '',
@@ -103,16 +108,21 @@ export class IvaComponent implements OnInit {
 
   ngOnInit() {
     this.noDataText = 'No hay data';
-    this.cancelAllChanges = 'Cancelar todos los cambios';
-    this.cancelRowChanges = 'Cancelar cambios en la tupla';
+    this.cancelAllChanges = 'Cancelar';
+    this.cancelRowChanges = 'Cancelar';
     this.confirmDeleteMessage = 'Todos los registros a este local serán borrados también, ¿está seguro?';
     this.deleteRow = 'Eliminar';
     this.editRow = 'Editar';
-    this.saveAllChanges = 'Guardar todos los cambios';
-    this.saveRowChanges = 'Guardar los cambios de la tupla';
+    this.saveAllChanges = 'Guardar';
+    this.saveRowChanges = 'Guardar';
     this.undeleteRow = 'No eliminar';
-    this.validationCancelChanges = 'Cancelar los cambios';
+    this.validationCancelChanges = 'Cancelar';
     this.backClick = false;
+    this.nuevo = {
+      nombre: undefined,
+      valor: undefined
+    };
+    this.guardando = false;
   }
 
   openModal(template: TemplateRef<any>) {
@@ -122,8 +132,36 @@ export class IvaComponent implements OnInit {
     );
   }
 
-  guardar() {
-    this.backClick = true;
+  guardar(e) {
+    e.preventDefault();
+    this.guardando = true;
+    const valoresGuardar = {
+      empresa_id: 1,
+      nombre: this.nuevo.nombre,
+      cantidad: this.nuevo.valor
+    };
+    console.log('a guardar', valoresGuardar);
+    this.service.insert(valoresGuardar).subscribe(resp => {
+      console.log('guardado', resp['_body']);
+      if (resp['_body'] === 'true') {
+        this.alerts.push(
+          {
+            type: 'success',
+            msg: 'Guardado exitoso'
+          }
+        );
+        this.ngOnInit();
+        this.cancelar();
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+        this.guardando = false;
+      }
+    });
   }
 
   cancelar() {

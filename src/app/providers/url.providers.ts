@@ -41,4 +41,8 @@ export class ULRProvider {
     return this.dominio + 'cuentas/update.php';
   }
 
+  public inserIVA() {
+    return this.dominio + 'iva/insert.php';
+  }
+
 }
