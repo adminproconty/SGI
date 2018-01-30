@@ -24,11 +24,11 @@
                             <div id="VerListado" class="dataTables_wrapper form-inline dt-bootstrap">
                                 <dx-data-grid
                                     id="gridContainer"
+                                    [dataSource]="ivas"
                                     [noDataText]="noDataText"
-                                    keyExpr="ID"
+                                    keyExpr="id"
                                     [allowColumnReordering]="true"
-                                    (onRowUpdating)="editar($event)"
-                                    (onRowRemoving)="eliminar($event)">
+                                    (onRowUpdating)="editar($event)">
                                     <dxo-paging [pageSize]="10"></dxo-paging>
 									                  <dxo-pager
 										                  infoText="Mostrando {0} to {1} de {2} I.V.A."
@@ -38,7 +38,6 @@
                                     <dxo-editing
                                         mode="row"
                                         [allowUpdating]="true"
-                                        [allowDeleting]="true"
                                         [texts]="{
                                                 cancelAllChanges: cancelAllChanges,
                                                 cancelRowChanges: cancelRowChanges,
@@ -52,6 +51,11 @@
                                             }">
                                     </dxo-editing>
                                     <dxo-search-panel placeholder="Buscar..." [visible]="true"></dxo-search-panel>
+
+                                    <dxi-column dataField="fecha" caption="Fecha" dataType="date" [allowEditing]="false"></dxi-column>
+                                    <dxi-column dataField="nombre" caption="Nombre"></dxi-column>
+                                    <dxi-column dataField="cantidad" caption="Cantidad (%)"></dxi-column>
+
                                 </dx-data-grid>
                             </div>
                         </div>

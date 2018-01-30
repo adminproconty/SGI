@@ -26,6 +26,7 @@ export class IvaComponent implements OnInit {
   nuevo: any = {};
   alerts: any = [];
   guardando: boolean;
+  ivas: any = [];
 
   constructor(
       private navegation: NavegationProvider,
@@ -123,6 +124,10 @@ export class IvaComponent implements OnInit {
       valor: undefined
     };
     this.guardando = false;
+    this.service.all().subscribe(resp => {
+      this.ivas = resp.data;
+      console.log('todos los ivas', resp.data);
+    });
   }
 
   openModal(template: TemplateRef<any>) {
@@ -170,6 +175,40 @@ export class IvaComponent implements OnInit {
 
   editar(e) {
     console.log('editar', e);
+    const valoresModificar = {
+      empresa_id: e.oldData.empresa_id,
+      nombre: '',
+      cantidad: ''
+    };
+    if (e.newData.nombre) {
+      valoresModificar.nombre = e.newData.nombre;
+    } else {
+      valoresModificar.nombre = e.oldData.nombre;
+    }
+    if (e.newData.cantidad) {
+      valoresModificar.cantidad = e.newData.cantidad;
+    } else {
+      valoresModificar.cantidad = e.oldData.cantidad;
+    }
+    console.log('a guardar', valoresModificar);
+    this.service.insert(valoresModificar).subscribe(resp => {
+      if (resp['_body'] === 'true') {
+        this.alerts.push(
+          {
+            type: 'success',
+            msg: 'Modificado exitoso'
+          }
+        );
+        this.ngOnInit();
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+      }
+    });
   }
 
   eliminar(e) {

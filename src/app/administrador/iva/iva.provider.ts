@@ -11,7 +11,7 @@ export class  IvaProvider {
     private urlProvider: ULRProvider) {}
 
   public all() {
-    return this.http.get(this.urlProvider.getAllCuentas())
+    return this.http.get(this.urlProvider.getAllIVA())
       .map((res: Response) => res.json());
   }
 
