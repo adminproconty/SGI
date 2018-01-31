@@ -113,15 +113,15 @@ export class UsuariosComponent implements OnInit {
 
   ngOnInit() {
     this.noDataText = 'No hay data';
-    this.cancelAllChanges = 'Cancelar todos los cambios';
-    this.cancelRowChanges = 'Cancelar cambios en la tupla';
+    this.cancelAllChanges = 'Cancelar';
+    this.cancelRowChanges = 'Cancelar';
     this.confirmDeleteMessage = 'Todos los registros a este local serán borrados también, ¿está seguro?';
     this.deleteRow = 'Eliminar';
     this.editRow = 'Editar';
-    this.saveAllChanges = 'Guardar todos los cambios';
-    this.saveRowChanges = 'Guardar los cambios de la tupla';
+    this.saveAllChanges = 'Guardar';
+    this.saveRowChanges = 'Guardar';
     this.undeleteRow = 'No eliminar';
-    this.validationCancelChanges = 'Cancelar los cambios';
+    this.validationCancelChanges = 'Cancelar';
     this.phonePattern = /^\+\s*1\s*\(\s*[02-9]\d{2}\)\s*\d{3}\s*-\s*\d{4}$/;
     this.phoneRules = {
         X: /[02-9]/
@@ -222,7 +222,38 @@ export class UsuariosComponent implements OnInit {
   }
 
   editar(e) {
-    console.log('editar', e);
+    console.log('arreglomod', e);
+    const usuarioModif = {
+      nombre: e.newData.nombre !== undefined ? e.newData.nombre : e.oldData.nombre,
+      apellido: e.newData.apellido !== undefined ? e.newData.apellido : e.oldData.apellido,
+      tipo_documento: e.newData.tipo_documento !== undefined ? e.newData.tipo_documento : e.oldData.tipo_documento,
+      num_documento: e.newData.num_documento !== undefined ? e.newData.num_documento : e.oldData.num_documento,
+      email: e.newData.email !== undefined ? e.newData.email : e.oldData.email,
+      celular: e.newData.celular !== undefined ? e.newData.celular : e.oldData.celular,
+      id: e.oldData.persona_id
+    };
+    usuarioModif.id = usuarioModif.id * 1;
+    usuarioModif.tipo_documento = usuarioModif.tipo_documento * 1;
+    console.log('usuario a editar', usuarioModif);
+    this.service.updateUsuario(usuarioModif).subscribe(resp => {
+      console.log('modificación', resp['_body']);
+      if (resp['_body'] === 'true') {
+        this.alerts.push(
+          {
+            type: 'success',
+            msg: 'Usuario modificado exitosamente'
+          }
+        );
+        this.ngOnInit();
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+      }
+    });
   }
 
   cambioTipoDocumento(e) {

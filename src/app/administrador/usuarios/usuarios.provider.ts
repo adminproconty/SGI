@@ -41,8 +41,8 @@ export class  UsuariosProvider {
       .map((resp: Response) => resp);
   }
 
-  public update(objeto: Object) {
-    return this.http.post(this.urlProvider.updateRol(), JSON.stringify(objeto), {
+  public updateUsuario(objeto: Object) {
+    return this.http.post(this.urlProvider.updateUsuario(), JSON.stringify(objeto), {
       headers: new Headers({ 'Content-type': 'application/json' })
       })
       .map((resp: Response) => resp);

@@ -81,6 +81,10 @@ export class ULRProvider {
     return this.dominio + 'usuarios/insert.php';
   }
 
+  public updateUsuario() {
+    return this.dominio + 'personas/update.php';
+  }
+
   public getAllCategorias() {
     return this.dominio + 'categorias/getAll.php';
   }

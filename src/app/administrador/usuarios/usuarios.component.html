@@ -51,6 +51,19 @@
                                             }">
                                     </dxo-editing>
                                     <dxo-search-panel placeholder="Buscar..." [visible]="true"></dxo-search-panel>
+
+                                    <dxi-column dataField="nombre" caption="Nombre"></dxi-column>
+                                    <dxi-column dataField="apellido" caption="Apellido"></dxi-column>
+                                    <dxi-column dataField="tipo_documento" caption="Tipo Documento">
+                                      <dxo-lookup
+                                          [dataSource]="tipoDocumentos"
+                                          displayExpr="nombre"
+                                          valueExpr="id">
+                                      </dxo-lookup>
+                                    </dxi-column>
+                                    <dxi-column dataField="num_documento" caption="Nº Documento"></dxi-column>
+                                    <dxi-column dataField="email" caption="Email"></dxi-column>
+                                    <dxi-column dataField="celular" caption="Celular"></dxi-column>
                                 </dx-data-grid>
                             </div>
                         </div>
