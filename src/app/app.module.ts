@@ -42,6 +42,7 @@ import { IngresosComponent } from './ingresos/ingresos/ingresos.component';
 import { ProveedoresComponent } from './egresos/proveedores/proveedores.component';
 import { EgresosComponent } from './egresos/egresos/egresos.component';
 import { ProductosComponent } from './inventario/productos/productos.component';
+import { FacturasComponent } from './ingresos/facturas/facturas.component';
 
 import { NavegationProvider } from './navegation/navegation.provider';
 import { EmpresaProvider } from './administrador/empresa/empresa.provider';
@@ -88,7 +89,8 @@ import {  DxCheckBoxModule,
     IngresosComponent,
     ProveedoresComponent,
     EgresosComponent,
-    ProductosComponent
+    ProductosComponent,
+    FacturasComponent
   ],
   imports: [
     DxCheckBoxModule,

@@ -87,7 +87,7 @@
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.ingresos.hijos.facturas">
-                        <a (click)="navegarFacturas()">
+                        <a (click)="navegarFacturas()" [routerLink]="['/ingresos/facturas']">
                             <i class="fa fa-folder-o" aria-hidden="true"></i>
                             Facturas
                         </a>

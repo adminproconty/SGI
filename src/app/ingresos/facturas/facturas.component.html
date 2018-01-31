@@ -1,0 +1,285 @@
+<div class="row">
+  <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+    <div *ngFor="let alert of alerts">
+      <alert [type]="alert.type" [dismissible]="true">{{ alert.msg }}</alert>
+    </div>
+  </div>
+</div>
+
+<div class="row" *ngIf="!facturando">
+  <div class="col-md-12">
+    <div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title">Facturas</h3>
+      </div>
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="col-sm-14" id="VerForm" style="display: block;">
+              <button class="btn btn-success" style="margin-bottom: 40px;" (click)="nuevafactura()">
+                <i class="fa fa-plus"></i>
+                Nueva Factura
+              </button>
+              <div id="VerListado" class="dataTables_wrapper form-inline dt-bootstrap">
+                <dx-data-grid
+                    id="gridContainer"
+                    [dataSource]="facturas"
+                    [noDataText]="noDataText"
+                    keyExpr="id"
+                    [allowColumnReordering]="true">
+                  <dxo-paging [pageSize]="10"></dxo-paging>
+                  <dxo-pager
+                      infoText="Mostrando {0} to {1} de {2} I.V.A."
+                      [showInfo]="true"
+                      [showNavigationButtons]="true">
+                  </dxo-pager>
+                  <dxo-editing
+                      mode="row"
+                      [texts]="{
+                        cancelAllChanges: cancelAllChanges,
+                        cancelRowChanges: cancelRowChanges,
+                        confirmDeleteMessage: confirmDeleteMessage,
+                        deleteRow: deleteRow,
+                        editRow: editRow,
+                        saveAllChanges: saveAllChanges,
+                        saveRowChanges: saveRowChanges,
+                        undeleteRow: undeleteRow,
+                        validationCancelChanges: validationCancelChanges
+                      }">
+                  </dxo-editing>
+                  <dxo-search-panel placeholder="Buscar..." [visible]="true"></dxo-search-panel>
+
+                  <!--<dxi-column dataField="nombre" caption="Nombre" [width]="400"></dxi-column>
+                  <dxi-column dataField="descripcion" caption="Descripción"></dxi-column>-->
+
+                </dx-data-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row" *ngIf="facturando">
+  <div class="col-md-12">
+    <div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title">Nueva Factura</h3>
+      </div>
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="col-sm-14" id="VerForm" style="display: block;">
+              <form name="frmSucursal" id="frmSucursal" (submit)="guardar($event)">
+
+                <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
+                    <div class="form-group">
+                      <label>Tipo Documento:
+                        <span class="required">*</span>
+                      </label>
+                      <dx-select-box
+                          [dataSource]="tipoDocumentos"
+                          displayExpr="nombre"
+                          valueExpr="id"
+                          placeholder="Seleccione el tipo de documento"
+                          (onValueChanged)="cambioTipoDocumento($event)">
+                        <dx-validator>
+                          <dxi-validation-rule type="required" message="Tipo de documento es requerido"></dxi-validation-rule>
+                        </dx-validator>
+                      </dx-select-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
+                    <div class="form-group">
+                      <label>Número de documento:
+                        <span class="required">*</span>
+                      </label>
+                      <dx-text-box class="form-control"
+                          name="documento"
+                          [(value)]="factura.documento">
+                        <dx-validator>
+                          <dxi-validation-rule type="required" message="Nombre legal es requerido"></dxi-validation-rule>
+                        </dx-validator>
+                      </dx-text-box>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
+                    <div class="form-group">
+                      <label>Nombre:
+                        <span class="required">*</span>
+                      </label>
+                      <dx-text-box class="form-control"
+                          name="nombre"
+                          [(value)]="factura.nombre">
+                        <dx-validator>
+                          <dxi-validation-rule type="required" message="Nombre legal es requerido"></dxi-validation-rule>
+                        </dx-validator>
+                      </dx-text-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
+                    <div class="form-group">
+                      <label>Apellido:
+                        <span class="required">*</span>
+                      </label>
+                      <dx-text-box class="form-control"
+                          name="apellido"
+                          [(value)]="factura.apellido">
+                        <dx-validator>
+                          <dxi-validation-rule type="required" message="Nombre legal es requerido"></dxi-validation-rule>
+                        </dx-validator>
+                      </dx-text-box>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
+                    <div class="form-group">
+                      <label>Correo Electrónico:
+                        <span class="required">*</span>
+                      </label>
+                      <dx-text-box class="form-control"
+                            mode="email"
+                            name="email"
+                            [(value)]="factura.email">
+                        <dx-validator>
+                          <dxi-validation-rule type="email"></dxi-validation-rule>
+                          <dxi-validation-rule type="required" message="Correo electrónico es requerido"></dxi-validation-rule>
+                        </dx-validator>
+                      </dx-text-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
+                    <div class="form-group">
+                      <label>Teléfono Celular:
+                        <span class="required">*</span>
+                      </label>
+                      <dx-text-box class="form-control"
+                          mask="(X00)0000000"
+                          [maskRules]="phoneRules"
+                          maskInvalidMessage="No cumple con el formato telefónico celular"
+                          [useMaskedValue]="true"
+                          name="celular"
+                          [(value)]="factura.celular">
+                        <dx-validator>
+                          <dxi-validation-rule type="required" message="Teléfono celular es requerido"></dxi-validation-rule>
+                        </dx-validator>
+                      </dx-text-box>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <label>
+                        Código:
+                      </label>
+                      <dx-text-box class="form-control"
+                          name="Codigo"
+                          [(value)]="factura.cod_producto">
+                      </dx-text-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <label>
+                        Nombre:
+                      </label>
+                      <dx-text-box class="form-control"
+                          name="nombre"
+                          [(value)]="factura.nom_producto">
+                      </dx-text-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
+                    <div class="form-group">
+                      <label>
+                        Cantidad:
+                      </label>
+                      <dx-text-box class="form-control"
+                          name="nombre"
+                          mode="number"
+                          [(value)]="factura.cant_producto">
+                      </dx-text-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
+                    <button type="button" class="btn btn-success"style="margin-top: 25px;" (click)="agregarCarrito()">
+                      <i class="fa fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <dx-data-grid
+                        id="gridContainer"
+                        [dataSource]="carrito"
+                        [noDataText]="noDataText"
+                        keyExpr="id"
+                        [allowColumnReordering]="true"
+                        (onRowRemoving)="eliminarProducto($event)">
+                      <dxo-paging [pageSize]="10"></dxo-paging>
+                      <dxo-pager
+                          infoText="Mostrando {0} to {1} de {2} ingresos"
+                          [showInfo]="true"
+                          [showNavigationButtons]="true">
+                      </dxo-pager>
+                      <dxo-editing
+                          mode="row"
+                          [allowDeleting]="true"
+                          [texts]="{
+                            cancelAllChanges: cancelAllChanges,
+                            cancelRowChanges: cancelRowChanges,
+                            confirmDeleteMessage: confirmDeleteMessage,
+                            deleteRow: deleteRow,
+                            editRow: editRow,
+                            saveAllChanges: saveAllChanges,
+                            saveRowChanges: saveRowChanges,
+                            undeleteRow: undeleteRow,
+                            validationCancelChanges: validationCancelChanges
+                          }">
+                      </dxo-editing>
+                      <dxo-search-panel placeholder="Buscar..." [visible]="true"></dxo-search-panel>
+
+                      <dxi-column dataField="codigo" caption="Código" [width]="150"></dxi-column>
+                      <dxi-column dataField="nombre" caption="Nombre"></dxi-column>
+                      <dxi-column dataField="cantidad" caption="Cantidad" [width]="120" dataType="number"></dxi-column>
+                      <dxi-column dataField="pu" caption="Precio Unitario" [width]="150" dataType="float"></dxi-column>
+                      <dxi-column dataField="pt" caption="Precio Total" [width]="150" dataType="float"></dxi-column>
+                    </dx-data-grid>
+                  </div>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
+                  <dx-button [disabled]="guardando"
+                      text="Guardar"
+                      icon="save"
+                      type="success"
+                      class="btn btn-success pull-right"
+                      [useSubmitBehavior]="true"
+                      [disabled]="guardando">
+                  </dx-button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

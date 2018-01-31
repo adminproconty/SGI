@@ -11,6 +11,7 @@ import { UsuariosComponent } from './administrador/usuarios/usuarios.component';
 import { EmpleadosComponent } from './administrador/empleados/empleados.component';
 import { ClientesComponent } from './ingresos/clientes/clientes.component';
 import { IngresosComponent } from './ingresos/ingresos/ingresos.component';
+import { FacturasComponent } from './ingresos/facturas/facturas.component';
 import { ProveedoresComponent } from './egresos/proveedores/proveedores.component';
 import { EgresosComponent } from './egresos/egresos/egresos.component';
 import { ProductosComponent } from './inventario/productos/productos.component';
@@ -51,6 +52,9 @@ const routes: Routes = [
         {
           path: 'clientes',
           component: ClientesComponent
+        }, {
+          path: 'facturas',
+          component: FacturasComponent
         }, {
           path: 'ingresos',
           component: IngresosComponent
