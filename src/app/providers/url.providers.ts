@@ -61,4 +61,20 @@ export class ULRProvider {
     return this.dominio + 'roles/update.php';
   }
 
+  public getAllTipoDocumento() {
+    return this.dominio + 'tipo_documento/getAll.php';
+  }
+
+  public insertPersona() {
+    return this.dominio + 'personas/insert.php';
+  }
+
+  public getPersonaInsertada() {
+    return this.dominio + 'personas/getByEmpresaDocumento.php';
+  }
+
+  public insertUsuario() {
+    return this.dominio + 'usuarios/insert.php';
+  }
+
 }

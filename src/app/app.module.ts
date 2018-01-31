@@ -49,6 +49,7 @@ import { LocalesProvider } from './administrador/locales/locales.provider';
 import { CuentasProvider } from './administrador/cuentas/cuentas.provider';
 import { IvaProvider } from './administrador/iva/iva.provider';
 import { RolesProvider } from './administrador/roles/roles.provider';
+import { UsuariosProvider } from './administrador/usuarios/usuarios.provider';
 
 import {  DxCheckBoxModule,
           DxSelectBoxModule,
@@ -126,7 +127,8 @@ import {  DxCheckBoxModule,
     LocalesProvider,
     CuentasProvider,
     IvaProvider,
-    RolesProvider
+    RolesProvider,
+    UsuariosProvider
   ],
   bootstrap: [AppComponent]
 })

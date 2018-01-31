@@ -3,6 +3,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 import { NavegationProvider } from '../../navegation/navegation.provider';
+import { UsuariosProvider } from './usuarios.provider';
 
 @Component({
   selector: 'app-usuarios',
@@ -26,10 +27,15 @@ export class UsuariosComponent implements OnInit {
   backClick: boolean;
   phonePattern: any;
   phoneRules: any;
+  tipoDocumentos: any = [];
+  nuevo: any = {};
+  alerts: any = [];
+  guardando: boolean;
 
   constructor(
     private navegation: NavegationProvider,
-    private modalService: BsModalService) {
+    private modalService: BsModalService,
+    private service: UsuariosProvider) {
     this.navegation.setMenu(
       {
         escritorio: '',
@@ -120,6 +126,20 @@ export class UsuariosComponent implements OnInit {
     this.phoneRules = {
         X: /[02-9]/
     };
+    this.service.getAllTipoDocumento().subscribe(resp => {
+      console.log('tipos documentos', resp.data);
+      this.tipoDocumentos = resp.data;
+    });
+    this.nuevo = {
+      empresa_id: 1,
+      nombre: '',
+      apellido: '',
+      tipo_documento: 0,
+      num_documento: '',
+      email: '',
+      celular: ''
+    };
+    this.guardando = false;
   }
 
   openModal(template: TemplateRef<any>) {
@@ -129,7 +149,69 @@ export class UsuariosComponent implements OnInit {
     );
   }
 
-  guardar() {}
+  guardar(e) {
+    e.preventDefault();
+    this.guardando = true;
+    const cel = this.nuevo.celular.split('(')[1];
+    const celCod = cel.split(')')[0];
+    const celPostCod = cel.split(')')[1];
+    this.nuevo.celular = celCod + celPostCod;
+    console.log('a guardar', this.nuevo);
+    this.insertarPersona();
+  }
+
+  insertarPersona() {
+    this.service.insertPersona(this.nuevo).subscribe(resp => {
+      console.log('insertar persona', resp['_body']);
+      if (resp['_body'] === 'true') {
+        this.consultarPersonaInsertada();
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+        this.guardando = false;
+      }
+    });
+  }
+
+  consultarPersonaInsertada() {
+    this.service.getPersonaInsertada(this.nuevo).subscribe(resp => {
+      resp['_body'] = JSON.parse(resp['_body']);
+      console.log('consultar persona insertada', resp);
+      this.insertarUsuario(resp['_body'].data[0].id);
+    });
+  }
+
+  insertarUsuario(id) {
+    const usuarioAgregar = {
+      persona_id: id,
+      clave: '12345'
+    };
+    this.service.insertUsuario(usuarioAgregar).subscribe(resp => {
+      console.log('insertar usuario', resp['_body']);
+      if (resp['_body'] === 'true') {
+        this.alerts.push(
+          {
+            type: 'success',
+            msg: 'Usuario agregado exitosamente'
+          }
+        );
+        this.ngOnInit();
+        this.cancelar();
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+        this.guardando = false;
+      }
+    });
+  }
 
   cancelar() {
     this.modalRef.hide();
@@ -141,6 +223,12 @@ export class UsuariosComponent implements OnInit {
 
   eliminar(e) {
     console.log('eliminar', e);
+  }
+
+  cambioTipoDocumento(e) {
+    console.log('cambio tipo documento', e);
+    const tipo = e.value * 1;
+    this.nuevo.tipo_documento = tipo;
   }
 
 }
