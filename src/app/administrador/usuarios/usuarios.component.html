@@ -26,10 +26,9 @@
                                     id="gridContainer"
                                     [dataSource]="usuarios"
                                     [noDataText]="noDataText"
-                                    keyExpr="ID"
+                                    keyExpr="id"
                                     [allowColumnReordering]="true"
-                                    (onRowUpdating)="editar($event)"
-                                    (onRowRemoving)="eliminar($event)">
+                                    (onRowUpdating)="editar($event)">
                                     <dxo-paging [pageSize]="10"></dxo-paging>
                                     <dxo-pager
                                         infoText="Mostrando {0} to {1} de {2} locales"
@@ -39,7 +38,6 @@
                                     <dxo-editing
                                         mode="row"
                                         [allowUpdating]="true"
-                                        [allowDeleting]="true"
                                         [texts]="{
                                                 cancelAllChanges: cancelAllChanges,
                                                 cancelRowChanges: cancelRowChanges,

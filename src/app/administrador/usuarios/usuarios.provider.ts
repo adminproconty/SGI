@@ -16,7 +16,7 @@ export class  UsuariosProvider {
   }
 
   public all() {
-    return this.http.get(this.urlProvider.getAllRoles())
+    return this.http.get(this.urlProvider.getAllUsuarios())
       .map((res: Response) => res.json());
   }
 

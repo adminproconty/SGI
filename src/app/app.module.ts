@@ -41,6 +41,7 @@ import { ClientesComponent } from './ingresos/clientes/clientes.component';
 import { IngresosComponent } from './ingresos/ingresos/ingresos.component';
 import { ProveedoresComponent } from './egresos/proveedores/proveedores.component';
 import { EgresosComponent } from './egresos/egresos/egresos.component';
+import { ProductosComponent } from './inventario/productos/productos.component';
 
 import { NavegationProvider } from './navegation/navegation.provider';
 import { EmpresaProvider } from './administrador/empresa/empresa.provider';
@@ -50,6 +51,7 @@ import { CuentasProvider } from './administrador/cuentas/cuentas.provider';
 import { IvaProvider } from './administrador/iva/iva.provider';
 import { RolesProvider } from './administrador/roles/roles.provider';
 import { UsuariosProvider } from './administrador/usuarios/usuarios.provider';
+import { ProductosProvider } from './inventario/productos/productos.provider';
 
 import {  DxCheckBoxModule,
           DxSelectBoxModule,
@@ -85,7 +87,8 @@ import {  DxCheckBoxModule,
     ClientesComponent,
     IngresosComponent,
     ProveedoresComponent,
-    EgresosComponent
+    EgresosComponent,
+    ProductosComponent
   ],
   imports: [
     DxCheckBoxModule,
@@ -128,7 +131,8 @@ import {  DxCheckBoxModule,
     CuentasProvider,
     IvaProvider,
     RolesProvider,
-    UsuariosProvider
+    UsuariosProvider,
+    ProductosProvider
   ],
   bootstrap: [AppComponent]
 })

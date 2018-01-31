@@ -258,7 +258,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <li [ngClass]="menu.menu.inventario.hijos.productos">
-                        <a (click)="navegarProductos()">
+                        <a (click)="navegarProductos()" [routerLink]="['/inventario/productos']">
                             <i class="fa fa-list-alt" aria-hidden="true"></i>
                             Lista de Productos
                         </a>

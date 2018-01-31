@@ -1,0 +1,309 @@
+<div class="row">
+  <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+    <div *ngFor="let alert of alerts">
+      <alert [type]="alert.type" [dismissible]="true">{{ alert.msg }}</alert>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title">Categorías</h3>
+      </div>
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="col-sm-14" id="VerForm" style="display: block;">
+              <button class="btn btn-success" style="margin-bottom: 40px;" (click)="openModal(nuevacategoria)">
+                <i class="fa fa-plus"></i>
+                Nueva
+              </button>
+              <div id="VerListado" class="dataTables_wrapper form-inline dt-bootstrap">
+                <dx-data-grid
+                    id="gridContainer"
+                    [dataSource]="categorias"
+                    [noDataText]="noDataText"
+                    keyExpr="id"
+                    [allowColumnReordering]="true"
+                    (onRowUpdating)="editarCategoria($event)">
+                  <dxo-paging [pageSize]="10"></dxo-paging>
+                  <dxo-pager
+                      infoText="Mostrando {0} to {1} de {2} I.V.A."
+                      [showInfo]="true"
+                      [showNavigationButtons]="true">
+                  </dxo-pager>
+                  <dxo-editing
+                      mode="row"
+                      [allowUpdating]="true"
+                      [texts]="{
+                        cancelAllChanges: cancelAllChanges,
+                        cancelRowChanges: cancelRowChanges,
+                        confirmDeleteMessage: confirmDeleteMessage,
+                        deleteRow: deleteRow,
+                        editRow: editRow,
+                        saveAllChanges: saveAllChanges,
+                        saveRowChanges: saveRowChanges,
+                        undeleteRow: undeleteRow,
+                        validationCancelChanges: validationCancelChanges
+                      }">
+                  </dxo-editing>
+                  <dxo-search-panel placeholder="Buscar..." [visible]="true"></dxo-search-panel>
+
+                  <dxi-column dataField="nombre" caption="Nombre" [width]="400"></dxi-column>
+                  <dxi-column dataField="descripcion" caption="Descripción"></dxi-column>
+
+                </dx-data-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #nuevacategoria>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-sm-14" id="VerForm" style="display: block;">
+                    <form name="frmSucursal" id="frmSucursal" (submit)="guardarCategoria($event)">
+                        <div class="row">
+                            <div class="col-md-12 left">
+                                <div class="form-group">
+                                    <label>Nombre:
+                                        <span class="required">*</span>
+                                    </label>
+                                    <dx-text-box class="form-control"
+                                            name="nombre"
+                                            [(value)]="categoria.nombre">
+                                        <dx-validator>
+                                            <dxi-validation-rule type="required" message="Nombre es requerido"></dxi-validation-rule>
+                                        </dx-validator>
+                                    </dx-text-box>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 left">
+                                <div class="form-group">
+                                    <label>Descripción:
+                                        <span class="required">*</span>
+                                    </label>
+                                    <dx-text-box class="form-control"
+                                            name="descripcion"
+                                            [(value)]="categoria.descripcion">
+                                        <dx-validator>
+                                            <dxi-validation-rule type="required" message="Descripción es requerida"></dxi-validation-rule>
+                                        </dx-validator>
+                                    </dx-text-box>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
+                            <dx-button
+                                text="Guardar"
+                                icon="save"
+                                type="success"
+                                [useSubmitBehavior]="true"
+                                class="btn btn-success pull-right"
+                                [disabled]="guardando">
+                            </dx-button>
+                            <dx-button
+                                icon="fa fa-remove"
+                                type="danger"
+                                (click)="cancelar()"
+                                class="btn btn-danger pull-right"
+                                text="Cancelar"
+                                style="margin-right: 5px;"
+                                [disabled]="guardando">
+                            </dx-button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title">Productos</h3>
+      </div>
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="col-sm-14" id="VerForm" style="display: block;">
+              <button class="btn btn-success" style="margin-bottom: 40px;" (click)="openModal(nuevoproducto)">
+                <i class="fa fa-plus"></i>
+                Nuevo
+              </button>
+              <div id="VerListado" class="dataTables_wrapper form-inline dt-bootstrap">
+                <dx-data-grid
+                    id="gridContainer"
+                    [dataSource]="productos"
+                    [noDataText]="noDataText"
+                    keyExpr="id"
+                    [allowColumnReordering]="true"
+                    (onRowUpdating)="editarCategoria($event)">
+                  <dxo-paging [pageSize]="10"></dxo-paging>
+                  <dxo-pager
+                      infoText="Mostrando {0} to {1} de {2} I.V.A."
+                      [showInfo]="true"
+                      [showNavigationButtons]="true">
+                  </dxo-pager>
+                  <dxo-editing
+                      mode="row"
+                      [allowUpdating]="true"
+                      [texts]="{
+                        cancelAllChanges: cancelAllChanges,
+                        cancelRowChanges: cancelRowChanges,
+                        confirmDeleteMessage: confirmDeleteMessage,
+                        deleteRow: deleteRow,
+                        editRow: editRow,
+                        saveAllChanges: saveAllChanges,
+                        saveRowChanges: saveRowChanges,
+                        undeleteRow: undeleteRow,
+                        validationCancelChanges: validationCancelChanges
+                      }">
+                  </dxo-editing>
+                  <dxo-search-panel placeholder="Buscar..." [visible]="true"></dxo-search-panel>
+
+                  <!--<dxi-column dataField="nombre" caption="Nombre" [width]="400"></dxi-column>
+                  <dxi-column dataField="descripcion" caption="Descripción"></dxi-column>-->
+
+                </dx-data-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #nuevoproducto>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="col-sm-14" id="VerForm" style="display: block;">
+          <form name="frmSucursal" id="frmSucursal" (submit)="guardarProducto($event)">
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <label>Tipo de categoría:
+                    <span class="required">*</span>
+                  </label>
+                  <dx-select-box
+                      [dataSource]="categorias"
+                      displayExpr="nombre"
+                      valueExpr="id"
+                      placeholder="Seleccione una categoria"
+                      (onValueChanged)="cambioCategoria($event)">
+                    <dx-validator>
+                      <dxi-validation-rule type="required" message="Categoría es requerida"></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-select-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <label>Nombre:
+                    <span class="required">*</span>
+                  </label>
+                  <dx-text-box class="form-control"
+                    name="nombre"
+                    [(value)]="producto.nombre">
+                      <dx-validator>
+                        <dxi-validation-rule type="required" message="Nombre es requerido"></dxi-validation-rule>
+                      </dx-validator>
+                  </dx-text-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <label>Unidad:
+                    <span class="required">*</span>
+                  </label>
+                  <dx-text-box class="form-control"
+                      name="descripcion"
+                      [(value)]="producto.unidad">
+                    <dx-validator>
+                      <dxi-validation-rule type="required" message="Unidad es requerida"></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-text-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <label>Código:
+                    <span class="required">*</span>
+                  </label>
+                  <dx-text-box class="form-control"
+                      name="descripcion"
+                      [(value)]="producto.codigo">
+                    <dx-validator>
+                      <dxi-validation-rule type="required" message="Código es requerido"></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-text-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <label>Descripción:
+                    <span class="required">*</span>
+                  </label>
+                  <dx-text-box class="form-control"
+                      name="descripcion"
+                      [(value)]="producto.descripcion">
+                    <dx-validator>
+                      <dxi-validation-rule type="required" message="Descripción es requerida"></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-text-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
+              <dx-button
+                  text="Guardar"
+                  icon="save"
+                  type="success"
+                  [useSubmitBehavior]="true"
+                  class="btn btn-success pull-right"
+                  [disabled]="guardando">
+              </dx-button>
+              <dx-button
+                  icon="fa fa-remove"
+                  type="danger"
+                  (click)="cancelar()"
+                  class="btn btn-danger pull-right"
+                  text="Cancelar"
+                  style="margin-right: 5px;"
+                  [disabled]="guardando">
+              </dx-button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

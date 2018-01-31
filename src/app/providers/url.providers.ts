@@ -73,8 +73,32 @@ export class ULRProvider {
     return this.dominio + 'personas/getByEmpresaDocumento.php';
   }
 
+  public getAllUsuarios() {
+    return this.dominio + 'usuarios/getAll.php';
+  }
+
   public insertUsuario() {
     return this.dominio + 'usuarios/insert.php';
+  }
+
+  public getAllCategorias() {
+    return this.dominio + 'categorias/getAll.php';
+  }
+
+  public insertCategoria() {
+    return this.dominio + 'categorias/insert.php';
+  }
+
+  public updateCategoria() {
+    return this.dominio + 'categorias/update.php';
+  }
+
+  public getAllProductos() {
+    return this.dominio + 'productos/getAll.php';
+  }
+
+  public insertProducto() {
+    return this.dominio + 'productos/insert.php';
   }
 
 }

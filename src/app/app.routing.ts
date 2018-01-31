@@ -13,6 +13,7 @@ import { ClientesComponent } from './ingresos/clientes/clientes.component';
 import { IngresosComponent } from './ingresos/ingresos/ingresos.component';
 import { ProveedoresComponent } from './egresos/proveedores/proveedores.component';
 import { EgresosComponent } from './egresos/egresos/egresos.component';
+import { ProductosComponent } from './inventario/productos/productos.component';
 
 const routes: Routes = [
     {
@@ -64,6 +65,14 @@ const routes: Routes = [
         }, {
           path: 'egresos',
           component: EgresosComponent
+        }
+      ]
+    }, {
+      path: 'inventario',
+      children: [
+        {
+          path: 'productos',
+          component: ProductosComponent
         }
       ]
     }

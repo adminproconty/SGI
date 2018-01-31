@@ -3,14 +3,15 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 import { NavegationProvider } from '../../navegation/navegation.provider';
-import { UsuariosProvider } from './usuarios.provider';
+import { ProductosProvider } from './productos.provider';
 
 @Component({
-  selector: 'app-usuarios',
-  templateUrl: 'usuarios.component.html',
-  styleUrls: ['usuarios.component.css']
+  selector: 'app-productos',
+  templateUrl: 'productos.component.html',
+  styleUrls: ['productos.component.css']
 })
-export class UsuariosComponent implements OnInit {
+
+export class ProductosComponent implements OnInit {
   noDataText: string;
   cancelAllChanges: string;
   cancelRowChanges: string;
@@ -21,33 +22,42 @@ export class UsuariosComponent implements OnInit {
   saveRowChanges: string;
   undeleteRow: string;
   validationCancelChanges: string;
-  usuarios: any = [];
-
   modalRef: BsModalRef;
   backClick: boolean;
-  phonePattern: any;
-  phoneRules: any;
-  tipoDocumentos: any = [];
-  nuevo: any = {};
+
+  categorias: any = [];
+  productos: any = [];
   alerts: any = [];
+  categoria: any = {
+    empresa_id: 1,
+    nombre: '',
+    descripcion: ''
+  };
+  producto: any = {
+    categoria_id: 0,
+    nombre: '',
+    unidad: '',
+    codigo: '',
+    descripcion: ''
+  };
   guardando: boolean;
 
   constructor(
     private navegation: NavegationProvider,
     private modalService: BsModalService,
-    private service: UsuariosProvider) {
+    private service: ProductosProvider) {
     this.navegation.setMenu(
       {
         escritorio: '',
         administrador: {
-            clase: 'active treeview',
+            clase: 'treeview',
             hijos: {
                 empresa: '',
                 locales: '',
                 cuentas: '',
                 iva: '',
                 roles: '',
-                usuarios: 'active',
+                usuarios: '',
                 empleados: ''
             }
         },
@@ -99,9 +109,9 @@ export class UsuariosComponent implements OnInit {
             }
         },
         inventario: {
-            clase: 'treeview',
+            clase: 'active treeview',
             hijos: {
-                productos: '',
+                productos: 'active',
                 requision: '',
                 fisico: '',
                 cardex: ''
@@ -113,36 +123,35 @@ export class UsuariosComponent implements OnInit {
 
   ngOnInit() {
     this.noDataText = 'No hay data';
-    this.cancelAllChanges = 'Cancelar todos los cambios';
-    this.cancelRowChanges = 'Cancelar cambios en la tupla';
+    this.cancelAllChanges = 'Cancelar';
+    this.cancelRowChanges = 'Cancelar';
     this.confirmDeleteMessage = 'Todos los registros a este local serán borrados también, ¿está seguro?';
     this.deleteRow = 'Eliminar';
     this.editRow = 'Editar';
-    this.saveAllChanges = 'Guardar todos los cambios';
-    this.saveRowChanges = 'Guardar los cambios de la tupla';
+    this.saveAllChanges = 'Guardar';
+    this.saveRowChanges = 'Guardar';
     this.undeleteRow = 'No eliminar';
-    this.validationCancelChanges = 'Cancelar los cambios';
-    this.phonePattern = /^\+\s*1\s*\(\s*[02-9]\d{2}\)\s*\d{3}\s*-\s*\d{4}$/;
-    this.phoneRules = {
-        X: /[02-9]/
-    };
-    this.service.getAllTipoDocumento().subscribe(resp => {
-      console.log('tipos documentos', resp.data);
-      this.tipoDocumentos = resp.data;
-    });
-    this.nuevo = {
+    this.validationCancelChanges = 'Cancelar';
+    this.categoria = {
       empresa_id: 1,
       nombre: '',
-      apellido: '',
-      tipo_documento: 0,
-      num_documento: '',
-      email: '',
-      celular: ''
+      descripcion: ''
+    };
+    this.producto = {
+      categoria_id: 0,
+      nombre: '',
+      unidad: '',
+      codigo: '',
+      descripcion: ''
     };
     this.guardando = false;
-    this.service.all().subscribe(resp => {
-      console.log('usuarios', resp.data);
-      this.usuarios = resp.data;
+    this.service.allCategorias().subscribe(resp => {
+      console.log('categorias', resp.data);
+      this.categorias = resp.data;
+    });
+    this.service.allProductos().subscribe(resp => {
+      console.log('productos', resp.data);
+      this.productos = resp.data;
     });
   }
 
@@ -153,22 +162,21 @@ export class UsuariosComponent implements OnInit {
     );
   }
 
-  guardar(e) {
+  guardarCategoria(e) {
     e.preventDefault();
     this.guardando = true;
-    const cel = this.nuevo.celular.split('(')[1];
-    const celCod = cel.split(')')[0];
-    const celPostCod = cel.split(')')[1];
-    this.nuevo.celular = celCod + celPostCod;
-    console.log('a guardar', this.nuevo);
-    this.insertarPersona();
-  }
-
-  insertarPersona() {
-    this.service.insertPersona(this.nuevo).subscribe(resp => {
-      console.log('insertar persona', resp['_body']);
+    console.log('categoria a guardar', this.categoria);
+    this.service.insertCategoria(this.categoria).subscribe(resp => {
+      console.log('categoria guardada', resp['_body']);
       if (resp['_body'] === 'true') {
-        this.consultarPersonaInsertada();
+        this.alerts.push(
+          {
+            type: 'success',
+            msg: 'Guardado exitoso'
+          }
+        );
+        this.ngOnInit();
+        this.cancelar();
       } else {
         this.alerts.push(
           {
@@ -181,26 +189,17 @@ export class UsuariosComponent implements OnInit {
     });
   }
 
-  consultarPersonaInsertada() {
-    this.service.getPersonaInsertada(this.nuevo).subscribe(resp => {
-      resp['_body'] = JSON.parse(resp['_body']);
-      console.log('consultar persona insertada', resp);
-      this.insertarUsuario(resp['_body'].data[0].id);
-    });
-  }
-
-  insertarUsuario(id) {
-    const usuarioAgregar = {
-      persona_id: id,
-      clave: '12345'
-    };
-    this.service.insertUsuario(usuarioAgregar).subscribe(resp => {
-      console.log('insertar usuario', resp['_body']);
+  guardarProducto(e) {
+    e.preventDefault();
+    this.guardando = true;
+    console.log('producto a guardar', this.producto);
+    this.service.insertProducto(this.producto).subscribe(resp => {
+      console.log('producto guardado', resp['_body']);
       if (resp['_body'] === 'true') {
         this.alerts.push(
           {
             type: 'success',
-            msg: 'Usuario agregado exitosamente'
+            msg: 'Guardado exitoso'
           }
         );
         this.ngOnInit();
@@ -221,14 +220,48 @@ export class UsuariosComponent implements OnInit {
     this.modalRef.hide();
   }
 
-  editar(e) {
+  editarCategoria(e) {
     console.log('editar', e);
+    const catModif = {
+      id: e.oldData.id,
+      nombre: '',
+      descripcion: ''
+    };
+    if (e.newData.nombre) {
+      catModif.nombre = e.newData.nombre;
+    } else {
+      catModif.nombre = e.oldData.nombre;
+    }
+    if (e.newData.descripcion) {
+      catModif.descripcion = e.newData.descripcion;
+    } else {
+      catModif.descripcion = e.oldData.descripcion;
+    }
+    this.service.updateCategoria(catModif).subscribe(resp => {
+      console.log('cat modificada', resp['_body']);
+      if (resp['_body'] === 'true') {
+        this.alerts.push(
+          {
+            type: 'success',
+            msg: 'Modificado exitosamente'
+          }
+        );
+        this.ngOnInit();
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+      }
+    });
   }
 
-  cambioTipoDocumento(e) {
-    console.log('cambio tipo documento', e);
+  cambioCategoria(e) {
+    console.log('cambio categoria', e);
     const tipo = e.value * 1;
-    this.nuevo.tipo_documento = tipo;
+    this.producto.categoria_id = tipo;
   }
 
 }
