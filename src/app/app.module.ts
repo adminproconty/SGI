@@ -54,6 +54,7 @@ import { RolesProvider } from './administrador/roles/roles.provider';
 import { UsuariosProvider } from './administrador/usuarios/usuarios.provider';
 import { ProductosProvider } from './inventario/productos/productos.provider';
 import { EmpleadosProvider } from './administrador/empleados/empleados.provider';
+import { ClientesProvider } from './ingresos/clientes/clientes.provider';
 
 import {  DxCheckBoxModule,
           DxSelectBoxModule,
@@ -136,7 +137,8 @@ import {  DxCheckBoxModule,
     RolesProvider,
     UsuariosProvider,
     ProductosProvider,
-    EmpleadosProvider
+    EmpleadosProvider,
+    ClientesProvider
   ],
   bootstrap: [AppComponent]
 })

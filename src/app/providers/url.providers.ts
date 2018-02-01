@@ -65,6 +65,10 @@ export class ULRProvider {
     return this.dominio + 'tipo_documento/getAll.php';
   }
 
+  public getAllPersonas() {
+    return this.dominio + 'personas/getAll.php';
+  }
+
   public insertPersona() {
     return this.dominio + 'personas/insert.php';
   }
@@ -87,6 +91,10 @@ export class ULRProvider {
 
   public getAllEmpleados() {
     return this.dominio + 'empleados/getAll.php';
+  }
+
+  public getAllClientes() {
+    return this.dominio + 'clientes/getAll.php';
   }
 
   public getAllCategorias() {

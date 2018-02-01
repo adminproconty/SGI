@@ -3,6 +3,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 import { NavegationProvider } from '../../navegation/navegation.provider';
+import { ClientesProvider } from './clientes.provider';
 
 @Component({
   selector: 'app-clientes',
@@ -28,10 +29,14 @@ export class ClientesComponent implements OnInit {
   phoneRules: any;
 
   tipoDocumentos: any = [];
+  alerts: any = [];
+  cliente: any = {};
+  guardando: boolean;
 
   constructor(
     private navegation: NavegationProvider,
-    private modalService: BsModalService) {
+    private modalService: BsModalService,
+    private service: ClientesProvider) {
     this.navegation.setMenu(
       {
         escritorio: '',
@@ -109,31 +114,37 @@ export class ClientesComponent implements OnInit {
 
   ngOnInit() {
     this.noDataText = 'No hay data';
-    this.cancelAllChanges = 'Cancelar todos los cambios';
-    this.cancelRowChanges = 'Cancelar cambios en la tupla';
+    this.cancelAllChanges = 'Cancelar';
+    this.cancelRowChanges = 'Cancelar';
     this.confirmDeleteMessage = 'Todos los registros a este local serán borrados también, ¿está seguro?';
     this.deleteRow = 'Eliminar';
     this.editRow = 'Editar';
-    this.saveAllChanges = 'Guardar todos los cambios';
-    this.saveRowChanges = 'Guardar los cambios de la tupla';
+    this.saveAllChanges = 'Guardar';
+    this.saveRowChanges = 'Guardar';
     this.undeleteRow = 'No eliminar';
-    this.validationCancelChanges = 'Cancelar los cambios';
+    this.validationCancelChanges = 'Cancelar';
     this.phonePattern = /^\+\s*1\s*\(\s*[02-9]\d{2}\)\s*\d{3}\s*-\s*\d{4}$/;
     this.phoneRules = {
         X: /[02-9]/
     };
-    this.tipoDocumentos = [
-        {
-            id: 1,
-            nombre: 'Cédula de Identidad'
-        }, {
-            id: 2,
-            nombre: 'R.U.C.'
-        }, {
-            id: 3,
-            nombre: 'Pasaporte'
-        }
-    ];
+    this.service.getAllTipoDocumento().subscribe(resp => {
+      console.log('tipo documentos', resp.data);
+      this.tipoDocumentos = resp.data;
+    });
+    this.guardando = false;
+    this.cliente = {
+      empresa_id: 1,
+      nombre: '',
+      apellido: '',
+      tipo_documento: 0,
+      num_documento: '',
+      email: '',
+      celular: ''
+    };
+    this.service.getAllClientes().subscribe(resp => {
+      console.log('clientes', resp.data);
+      this.clientes = resp.data;
+    });
   }
 
   openModal(template: TemplateRef<any>) {
@@ -143,18 +154,84 @@ export class ClientesComponent implements OnInit {
     );
   }
 
-  guardar() {}
+  guardar(e) {
+    e.preventDefault();
+    this.guardando = true;
+    const cel = this.cliente.celular.split('(')[1];
+    const celCod = cel.split(')')[0];
+    const celPostCod = cel.split(')')[1];
+    this.cliente.celular = celCod + celPostCod;
+    console.log('a guardar', this.cliente);
+    this.insertarPersona();
+  }
+
+  insertarPersona() {
+    this.service.insertPersona(this.cliente).subscribe(resp => {
+      console.log('insertar persona', resp['_body']);
+      if (resp['_body'] === 'true') {
+        this.alerts.push(
+          {
+            type: 'success',
+            msg: 'Cliente agregado exitosamente'
+          }
+        );
+        this.ngOnInit();
+        this.cancelar();
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+      }
+      this.guardando = false;
+    });
+  }
 
   cancelar() {
     this.modalRef.hide();
   }
 
   editar(e) {
-    console.log('editar', e);
+    console.log('arreglomod', e);
+    const clienteModif = {
+      nombre: e.newData.nombre !== undefined ? e.newData.nombre : e.oldData.nombre,
+      apellido: e.newData.apellido !== undefined ? e.newData.apellido : e.oldData.apellido,
+      tipo_documento: e.newData.tipo_documento !== undefined ? e.newData.tipo_documento : e.oldData.tipo_documento,
+      num_documento: e.newData.num_documento !== undefined ? e.newData.num_documento : e.oldData.num_documento,
+      email: e.newData.email !== undefined ? e.newData.email : e.oldData.email,
+      celular: e.newData.celular !== undefined ? e.newData.celular : e.oldData.celular,
+      id: e.oldData.id
+    };
+    clienteModif.id = clienteModif.id * 1;
+    clienteModif.tipo_documento = clienteModif.tipo_documento * 1;
+    console.log('cliente a editar', clienteModif);
+    this.service.updateUsuario(clienteModif).subscribe(resp => {
+      console.log('modificación', resp['_body']);
+      if (resp['_body'] === 'true') {
+        this.alerts.push(
+          {
+            type: 'success',
+            msg: 'Cliente modificado exitosamente'
+          }
+        );
+        this.ngOnInit();
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+      }
+    });
   }
 
-  eliminar(e) {
-    console.log('eliminar', e);
+  cambioTipoDocumento(e) {
+    console.log('cambio tipo documento', e);
+    const tipo = e.value * 1;
+    this.cliente.tipo_documento = tipo;
   }
 
 }
