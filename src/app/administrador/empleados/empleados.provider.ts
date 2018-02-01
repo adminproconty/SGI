@@ -16,7 +16,7 @@ export class  EmpleadosProvider {
   }
 
   public all() {
-    return this.http.get(this.urlProvider.getAllUsuarios())
+    return this.http.get(this.urlProvider.getAllEmpleados())
       .map((res: Response) => res.json());
   }
 
