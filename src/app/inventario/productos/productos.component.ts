@@ -31,6 +31,7 @@ export class ProductosComponent implements OnInit {
   categoria: any = {
     empresa_id: 1,
     nombre: '',
+    abreviatura: '',
     descripcion: ''
   };
   producto: any = {
@@ -135,6 +136,7 @@ export class ProductosComponent implements OnInit {
     this.categoria = {
       empresa_id: 1,
       nombre: '',
+      abreviatura: '',
       descripcion: ''
     };
     this.producto = {
@@ -225,6 +227,7 @@ export class ProductosComponent implements OnInit {
     const catModif = {
       id: e.oldData.id,
       nombre: '',
+      abreviatura: '',
       descripcion: ''
     };
     if (e.newData.nombre) {
@@ -236,6 +239,11 @@ export class ProductosComponent implements OnInit {
       catModif.descripcion = e.newData.descripcion;
     } else {
       catModif.descripcion = e.oldData.descripcion;
+    }
+    if (e.newData.abreviatura) {
+      catModif.abreviatura = e.newData.abreviatura;
+    } else {
+      catModif.abreviatura = e.oldData.abreviatura;
     }
     this.service.updateCategoria(catModif).subscribe(resp => {
       console.log('cat modificada', resp['_body']);
@@ -262,6 +270,49 @@ export class ProductosComponent implements OnInit {
     console.log('cambio categoria', e);
     const tipo = e.value * 1;
     this.producto.categoria_id = tipo;
+    const env = {
+      categoria_id: tipo
+    };
+    this.service.getCodProducto(env).subscribe(resp => {
+      console.log('código producto', JSON.parse(resp['_body']));
+      const res = JSON.parse(resp['_body']);
+      this.producto.codigo = res.data[0];
+      console.log(this.producto.codigo);
+    });
+  }
+
+  editarProducto(e) {
+    const prodModif = {
+      categoria_id: e.newData.categoria_id !== undefined ? e.newData.categoria_id : e.oldData.categoria_id,
+      nombre: e.newData.nombre !== undefined ? e.newData.nombre : e.oldData.nombre,
+      unidad: e.newData.unidad !== undefined ? e.newData.unidad : e.oldData.unidad,
+      codigo: e.newData.codigo !== undefined ? e.newData.codigo : e.oldData.codigo,
+      descripcion: e.newData.descripcion !== undefined ? e.newData.descripcion : e.oldData.descripcion,
+      id: e.oldData.id
+    };
+    this.service.updateProducto(prodModif).subscribe(resp => {
+      console.log('producto modificado', resp['_body']);
+      if (resp['_body'] === 'true') {
+        this.alerts.push(
+          {
+            type: 'success',
+            msg: 'Modificado exitosamente'
+          }
+        );
+        this.ngOnInit();
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+      }
+    });
+  }
+
+  cambiarAbreviatura(e) {
+    this.categoria.abreviatura = e.value.substr(0, 4).toUpperCase();
   }
 
 }

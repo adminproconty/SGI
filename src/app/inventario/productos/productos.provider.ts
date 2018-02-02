@@ -29,6 +29,13 @@ export class  ProductosProvider {
       .map((resp: Response) => resp);
   }
 
+  public getCodProducto(objeto: Object) {
+    return this.http.post(this.urlProvider.getCodProducto(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-type': 'application/json' })
+      })
+      .map((resp: Response) => resp);
+  }
+
   public insertProducto(objeto: any) {
     return this.http.post(this.urlProvider.insertProducto(), JSON.stringify(objeto), {
       headers: new Headers({ 'Content-Type': 'application/json' })
@@ -39,6 +46,13 @@ export class  ProductosProvider {
   public allProductos() {
     return this.http.get(this.urlProvider.getAllProductos())
       .map((res: Response) => res.json());
+  }
+
+  public updateProducto(objeto: any) {
+    return this.http.post(this.urlProvider.updateProducto(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-Type': 'application/json'})
+    })
+      .map((resp: Response) => resp);
   }
 
 }
