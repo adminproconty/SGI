@@ -201,10 +201,11 @@
                       valueExpr="id">
                     </dxo-lookup>
                   </dxi-column>
-                  <dxi-column dataField="codigo" caption="Código" [width]="150"></dxi-column>
+                  <dxi-column dataField="codigo" caption="Código" [width]="100"></dxi-column>
                   <dxi-column dataField="nombre" caption="Nombre"></dxi-column>
-                  <dxi-column dataField="descripcion" caption="Descripción" [width]="300"></dxi-column>
-                  <dxi-column dataField="unidad" caption="Unidad" [width]="150"></dxi-column>
+                  <dxi-column dataField="descripcion" caption="Descripción" [width]="250"></dxi-column>
+                  <dxi-column dataField="unidad" caption="Unidad" [width]="100"></dxi-column>
+                  <dxi-column dataField="costo" caption="Costo" [width]="100"></dxi-column>
 
                 </dx-data-grid>
               </div>
@@ -305,6 +306,24 @@
                       [(value)]="producto.descripcion">
                     <dx-validator>
                       <dxi-validation-rule type="required" message="Descripción es requerida"></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-text-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <label>Costo:
+                    <span class="required">*</span>
+                  </label>
+                  <dx-text-box class="form-control"
+                      name="costo"
+                      mode="float"
+                      [(value)]="producto.costo">
+                    <dx-validator>
+                      <dxi-validation-rule type="required" message="Costo es requerido"></dxi-validation-rule>
                     </dx-validator>
                   </dx-text-box>
                 </div>

@@ -144,7 +144,8 @@ export class ProductosComponent implements OnInit {
       nombre: '',
       unidad: '',
       codigo: '',
-      descripcion: ''
+      descripcion: '',
+      costo: undefined
     };
     this.guardando = false;
     this.service.allCategorias().subscribe(resp => {
@@ -197,6 +198,32 @@ export class ProductosComponent implements OnInit {
     console.log('producto a guardar', this.producto);
     this.service.insertProducto(this.producto).subscribe(resp => {
       console.log('producto guardado', resp['_body']);
+      if (resp['_body'] === 'true') {
+        this.consultarId(this.producto.codigo, this.producto.categoria_id);
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+        this.guardando = false;
+      }
+    });
+  }
+
+  consultarId(cod, cat) {
+    this.service.getIdProductoByCodCategoria({codigo: cod, categoria_id: cat}).subscribe(resp => {
+      const respuesta = JSON.parse(resp['_body']);
+      console.log('respuesta get id', respuesta);
+      const id = respuesta.data[0].id * 1;
+      this.insertCosto(id);
+    });
+  }
+
+  insertCosto(id) {
+    this.service.insertCosto({producto_id: id, costo: this.producto.costo}).subscribe(resp => {
+      console.log('insert costo', resp['_body']);
       if (resp['_body'] === 'true') {
         this.alerts.push(
           {
@@ -290,8 +317,46 @@ export class ProductosComponent implements OnInit {
       descripcion: e.newData.descripcion !== undefined ? e.newData.descripcion : e.oldData.descripcion,
       id: e.oldData.id
     };
-    this.service.updateProducto(prodModif).subscribe(resp => {
-      console.log('producto modificado', resp['_body']);
+    if (e.newData.costo) {
+      this.service.updateProducto(prodModif).subscribe(resp => {
+        console.log('producto modificado', resp['_body']);
+        if (resp['_body'] === 'true') {
+          this.actualizarCosto(e.oldData.id, e.newData.costo);
+        } else {
+          this.alerts.push(
+            {
+              type: 'danger',
+              msg: 'Error, por favor contacte al administrador del sistema'
+            }
+          );
+        }
+      });
+    } else {
+      this.service.updateProducto(prodModif).subscribe(resp => {
+        console.log('producto modificado', resp['_body']);
+        if (resp['_body'] === 'true') {
+          this.alerts.push(
+            {
+              type: 'success',
+              msg: 'Modificado exitosamente'
+            }
+          );
+          this.ngOnInit();
+        } else {
+          this.alerts.push(
+            {
+              type: 'danger',
+              msg: 'Error, por favor contacte al administrador del sistema'
+            }
+          );
+        }
+      });
+    }
+  }
+
+  actualizarCosto(prod, costo) {
+    this.service.insertCosto({producto_id: prod, costo: costo}).subscribe(resp => {
+      console.log('costo actualizado', resp['_body']);
       if (resp['_body'] === 'true') {
         this.alerts.push(
           {

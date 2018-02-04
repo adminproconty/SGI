@@ -36,8 +36,29 @@ export class  ProductosProvider {
       .map((resp: Response) => resp);
   }
 
+  public getIdProductoByCodCategoria(objeto: Object) {
+    return this.http.post(this.urlProvider.getIdProductoByCodCategoria(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-type': 'application/json' })
+      })
+      .map((resp: Response) => resp);
+  }
+
+  public getCostoByProducto(objeto: Object) {
+    return this.http.post(this.urlProvider.getCostoByProducto(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-type': 'application/json' })
+      })
+      .map((resp: Response) => resp);
+  }
+
   public insertProducto(objeto: any) {
     return this.http.post(this.urlProvider.insertProducto(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-Type': 'application/json' })
+    })
+      .map((resp: Response) => resp);
+  }
+
+  public insertCosto(objeto: any) {
+    return this.http.post(this.urlProvider.insertCosto(), JSON.stringify(objeto), {
       headers: new Headers({ 'Content-Type': 'application/json' })
     })
       .map((resp: Response) => resp);
