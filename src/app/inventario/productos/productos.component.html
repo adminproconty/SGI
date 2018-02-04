@@ -233,6 +233,7 @@
                       displayExpr="nombre"
                       valueExpr="id"
                       placeholder="Seleccione una categoria"
+                      [searchEnabled]="true"
                       (onValueChanged)="cambioCategoria($event)">
                     <dx-validator>
                       <dxi-validation-rule type="required" message="Categoría es requerida"></dxi-validation-rule>

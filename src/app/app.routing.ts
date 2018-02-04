@@ -15,6 +15,7 @@ import { FacturasComponent } from './ingresos/facturas/facturas.component';
 import { ProveedoresComponent } from './egresos/proveedores/proveedores.component';
 import { EgresosComponent } from './egresos/egresos/egresos.component';
 import { ProductosComponent } from './inventario/productos/productos.component';
+import { FisicoComponent } from './inventario/fisico/fisico.component';
 
 const routes: Routes = [
     {
@@ -77,6 +78,9 @@ const routes: Routes = [
         {
           path: 'productos',
           component: ProductosComponent
+        }, {
+          path: 'fisico',
+          component: FisicoComponent
         }
       ]
     }

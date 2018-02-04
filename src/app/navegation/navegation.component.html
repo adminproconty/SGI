@@ -270,7 +270,7 @@
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.inventario.hijos.fisico">
-                        <a (click)="navegarFisico()">
+                        <a (click)="navegarFisico()" [routerLink]="['/inventario/fisico']">
                             <i class="fa fa-cube" aria-hidden="true"></i>
                             Físico
                         </a>

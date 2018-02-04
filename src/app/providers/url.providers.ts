@@ -125,4 +125,24 @@ export class ULRProvider {
     return this.dominio + 'productos/update.php';
   }
 
+  public getAllFisico() {
+    return this.dominio + 'inventario/getAll.php';
+  }
+
+  public getFisicoByLocalProducto() {
+    return this.dominio + 'inventario/getByLocalProducto.php';
+  }
+
+  public insertFisico() {
+    return this.dominio + 'inventario/insert.php';
+  }
+
+  public updateFisico() {
+    return this.dominio + 'inventario/update.php';
+  }
+
+  public deleteFisico() {
+    return this.dominio + 'inventario/delete.php';
+  }
+
 }

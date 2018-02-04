@@ -1,0 +1,146 @@
+<div class="row">
+  <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+    <div *ngFor="let alert of alerts">
+      <alert [type]="alert.type" [dismissible]="true">{{ alert.msg }}</alert>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title">Categorías</h3>
+      </div>
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="col-sm-14" id="VerForm" style="display: block;">
+              <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <a class="btn btn-success" style="margin-bottom: 40px;" [routerLink]="['/inventario/productos']">
+                    <i class="fa fa-plus"></i>
+                    Nuevo Producto
+                  </a>
+                </div>
+              </div>
+              <div class="row">
+                <form  name="frmSucursal" id="frmSucursal" (submit)="guardar($event)">
+                  <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                    <div class="form-group">
+                      <label>Locales:
+                        <span class="required">*</span>
+                      </label>
+                      <dx-select-box
+                          [dataSource]="locales"
+                          displayExpr="nombre"
+                          valueExpr="id"
+                          placeholder="Seleccione un local"
+                          [searchEnabled]="true"
+                          (onValueChanged)="cambioLocal($event)">
+                        <dx-validator>
+                          <dxi-validation-rule type="required" message="Local es requerido"></dxi-validation-rule>
+                        </dx-validator>
+                      </dx-select-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                    <div class="form-group">
+                      <label>Productos:
+                        <span class="required">*</span>
+                      </label>
+                      <dx-select-box
+                          [dataSource]="productos"
+                          displayExpr="nombre"
+                          valueExpr="id"
+                          placeholder="Seleccione un producto"
+                          [searchEnabled]="true"
+                          (onValueChanged)="cambioProducto($event)">
+                        <dx-validator>
+                          <dxi-validation-rule type="required" message="Producto es requerido"></dxi-validation-rule>
+                        </dx-validator>
+                      </dx-select-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                    <div class="form-group">
+                      <label>Cantidad:
+                        <span class="required">*</span>
+                      </label>
+                      <dx-text-box class="form-control"
+                          name="cantidad"
+                          mode="number"
+                          [(value)]="nuevo.cantidad">
+                        <dx-validator>
+                          <dxi-validation-rule type="required" message="Cantidad es requerida"></dxi-validation-rule>
+                        </dx-validator>
+                      </dx-text-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                    <div clas="form-group">
+                      <label>
+                      </label>
+                      <dx-button
+                          text="Guardar"
+                          icon="save"
+                          type="success"
+                          [useSubmitBehavior]="true"
+                          class="btn btn-success pull-right"
+                          [disabled]="guardando"
+                          style="margin-top: 20px;">
+                      </dx-button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div id="VerListado" class="dataTables_wrapper form-inline dt-bootstrap">
+                <dx-data-grid
+                    id="gridContainer"
+                    [dataSource]="inventario"
+                    [noDataText]="noDataText"
+                    keyExpr="id"
+                    [allowColumnReordering]="true"
+                    (onRowUpdating)="editarCantidad($event)"
+                    (onRowRemoving)="eliminarCantidad($event)">
+                  <dxo-paging [pageSize]="10"></dxo-paging>
+                  <dxo-pager
+                      infoText="Mostrando {0} to {1} de {2} productos"
+                      [showInfo]="true"
+                      [showNavigationButtons]="true">
+                  </dxo-pager>
+                  <dxo-editing
+                      mode="row"
+                      [allowUpdating]="true"
+                      [allowDeleting]="true"
+                      [texts]="{
+                        cancelAllChanges: cancelAllChanges,
+                        cancelRowChanges: cancelRowChanges,
+                        confirmDeleteMessage: confirmDeleteMessage,
+                        deleteRow: deleteRow,
+                        editRow: editRow,
+                        saveAllChanges: saveAllChanges,
+                        saveRowChanges: saveRowChanges,
+                        undeleteRow: undeleteRow,
+                        validationCancelChanges: validationCancelChanges
+                      }">
+                  </dxo-editing>
+                  <dxo-search-panel placeholder="Buscar..." [visible]="true"></dxo-search-panel>
+
+                  <dxi-column dataField="local_nom" caption="Local" [width]="150" [allowEditing]="false"></dxi-column>
+                  <dxi-column dataField="codigo" caption="COD Producto" [width]="150" [allowEditing]="false"></dxi-column>
+                  <dxi-column dataField="nombre" caption="Producto" [allowEditing]="false"></dxi-column>
+                  <dxi-column dataField="cantidad" caption="Cantidad" [width]="120"></dxi-column>
+
+                </dx-data-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
