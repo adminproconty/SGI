@@ -45,6 +45,10 @@ export class ULRProvider {
     return this.dominio + 'iva/getAll.php';
   }
 
+  public getIvaById() {
+    return this.dominio + 'iva/getById.php';
+  }
+
   public inserIVA() {
     return this.dominio + 'iva/insert.php';
   }
@@ -93,6 +97,10 @@ export class ULRProvider {
     return this.dominio + 'empleados/getAll.php';
   }
 
+  public getClienteByTipoDocumento () {
+    return this.dominio + 'personas/getByTipoDocumento.php';
+  }
+
   public getAllClientes() {
     return this.dominio + 'clientes/getAll.php';
   }
@@ -111,6 +119,10 @@ export class ULRProvider {
 
   public getAllProductos() {
     return this.dominio + 'productos/getAll.php';
+  }
+
+  public getProductoById() {
+    return this.dominio + 'productos/getById.php';
   }
 
   public getCodProducto() {

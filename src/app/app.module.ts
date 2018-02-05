@@ -57,6 +57,7 @@ import { ProductosProvider } from './inventario/productos/productos.provider';
 import { EmpleadosProvider } from './administrador/empleados/empleados.provider';
 import { ClientesProvider } from './ingresos/clientes/clientes.provider';
 import { FisicoProvider } from './inventario/fisico/fisico.provider';
+import { FacturasProvider } from './ingresos/facturas/facturas.provider';
 
 import {  DxCheckBoxModule,
           DxSelectBoxModule,
@@ -72,7 +73,8 @@ import {  DxCheckBoxModule,
           DxDateBoxModule,
           DxTabsModule,
           DxLoadIndicatorModule,
-          DxTemplateModule
+          DxTemplateModule,
+          DxLookupModule
         } from 'devextreme-angular';
 
 
@@ -112,6 +114,7 @@ import {  DxCheckBoxModule,
     DxTabsModule,
     DxLoadIndicatorModule,
     DxTemplateModule,
+    DxLookupModule,
     BrowserModule,
     HttpClientModule,
     HttpModule,
@@ -142,7 +145,8 @@ import {  DxCheckBoxModule,
     ProductosProvider,
     EmpleadosProvider,
     ClientesProvider,
-    FisicoProvider
+    FisicoProvider,
+    FacturasProvider
   ],
   bootstrap: [AppComponent]
 })

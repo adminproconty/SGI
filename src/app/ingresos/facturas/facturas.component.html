@@ -100,7 +100,9 @@
                       </label>
                       <dx-text-box class="form-control"
                           name="documento"
-                          [(value)]="factura.documento">
+                          [(value)]="factura.documento"
+                          [disabled]="consumidorfinal"
+                          (onValueChanged)="documentoChanged($event)">
                         <dx-validator>
                           <dxi-validation-rule type="required" message="Nombre legal es requerido"></dxi-validation-rule>
                         </dx-validator>
@@ -117,7 +119,8 @@
                       </label>
                       <dx-text-box class="form-control"
                           name="nombre"
-                          [(value)]="factura.nombre">
+                          [(value)]="factura.nombre"
+                          [disabled]="consumidorfinal">
                         <dx-validator>
                           <dxi-validation-rule type="required" message="Nombre legal es requerido"></dxi-validation-rule>
                         </dx-validator>
@@ -132,7 +135,8 @@
                       </label>
                       <dx-text-box class="form-control"
                           name="apellido"
-                          [(value)]="factura.apellido">
+                          [(value)]="factura.apellido"
+                          [disabled]="consumidorfinal">
                         <dx-validator>
                           <dxi-validation-rule type="required" message="Nombre legal es requerido"></dxi-validation-rule>
                         </dx-validator>
@@ -150,7 +154,8 @@
                       <dx-text-box class="form-control"
                             mode="email"
                             name="email"
-                            [(value)]="factura.email">
+                            [(value)]="factura.email"
+                            [disabled]="consumidorfinal">
                         <dx-validator>
                           <dxi-validation-rule type="email"></dxi-validation-rule>
                           <dxi-validation-rule type="required" message="Correo electrónico es requerido"></dxi-validation-rule>
@@ -170,7 +175,8 @@
                           maskInvalidMessage="No cumple con el formato telefónico celular"
                           [useMaskedValue]="true"
                           name="celular"
-                          [(value)]="factura.celular">
+                          [(value)]="factura.celular"
+                          [disabled]="consumidorfinal">
                         <dx-validator>
                           <dxi-validation-rule type="required" message="Teléfono celular es requerido"></dxi-validation-rule>
                         </dx-validator>
@@ -180,27 +186,26 @@
                 </div>
 
                 <div class="row">
-                  <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+                  <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
                     <div class="form-group">
                       <label>
-                        Código:
+                        Producto:
                       </label>
-                      <dx-text-box class="form-control"
-                          name="Codigo"
-                          [(value)]="factura.cod_producto">
-                      </dx-text-box>
-                    </div>
-                  </div>
-
-                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <div class="form-group">
-                      <label>
-                        Nombre:
-                      </label>
-                      <dx-text-box class="form-control"
-                          name="nombre"
-                          [(value)]="factura.nom_producto">
-                      </dx-text-box>
+                      <dx-lookup
+                          class="field-customization"
+                          [items]="productos"
+                          [displayExpr]="displayProductos"
+                          valueExpr="id"
+                          title="Seleccione un producto"
+                          [value]="productos[0].id"
+                          fieldTemplate="field"
+                          (onValueChanged)="cambioProducto($event)">
+                        <div *dxTemplate="let item of 'field'">
+                          <div class="custom-field">
+                            {{item.codigo}} - {{item.nombre}} ${{item.costo}}
+                          </div>
+                        </div>
+                      </dx-lookup>
                     </div>
                   </div>
 
@@ -218,9 +223,13 @@
                   </div>
 
                   <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
-                    <button type="button" class="btn btn-success"style="margin-top: 25px;" (click)="agregarCarrito()">
-                      <i class="fa fa-plus"></i>
-                    </button>
+                    <dx-button
+                        icon="fa fa-plus"
+                        type="success"
+                        class="btn btn-success"
+                        style="margin-top: 22px;"
+                        (click)="agregarCarrito()">
+                    </dx-button>
                   </div>
                 </div>
 
@@ -259,9 +268,72 @@
                       <dxi-column dataField="codigo" caption="Código" [width]="150"></dxi-column>
                       <dxi-column dataField="nombre" caption="Nombre"></dxi-column>
                       <dxi-column dataField="cantidad" caption="Cantidad" [width]="120" dataType="number"></dxi-column>
-                      <dxi-column dataField="pu" caption="Precio Unitario" [width]="150" dataType="float"></dxi-column>
-                      <dxi-column dataField="pt" caption="Precio Total" [width]="150" dataType="float"></dxi-column>
+                      <dxi-column dataField="costo" caption="Precio Unitario" [width]="150" dataType="float" alignment="right" format="currency"></dxi-column>
+                      <dxi-column dataField="pt" caption="Precio Total" [width]="150" dataType="float" alignment="right" format="currency"></dxi-column>
+
+                      <dxo-summary>
+                        <dxi-total-item
+                            column="pt"
+                            summaryType="sum"
+                            valueFormat="currency"
+                            [customizeText]="customizeSum">
+                        </dxi-total-item>
+                      </dxo-summary>
                     </dx-data-grid>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-2 col-lg-offset-6 col-md-2 col-md-offset-6 col-sm-4 col-xs-4">
+                    <div class="form-group">
+                      <label class="pull-right">I.V.A:
+                        <span class="required">*</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <div class="form-group">
+                      <dx-lookup
+                          [items]="ivas"
+                          [displayExpr]="displayIvas"
+                          valueExpr="id"
+                          [value]="ivas[0].id"
+                          fieldTemplate="field"
+                          (onValueChanged)="cambioIva($event)">
+                        <div *dxTemplate="let item of 'field'">
+                          <div class="custom-field">
+                            {{item.nombre}} - {{item.cantidad}}%
+                          </div>
+                        </div>
+                      </dx-lookup>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                    <div class="form-group">
+                      <label>
+                        ${{factura.total_iva}}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-2 col-lg-offset-8 col-md-2 col-md-offset-8 col-sm-4 col-sm-offset-4 col-xs-6">
+                    <div class="form-group">
+                      <label class="pull-right">
+                        Total:
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
+                    <div class="form-group">
+                      <label>
+                        ${{factura.total_pagar}}
+                      </label>
+                    </div>
                   </div>
                 </div>
 
