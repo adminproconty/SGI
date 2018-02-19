@@ -130,6 +130,12 @@ export class ClientesComponent implements OnInit {
     this.service.getAllTipoDocumento().subscribe(resp => {
       console.log('tipo documentos', resp.data);
       this.tipoDocumentos = resp.data;
+      for (let i = 0; i < this.tipoDocumentos.length; i++) {
+        if (this.tipoDocumentos[i].nombre === 'Consumidor final') {
+          const index = this.tipoDocumentos.indexOf(this.tipoDocumentos[i]);
+          this.tipoDocumentos.splice(index, 1);
+        }
+      }
     });
     this.guardando = false;
     this.cliente = {
@@ -138,6 +144,7 @@ export class ClientesComponent implements OnInit {
       apellido: '',
       tipo_documento: 0,
       num_documento: '',
+      direccion: '',
       email: '',
       celular: ''
     };
@@ -157,10 +164,6 @@ export class ClientesComponent implements OnInit {
   guardar(e) {
     e.preventDefault();
     this.guardando = true;
-    const cel = this.cliente.celular.split('(')[1];
-    const celCod = cel.split(')')[0];
-    const celPostCod = cel.split(')')[1];
-    this.cliente.celular = celCod + celPostCod;
     console.log('a guardar', this.cliente);
     this.insertarPersona();
   }
@@ -200,6 +203,8 @@ export class ClientesComponent implements OnInit {
       apellido: e.newData.apellido !== undefined ? e.newData.apellido : e.oldData.apellido,
       tipo_documento: e.newData.tipo_documento !== undefined ? e.newData.tipo_documento : e.oldData.tipo_documento,
       num_documento: e.newData.num_documento !== undefined ? e.newData.num_documento : e.oldData.num_documento,
+      direccion: e.newData.direccion !== undefined ? e.newData.direccion : e.oldData.direccion,
+      descripcion: e.newData.descripcion !== undefined ? e.newData.descripcion : e.oldData.descripcion,
       email: e.newData.email !== undefined ? e.newData.email : e.oldData.email,
       celular: e.newData.celular !== undefined ? e.newData.celular : e.oldData.celular,
       id: e.oldData.id
@@ -207,7 +212,7 @@ export class ClientesComponent implements OnInit {
     clienteModif.id = clienteModif.id * 1;
     clienteModif.tipo_documento = clienteModif.tipo_documento * 1;
     console.log('cliente a editar', clienteModif);
-    this.service.updateUsuario(clienteModif).subscribe(resp => {
+    this.service.updatePersona(clienteModif).subscribe(resp => {
       console.log('modificación', resp['_body']);
       if (resp['_body'] === 'true') {
         this.alerts.push(

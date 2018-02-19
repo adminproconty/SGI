@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { NavegationProvider } from './navegation.provider';
+import { DatosUsuarioProvider } from './../providers/datos.usuario.provider';
+
 
 @Component({
   selector: 'app-navegation',
@@ -8,7 +11,13 @@ import { NavegationProvider } from './navegation.provider';
   styleUrls: ['navegation.component.css']
 })
 export class NavegationComponent {
-  constructor(public menu: NavegationProvider) {
+  usuario: any;
+
+  constructor(
+    public menu: NavegationProvider,
+    private datosUsuario: DatosUsuarioProvider,
+    private router: Router) {
+    this.usuario = datosUsuario.datos;
     this.menu.setMenu(
       {
         escritorio: 'active',
@@ -83,7 +92,7 @@ export class NavegationComponent {
       }
     );
   }
-  
+
   navegarDashboard(){
     this.menu.setMenu(
         {
@@ -3730,5 +3739,12 @@ export class NavegationComponent {
               }
             }
           );
+    }
+
+    cerrarSesion() {
+      localStorage.removeItem('usuario');
+      localStorage.removeItem('locales');
+      localStorage.removeItem('datosEmpresa');
+      this.router.navigate(['/login']);
     }
 }

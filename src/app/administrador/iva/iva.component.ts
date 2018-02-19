@@ -176,22 +176,14 @@ export class IvaComponent implements OnInit {
   editar(e) {
     console.log('editar', e);
     const valoresModificar = {
-      empresa_id: e.oldData.empresa_id,
-      nombre: '',
-      cantidad: ''
+      id: e.oldData.id * 1,
+      nombre: e.newData.nombre !== undefined ? e.newData.nombre : e.oldData.nombre,
+      cantidad: e.newData.cantidad !== undefined ? e.newData.cantidad : e.oldData.cantidad
     };
-    if (e.newData.nombre) {
-      valoresModificar.nombre = e.newData.nombre;
-    } else {
-      valoresModificar.nombre = e.oldData.nombre;
-    }
-    if (e.newData.cantidad) {
-      valoresModificar.cantidad = e.newData.cantidad;
-    } else {
-      valoresModificar.cantidad = e.oldData.cantidad;
-    }
+    valoresModificar.cantidad = valoresModificar.cantidad * 1;
     console.log('a guardar', valoresModificar);
-    this.service.insert(valoresModificar).subscribe(resp => {
+    this.service.update(valoresModificar).subscribe(resp => {
+      console.log('modificado', resp['_body']);
       if (resp['_body'] === 'true') {
         this.alerts.push(
           {

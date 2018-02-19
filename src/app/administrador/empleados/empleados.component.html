@@ -63,7 +63,10 @@
                                     </dxi-column>
                                     <dxi-column dataField="num_documento" caption="Nº Documento"></dxi-column>
                                     <dxi-column dataField="email" caption="Email"></dxi-column>
+                                    <dxi-column dataField="direccion" caption="Dirección"></dxi-column>
+                                    <dxi-column dataField="convencional" caption="Convencional"></dxi-column>
                                     <dxi-column dataField="celular" caption="Celular"></dxi-column>
+                                    <dxi-column dataField="opcional" caption="Opcional"></dxi-column>
                                 </dx-data-grid>
                             </div>
                         </div>
@@ -157,6 +160,23 @@
             <div class="row">
               <div class="col-md-12 left">
                 <div class="form-group">
+                  <label>Dirección:
+                    <span class="required">*</span>
+                  </label>
+                  <dx-text-box
+                      class="form-control"
+                      [(value)]="empleado.direccion">
+                    <dx-validator>
+                      <dxi-validation-rule type="required" message="Direccion es requerida"></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-text-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
                   <label>Correo Electrónico:
                     <span class="required">*</span>
                   </label>
@@ -169,6 +189,23 @@
                       <dxi-validation-rule type="email"></dxi-validation-rule>
                       <dxi-validation-rule type="required" message="Correo Electrónico es requerido"></dxi-validation-rule>
                     </dx-validator>
+                  </dx-text-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <label>Teléfono Convencional:
+                  </label>
+                  <dx-text-box class="form-control"
+                      mask="(X0)0000000"
+                      [maskRules]="phoneRules"
+                      maskInvalidMessage="No cumple con el formato telefónico convencional"
+                      [useMaskedValue]="true"
+                      name="telefono"
+                      [(value)]="empleado.convencional">
                   </dx-text-box>
                 </div>
               </div>
@@ -190,6 +227,20 @@
                     <dx-validator>
                       <dxi-validation-rule type="required" message="Teléfono celular es requerido"></dxi-validation-rule>
                     </dx-validator>
+                  </dx-text-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <label>Teléfono Opcional:
+                  </label>
+                  <dx-text-box class="form-control"
+                      mode="number"
+                      name="telefono"
+                      [(value)]="empleado.opcional">
                   </dx-text-box>
                 </div>
               </div>

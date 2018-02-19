@@ -1,4 +1,12 @@
 <div class="row">
+  <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+    <div *ngFor="let alert of alerts">
+      <alert [type]="alert.type" [dismissible]="true">{{ alert.msg }}</alert>
+    </div>
+  </div>
+</div>
+
+<div class="row">
   <div class="col-md-12">
     <div class="box">
       <div class="box-header with-border">
@@ -8,7 +16,7 @@
         <div class="row">
           <div class="col-md-12">
             <div class="col-sm-14" id="VerForm" style="display: block;">
-              <form name="frmSucursal" id="frmSucursal" (submit)="guardar()">
+              <form name="frmSucursal" id="frmSucursal" (submit)="guardar($event)">
                 <div class="row">
                   <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6 left">
                     <div class="form-group">
@@ -28,6 +36,7 @@
                         <span class="required">*</span>
                       </label>
                       <dx-date-box
+                          (onValueChanged)="cambioFecha($event)"
                           invalidDateMessage="La fecha debe tener el siguiente formato: dd/MM/yyyy">
                           <dx-validator>
                               <dxi-validation-rule type="required" message="Fecha es requerida"></dxi-validation-rule>
@@ -42,7 +51,8 @@
                         <span class="required">*</span>
                       </label>
                       <dx-text-box class="form-control"
-                          name="recibo">
+                          name="recibo"
+                          [(value)]="ingresos.recibo">
                         <dx-validator>
                           <dxi-validation-rule type="required" message="Recibo es requerido"></dxi-validation-rule>
                         </dx-validator>
@@ -59,10 +69,8 @@
                         [dataSource]="cuentas"
                         displayExpr="nombre"
                         valueExpr="id"
-                        placeholder="Seleccione una cuenta">
-                        <dx-validator>
-                            <dxi-validation-rule type="required" message="Cuenta es requerida"></dxi-validation-rule>
-                        </dx-validator>
+                        placeholder="Seleccione una cuenta"
+                        (onValueChanged)="cambioCuenta($event)">
                       </dx-select-box>
                     </div>
                   </div>
@@ -75,7 +83,8 @@
                         <span class="required">*</span>
                       </label>
                       <dx-text-box class="form-control"
-                          name="descripcion">
+                          name="descripcion"
+                          [(value)]="ingresos.descripcion">
                           <dx-validator>
                             <dxi-validation-rule type="required" message="Descripción (Observación) es requerida"></dxi-validation-rule>
                           </dx-validator>
@@ -90,7 +99,8 @@
                       </label>
                       <dx-text-box class="form-control"
                           name="referencia"
-                          mode="number">
+                          mode="number"
+                          [(value)]="ingresos.referencia">
                           <dx-validator>
                             <dxi-validation-rule type="required" message="Referencia es requerida"></dxi-validation-rule>
                           </dx-validator>
@@ -105,7 +115,8 @@
                       </label>
                       <dx-text-box class="form-control"
                           name="documento"
-                          mode="number">
+                          mode="number"
+                          [(value)]="ingresos.documento">
                           <dx-validator>
                             <dxi-validation-rule type="required" message="Documento es requerido"></dxi-validation-rule>
                           </dx-validator>
@@ -113,165 +124,206 @@
                     </div>
                   </div>
                 </div>
-              </form>
 
-              <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                  <div id="tabs">
-                    <dx-tabs
-                        [dataSource]="tabs"
-                        [selectedIndex]="0"
-                        (onItemClick)="selectTab($event)">
-                    </dx-tabs>
-                  </div>
-                </div>
-
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                  <dx-data-grid *ngIf="tabContent=='Ingreso directo'"
-                        id="gridContainer"
-                        [dataSource]="ingresoDirecto"
-                        [noDataText]="noDataText"
-                        keyExpr="ID"
-                        [allowColumnReordering]="true"
-                        (onRowUpdating)="editarIngresoDirecto($event)"
-                        (onRowRemoving)="eliminarIngresoDirecto($event)">
-                      <dxo-paging [pageSize]="10"></dxo-paging>
-                        <dxo-pager
-                            infoText="Mostrando {0} to {1} de {2} ingresos"
-                            [showInfo]="true"
-                            [showNavigationButtons]="true">
-                        </dxo-pager>
-                      <dxo-editing
-                          mode="row"
-                          [allowUpdating]="true"
-                          [allowDeleting]="true"
-                          [allowAdding]="true"
-                          [texts]="{
-                            cancelAllChanges: cancelAllChanges,
-                            cancelRowChanges: cancelRowChanges,
-                            confirmDeleteMessage: confirmDeleteMessage,
-                            deleteRow: deleteRow,
-                            editRow: editRow,
-                            saveAllChanges: saveAllChanges,
-                            saveRowChanges: saveRowChanges,
-                            undeleteRow: undeleteRow,
-                            validationCancelChanges: validationCancelChanges
-                          }">
-                      </dxo-editing>
-                      <dxo-search-panel placeholder="Buscar..." [visible]="true"></dxo-search-panel>
-
-                      <dxi-column dataField="Cuenta" caption="Cuenta"></dxi-column>
-                      <dxi-column dataField="Debe" caption="Debe" [width]="130" dataType="number"></dxi-column>
-                      <dxi-column dataField="Haber" caption="Haber" [width]="130" dataType="number"></dxi-column>
-                    </dx-data-grid>
-
-                    <dx-data-grid *ngIf="tabContent=='Transferencia'"
-                        id="gridContainer"
-                        [dataSource]="transferencias"
-                        [noDataText]="noDataText"
-                        keyExpr="ID"
-                        [allowColumnReordering]="true"
-                        (onRowUpdating)="editarTransferencia($event)"
-                        (onRowRemoving)="eliminarTransferencia($event)">
-                      <dxo-paging [pageSize]="10"></dxo-paging>
-                        <dxo-pager
-                            infoText="Mostrando {0} to {1} de {2} ingresos"
-                            [showInfo]="true"
-                            [showNavigationButtons]="true">
-                        </dxo-pager>
-                      <dxo-editing
-                          mode="row"
-                          [allowUpdating]="true"
-                          [allowDeleting]="true"
-                          [allowAdding]="true"
-                          [texts]="{
-                            cancelAllChanges: cancelAllChanges,
-                            cancelRowChanges: cancelRowChanges,
-                            confirmDeleteMessage: confirmDeleteMessage,
-                            deleteRow: deleteRow,
-                            editRow: editRow,
-                            saveAllChanges: saveAllChanges,
-                            saveRowChanges: saveRowChanges,
-                            undeleteRow: undeleteRow,
-                            validationCancelChanges: validationCancelChanges
-                          }">
-                      </dxo-editing>
-                      <dxo-search-panel placeholder="Buscar..." [visible]="true"></dxo-search-panel>
-
-                      <dxi-column dataField="Fecha" caption="Fecha" [width]="130" dataType="date"></dxi-column>
-                      <dxi-column dataField="BancoR" caption="Banco Receptor"></dxi-column>
-                      <dxi-column dataField="BancoE" caption="Banco Emisor"></dxi-column>
-                      <dxi-column dataField="Monto" caption="Monto" [width]="130" dataType="number"></dxi-column>
-                      <dxi-column dataField="Codigo" caption="Código Referencia" [width]="130"></dxi-column>
-                    </dx-data-grid>
-
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top: 15px;" *ngIf="tabContent=='Tarjeta'">
-                      <div class="col-lg-8 col-md-8 col-sm-6 col-xs-6">
-                        <div class="form-group">
-                          <label>Tarjeta:
-                            <span class="required">*</span>
-                          </label>
-                          <dx-select-box
-                              [dataSource]="tarjetas"
-                              displayExpr="banco"
-                              valueExpr="id"
-                              placeholder="Seleccione una tarjeta">
-                            <dx-validator>
-                              <dxi-validation-rule type="required" message="Tarjeta es requerida"></dxi-validation-rule>
-                            </dx-validator>
-                          </dx-select-box>
-                        </div>
-                      </div>
-
-                      <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
-                        <div class="form-group">
-                          <label>Cantidad:
-                            <span class="required">*</span>
-                          </label>
-                          <dx-text-box class="form-control"
-                              name="cantidadTarjeta"
-                              mode="number">
-                            <dx-validator>
-                              <dxi-validation-rule type="required" message="Cantidad es requerida"></dxi-validation-rule>
-                            </dx-validator>
-                          </dx-text-box>
-                        </div>
-                      </div>
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div id="tabs">
+                      <dx-tabs
+                          [dataSource]="tabs"
+                          [selectedIndex]="0"
+                          (onItemClick)="selectTab($event)">
+                      </dx-tabs>
                     </div>
-                </div>
-              </div>
+                  </div>
 
-              <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
-                  <div class="form-group col-lg-3 col-lg-offset-9 col-md-3 col-md-offset-9 col-sm-4 col-sm-offset-8 col-xs-12">
-                    <label>
-                      Total Ingresos:
-                    </label>
-                    <dx-text-box class="form-control" [disabled]="true"
-                        name="total"
-                        mode="number">
-                    </dx-text-box>
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <dx-data-grid *ngIf="tabContent=='Ingreso directo'"
+                          id="gridContainer"
+                          [dataSource]="ingresoDirecto"
+                          [noDataText]="noDataText"
+                          keyExpr="ID"
+                          [allowColumnReordering]="true"
+                          (onRowUpdating)="editarIngresoDirecto($event)"
+                          (onRowRemoving)="eliminarIngresoDirecto($event)">
+                        <dxo-paging [pageSize]="10"></dxo-paging>
+                          <dxo-pager
+                              infoText="Mostrando {0} to {1} de {2} ingresos"
+                              [showInfo]="true"
+                              [showNavigationButtons]="true">
+                          </dxo-pager>
+                        <dxo-editing
+                            mode="row"
+                            [allowUpdating]="true"
+                            [allowDeleting]="true"
+                            [allowAdding]="true"
+                            [texts]="{
+                              cancelAllChanges: cancelAllChanges,
+                              cancelRowChanges: cancelRowChanges,
+                              confirmDeleteMessage: confirmDeleteMessage,
+                              deleteRow: deleteRow,
+                              editRow: editRow,
+                              saveAllChanges: saveAllChanges,
+                              saveRowChanges: saveRowChanges,
+                              undeleteRow: undeleteRow,
+                              validationCancelChanges: validationCancelChanges
+                            }">
+                        </dxo-editing>
+                        <dxo-search-panel placeholder="Buscar..." [visible]="true"></dxo-search-panel>
+
+                        <dxi-column dataField="Cuenta" caption="Cuenta"></dxi-column>
+                        <dxi-column dataField="Debe" caption="Debe" [width]="130" dataType="number"></dxi-column>
+                        <dxi-column dataField="Haber" caption="Haber" [width]="130" dataType="number"></dxi-column>
+                    </dx-data-grid>
+
+                      <dx-data-grid *ngIf="tabContent=='Transferencia'"
+                          id="gridContainer"
+                          [dataSource]="transferencias"
+                          [noDataText]="noDataText"
+                          keyExpr="ID"
+                          [allowColumnReordering]="true"
+                          (onRowUpdating)="editarTransferencia($event)"
+                          (onRowRemoving)="eliminarTransferencia($event)">
+                        <dxo-paging [pageSize]="10"></dxo-paging>
+                          <dxo-pager
+                              infoText="Mostrando {0} to {1} de {2} ingresos"
+                              [showInfo]="true"
+                              [showNavigationButtons]="true">
+                          </dxo-pager>
+                        <dxo-editing
+                            mode="row"
+                            [allowUpdating]="true"
+                            [allowDeleting]="true"
+                            [allowAdding]="true"
+                            [texts]="{
+                              cancelAllChanges: cancelAllChanges,
+                              cancelRowChanges: cancelRowChanges,
+                              confirmDeleteMessage: confirmDeleteMessage,
+                              deleteRow: deleteRow,
+                              editRow: editRow,
+                              saveAllChanges: saveAllChanges,
+                              saveRowChanges: saveRowChanges,
+                              undeleteRow: undeleteRow,
+                              validationCancelChanges: validationCancelChanges
+                            }">
+                        </dxo-editing>
+                        <dxo-search-panel placeholder="Buscar..." [visible]="true"></dxo-search-panel>
+
+                        <dxi-column dataField="Fecha" caption="Fecha" [width]="130" dataType="date"></dxi-column>
+                        <dxi-column dataField="BancoR" caption="Banco Receptor"></dxi-column>
+                        <dxi-column dataField="BancoE" caption="Banco Emisor"></dxi-column>
+                        <dxi-column dataField="Monto" caption="Monto" [width]="130" dataType="number"></dxi-column>
+                        <dxi-column dataField="Codigo" caption="Código Referencia" [width]="130"></dxi-column>
+                      </dx-data-grid>
+
+                      <dx-data-grid *ngIf="tabContent=='Cheque'"
+                          id="gridContainer"
+                          [dataSource]="cheques"
+                          [noDataText]="noDataText"
+                          keyExpr="ID"
+                          [allowColumnReordering]="true"
+                          (onRowUpdating)="editarCheque($event)"
+                          (onRowRemoving)="eliminarCheque($event)">
+                        <dxo-paging [pageSize]="10"></dxo-paging>
+                          <dxo-pager
+                              infoText="Mostrando {0} to {1} de {2} ingresos"
+                              [showInfo]="true"
+                              [showNavigationButtons]="true">
+                          </dxo-pager>
+                        <dxo-editing
+                            mode="row"
+                            [allowUpdating]="true"
+                            [allowDeleting]="true"
+                            [allowAdding]="true"
+                            [texts]="{
+                              cancelAllChanges: cancelAllChanges,
+                              cancelRowChanges: cancelRowChanges,
+                              confirmDeleteMessage: confirmDeleteMessage,
+                              deleteRow: deleteRow,
+                              editRow: editRow,
+                              saveAllChanges: saveAllChanges,
+                              saveRowChanges: saveRowChanges,
+                              undeleteRow: undeleteRow,
+                              validationCancelChanges: validationCancelChanges
+                            }">
+                        </dxo-editing>
+                        <dxo-search-panel placeholder="Buscar..." [visible]="true"></dxo-search-panel>
+
+                        <dxi-column dataField="fecha" caption="Fecha" [width]="130" dataType="date"></dxi-column>
+                        <dxi-column dataField="banco" caption="Banco"></dxi-column>
+                        <dxi-column dataField="numero" caption="Número Cheque" [width]="130"></dxi-column>
+                        <dxi-column dataField="titular" caption="Títular Cuenta" [width]="130"></dxi-column>
+                        <dxi-column dataField="monto" caption="Monto" [width]="130" dataType="float"></dxi-column>
+                      </dx-data-grid>
+
+                      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top: 15px;" *ngIf="tabContent=='Tarjeta'">
+                        <div class="col-lg-8 col-md-8 col-sm-6 col-xs-6">
+                          <div class="form-group">
+                            <label>Tarjeta:
+                              <span class="required">*</span>
+                            </label>
+                            <dx-select-box
+                                [dataSource]="tarjetas"
+                                displayExpr="banco"
+                                valueExpr="id"
+                                placeholder="Seleccione una tarjeta">
+                              <dx-validator>
+                                <dxi-validation-rule type="required" message="Tarjeta es requerida"></dxi-validation-rule>
+                              </dx-validator>
+                            </dx-select-box>
+                          </div>
+                        </div>
+
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
+                          <div class="form-group">
+                            <label>Cantidad:
+                              <span class="required">*</span>
+                            </label>
+                            <dx-text-box class="form-control"
+                                name="cantidadTarjeta"
+                                mode="number">
+                              <dx-validator>
+                                <dxi-validation-rule type="required" message="Cantidad es requerida"></dxi-validation-rule>
+                              </dx-validator>
+                            </dx-text-box>
+                          </div>
+                        </div>
+                      </div>
                   </div>
                 </div>
 
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
-                  <dx-button
-                      text="Guardar"
-                      icon="save"
-                      type="success"
-                      [useSubmitBehavior]="true"
-                      class="btn btn-success pull-right">
-                  </dx-button>
-                  <dx-button
-                      icon="fa fa-remove"
-                      type="danger"
-                      (click)="cancelar()"
-                      class="btn btn-danger pull-right"
-                      text="Cancelar"
-                      style="margin-right: 5px;">
-                  </dx-button>
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
+                    <div class="form-group col-lg-3 col-lg-offset-9 col-md-3 col-md-offset-9 col-sm-4 col-sm-offset-8 col-xs-12">
+                      <label>
+                        Total Ingresos:
+                      </label>
+                      <dx-text-box class="form-control" [disabled]="true"
+                          name="total"
+                          mode="number"
+                          [disabled]="true">
+                      </dx-text-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
+                    <dx-button
+                        text="Guardar"
+                        icon="save"
+                        type="success"
+                        [useSubmitBehavior]="true"
+                        class="btn btn-success pull-right">
+                    </dx-button>
+                    <dx-button
+                        icon="fa fa-remove"
+                        type="danger"
+                        (click)="cancelar()"
+                        class="btn btn-danger pull-right"
+                        text="Cancelar"
+                        style="margin-right: 5px;">
+                    </dx-button>
+                  </div>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>

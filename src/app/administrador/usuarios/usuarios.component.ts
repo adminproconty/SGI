@@ -31,6 +31,10 @@ export class UsuariosComponent implements OnInit {
   nuevo: any = {};
   alerts: any = [];
   guardando: boolean;
+  locales: any = [];
+  empleado: false;
+  usuarioLocal: any = [];
+  localUsuario: any = {};
 
   constructor(
     private navegation: NavegationProvider,
@@ -129,6 +133,12 @@ export class UsuariosComponent implements OnInit {
     this.service.getAllTipoDocumento().subscribe(resp => {
       console.log('tipos documentos', resp.data);
       this.tipoDocumentos = resp.data;
+      for (let i = 0; i < this.tipoDocumentos.length; i++) {
+        if (this.tipoDocumentos[i].nombre === 'Consumidor final') {
+          const index = this.tipoDocumentos.indexOf(this.tipoDocumentos[i]);
+          this.tipoDocumentos.splice(index, 1);
+        }
+      }
     });
     this.nuevo = {
       empresa_id: 1,
@@ -137,12 +147,29 @@ export class UsuariosComponent implements OnInit {
       tipo_documento: 0,
       num_documento: '',
       email: '',
-      celular: ''
+      direccion: '',
+      convencional: '',
+      celular: '',
+      opcional: '',
+      locales: [],
+      empleado: 0
     };
     this.guardando = false;
     this.service.all().subscribe(resp => {
       console.log('usuarios', resp.data);
       this.usuarios = resp.data;
+      this.localUsuario = {
+        empleado_id: this.usuarios[0].id,
+        locales: []
+      };
+    });
+    this.service.getAllLocales().subscribe(resp => {
+      console.log('locales', resp.data);
+      this.locales = resp.data;
+    });
+    this.service.getAllLocalUsuario().subscribe(resp => {
+      console.log('usuario local', resp.data);
+      this.usuarioLocal = resp.data;
     });
   }
 
@@ -160,11 +187,25 @@ export class UsuariosComponent implements OnInit {
     const celCod = cel.split(')')[0];
     const celPostCod = cel.split(')')[1];
     this.nuevo.celular = celCod + celPostCod;
+    const tlf = this.nuevo.convencional.split('(')[1];
+    const tlfCod = tlf.split(')')[0];
+    const tlfPostCod = tlf.split(')')[1];
+    this.nuevo.convencional = tlfCod + tlfPostCod;
+    if (this.nuevo.convencional === '') {
+      this.nuevo.convencional = 'NULL';
+    }
+    if (this.nuevo.celular === '') {
+      this.nuevo.celular = 'NULL';
+    }
+    if (this.nuevo.opcional === '') {
+      this.nuevo.opcional = 'NULL';
+    }
     console.log('a guardar', this.nuevo);
     this.insertarPersona();
   }
 
   insertarPersona() {
+    this.nuevo.descripcion = '---';
     this.service.insertPersona(this.nuevo).subscribe(resp => {
       console.log('insertar persona', resp['_body']);
       if (resp['_body'] === 'true') {
@@ -192,7 +233,8 @@ export class UsuariosComponent implements OnInit {
   insertarUsuario(id) {
     const usuarioAgregar = {
       persona_id: id,
-      clave: '12345'
+      clave: '12345',
+      empleado: this.nuevo.empleado
     };
     this.service.insertUsuario(usuarioAgregar).subscribe(resp => {
       console.log('insertar usuario', resp['_body']);
@@ -227,13 +269,25 @@ export class UsuariosComponent implements OnInit {
       nombre: e.newData.nombre !== undefined ? e.newData.nombre : e.oldData.nombre,
       apellido: e.newData.apellido !== undefined ? e.newData.apellido : e.oldData.apellido,
       tipo_documento: e.newData.tipo_documento !== undefined ? e.newData.tipo_documento : e.oldData.tipo_documento,
+      direccion: e.newData.direccion !== undefined ? e.newData.direccion : e.oldData.direccion,
+      descripcion: '---',
       num_documento: e.newData.num_documento !== undefined ? e.newData.num_documento : e.oldData.num_documento,
       email: e.newData.email !== undefined ? e.newData.email : e.oldData.email,
+      convencional: e.newData.convencional !== undefined ? e.newData.convencional : e.oldData.convencional,
       celular: e.newData.celular !== undefined ? e.newData.celular : e.oldData.celular,
-      id: e.oldData.persona_id
+      opcional: e.newData.opcional !== undefined ? e.newData.opcional : e.oldData.opcional,
+      empleado: e.newData.empleado !== undefined ? e.newData.empleado : e.oldData.empleado,
+      clave: e.oldData.clave,
+      persona_id: e.oldData.persona_id,
+      id: e.oldData.id
     };
-    usuarioModif.id = usuarioModif.id * 1;
-    usuarioModif.tipo_documento = usuarioModif.tipo_documento * 1;
+    if (usuarioModif.empleado === true) {
+      usuarioModif.empleado = 1;
+    } else {
+      usuarioModif.empleado = 0;
+    }
+    usuarioModif.id = usuarioModif.id;
+    usuarioModif.tipo_documento = usuarioModif.tipo_documento;
     console.log('usuario a editar', usuarioModif);
     this.service.updateUsuario(usuarioModif).subscribe(resp => {
       console.log('modificación', resp['_body']);
@@ -260,6 +314,88 @@ export class UsuariosComponent implements OnInit {
     console.log('cambio tipo documento', e);
     const tipo = e.value * 1;
     this.nuevo.tipo_documento = tipo;
+  }
+
+  changeLocal(e) {
+    console.log('cambio local', e);
+    if (e.value.length > 0) {
+      const data = [];
+      for (let i = 0; i < e.value.length; i++) {
+        const valor = e.value[i] * 1;
+        data.push(valor);
+      }
+      this.nuevo.locales = data;
+      this.localUsuario.locales = data;
+    }
+  }
+
+  cambioEmpleado(e) {
+    if (e.value === true) {
+      this.nuevo.empleado = 1;
+    } else {
+      this.nuevo.empleado = 0;
+    }
+  }
+
+  eliminarLocalUsuario(e) {
+    console.log('eliminar local_usuario', e);
+    const idempleado = e.key * 1;
+    this.service.deleteAsignacion({id: idempleado }).subscribe(resp => {
+      console.log('eliminado', resp['_body']);
+      if (resp['_body'] === 'true') {
+        this.alerts.push(
+          {
+            type: 'success',
+            msg: 'Eliminada exitosa'
+          }
+        );
+        this.ngOnInit();
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+      }
+    });
+  }
+
+  displayUsuarios(item) {
+    if (!item) {
+      return '';
+    }
+    return 'Nombre: ' + item.nombre + ' Apellido: ' + item.apellido + ' Nº Documento:  ' + item.num_documento;
+  }
+
+  cambioUsuario(e) {
+    console.log('cambio usuario', e);
+    this.localUsuario.empleado_id = e.value;
+  }
+
+  asignar(e) {
+    e.preventDefault();
+    console.log('asignar', this.localUsuario);
+    this.service.asignarEmpleadoLocal(this.localUsuario).subscribe(resp => {
+      console.log('asignado', resp['_body']);
+      if (resp['_body'] === 'true') {
+        this.alerts.push(
+          {
+            type: 'success',
+            msg: 'Asignación exitosa'
+          }
+        );
+        this.ngOnInit();
+        this.cancelar();
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+      }
+    });
   }
 
 }

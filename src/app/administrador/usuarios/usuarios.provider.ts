@@ -20,6 +20,23 @@ export class  UsuariosProvider {
       .map((res: Response) => res.json());
   }
 
+  public getAllLocalUsuario() {
+    return this.http.get(this.urlProvider.getAllLocalUsuario())
+      .map((res: Response) => res.json());
+  }
+
+  public getAllLocales() {
+    return this.http.get(this.urlProvider.getAllLocales())
+      .map((res: Response) => res.json());
+  }
+
+  public getUsuarioLocalByEmpleado(objeto: any) {
+    return this.http.post(this.urlProvider.getLocalUsuarioByEmpleado(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-Type': 'application/json' })
+    })
+      .map((resp: Response) => resp);
+  }
+
   public insertPersona(objeto: any) {
     return this.http.post(this.urlProvider.insertPersona(), JSON.stringify(objeto), {
       headers: new Headers({ 'Content-Type': 'application/json' })
@@ -41,8 +58,30 @@ export class  UsuariosProvider {
       .map((resp: Response) => resp);
   }
 
+  public insertEmpleadoLocal(objeto: any) {
+    return this.http.post(this.urlProvider.insertEmpleadoLocal(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-Type': 'application/json' })
+    })
+      .map((resp: Response) => resp);
+  }
+
+  public asignarEmpleadoLocal(objeto: any) {
+    return this.http.post(this.urlProvider.asignarEmpleadoLocal(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-Type': 'application/json' })
+    })
+      .map((resp: Response) => resp);
+  }
+
+
   public updateUsuario(objeto: Object) {
     return this.http.post(this.urlProvider.updateUsuario(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-type': 'application/json' })
+      })
+      .map((resp: Response) => resp);
+  }
+
+  public deleteAsignacion(objeto: Object) {
+    return this.http.post(this.urlProvider.deleteAsignacion(), JSON.stringify(objeto), {
       headers: new Headers({ 'Content-type': 'application/json' })
       })
       .map((resp: Response) => resp);

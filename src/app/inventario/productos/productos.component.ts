@@ -39,9 +39,11 @@ export class ProductosComponent implements OnInit {
     nombre: '',
     unidad: '',
     codigo: '',
-    descripcion: ''
+    descripcion: '',
+    servicio: 0
   };
   guardando: boolean;
+  servicio: boolean;
 
   constructor(
     private navegation: NavegationProvider,
@@ -145,7 +147,8 @@ export class ProductosComponent implements OnInit {
       unidad: '',
       codigo: '',
       descripcion: '',
-      costo: undefined
+      costo: undefined,
+      servicio: 0
     };
     this.guardando = false;
     this.service.allCategorias().subscribe(resp => {
@@ -156,6 +159,7 @@ export class ProductosComponent implements OnInit {
       console.log('productos', resp.data);
       this.productos = resp.data;
     });
+    this.servicio = false;
   }
 
   openModal(template: TemplateRef<any>) {
@@ -315,8 +319,14 @@ export class ProductosComponent implements OnInit {
       unidad: e.newData.unidad !== undefined ? e.newData.unidad : e.oldData.unidad,
       codigo: e.newData.codigo !== undefined ? e.newData.codigo : e.oldData.codigo,
       descripcion: e.newData.descripcion !== undefined ? e.newData.descripcion : e.oldData.descripcion,
+      servicio: e.newData.servicio !== undefined ? e.newData.servicio : e.oldData.servicio,
       id: e.oldData.id
     };
+    if (prodModif.servicio === true) {
+      prodModif.servicio = 1;
+    } else {
+      prodModif.servicio = 0;
+    }
     if (e.newData.costo) {
       this.service.updateProducto(prodModif).subscribe(resp => {
         console.log('producto modificado', resp['_body']);
@@ -332,6 +342,7 @@ export class ProductosComponent implements OnInit {
         }
       });
     } else {
+      console.log('producto modificar', prodModif);
       this.service.updateProducto(prodModif).subscribe(resp => {
         console.log('producto modificado', resp['_body']);
         if (resp['_body'] === 'true') {
@@ -378,6 +389,14 @@ export class ProductosComponent implements OnInit {
 
   cambiarAbreviatura(e) {
     this.categoria.abreviatura = e.value.substr(0, 4).toUpperCase();
+  }
+
+  cambioServicio(e) {
+    if (e.value === true) {
+      this.producto.servicio = 1;
+    } else {
+      this.producto.servicio = 0;
+    }
   }
 
 }

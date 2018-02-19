@@ -100,31 +100,7 @@ export class EmpresaComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.service.all().subscribe(resp => {
-      console.log('empresa', resp);
-      this.empresa = {
-        id: resp.data[0].id,
-        nombre_comercial: resp.data[0].nombre_comercial,
-        nombre_legal: resp.data[0].nombre_legal,
-        email: resp.data[0].email,
-        RUC: resp.data[0].RUC,
-        direccion: resp.data[0].direccion,
-        telefono: resp.data[0].telefono,
-        celular: resp.data[0].celular
-      };
-      this.infoEmpresa.setDatos(
-        {
-          id: resp.data[0].id,
-          nombre_comercial: resp.data[0].nombre_comercial,
-          nombre_legal: resp.data[0].nombre_legal,
-          email: resp.data[0].email,
-          RUC: resp.data[0].RUC,
-          direccion: resp.data[0].direccion,
-          telefono: resp.data[0].telefono,
-          celular: resp.data[0].celular
-        }
-      );
-    });
+    this.empresa = this.infoEmpresa.datos;
     this.guardando = false;
     this.dismissible = true;
   }

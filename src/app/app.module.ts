@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app.routing';
 import { ULRProvider } from './providers/url.providers';
+import { DatePipe } from '@angular/common';
 
 import { TranslationsModule } from './translation/translation.module';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
@@ -27,6 +28,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
+import { AplicacionComponent } from './aplicacion/aplicacion.component';
 import { HeaderComponent } from './header/header.component';
 import { NavegationComponent } from './navegation/navegation.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -44,10 +46,13 @@ import { EgresosComponent } from './egresos/egresos/egresos.component';
 import { ProductosComponent } from './inventario/productos/productos.component';
 import { FacturasComponent } from './ingresos/facturas/facturas.component';
 import { FisicoComponent } from './inventario/fisico/fisico.component';
+import { LoginComponent } from './login/login.component';
 
 import { NavegationProvider } from './navegation/navegation.provider';
 import { EmpresaProvider } from './administrador/empresa/empresa.provider';
 import { DatosEmpresaProvider } from './providers/datos.empresa.provider';
+import { DatosUsuarioProvider } from './providers/datos.usuario.provider';
+import { DatosLocalProvider } from './providers/datos.local.provider';
 import { LocalesProvider } from './administrador/locales/locales.provider';
 import { CuentasProvider } from './administrador/cuentas/cuentas.provider';
 import { IvaProvider } from './administrador/iva/iva.provider';
@@ -58,6 +63,9 @@ import { EmpleadosProvider } from './administrador/empleados/empleados.provider'
 import { ClientesProvider } from './ingresos/clientes/clientes.provider';
 import { FisicoProvider } from './inventario/fisico/fisico.provider';
 import { FacturasProvider } from './ingresos/facturas/facturas.provider';
+import { LoginProvider } from './login/login.provider';
+import { IngresosProvider } from './ingresos/ingresos/ingresos.provider';
+
 
 import {  DxCheckBoxModule,
           DxSelectBoxModule,
@@ -74,13 +82,18 @@ import {  DxCheckBoxModule,
           DxTabsModule,
           DxLoadIndicatorModule,
           DxTemplateModule,
-          DxLookupModule
+          DxLookupModule,
+          DxTagBoxModule,
+          DxScrollViewComponent,
+          DxScrollViewModule,
+          DxPivotGridModule
         } from 'devextreme-angular';
 
 
 @NgModule({
   declarations: [
     AppComponent,
+    AplicacionComponent,
     HeaderComponent,
     NavegationComponent,
     DashboardComponent,
@@ -97,7 +110,8 @@ import {  DxCheckBoxModule,
     EgresosComponent,
     ProductosComponent,
     FacturasComponent,
-    FisicoComponent
+    FisicoComponent,
+    LoginComponent
   ],
   imports: [
     DxCheckBoxModule,
@@ -115,6 +129,9 @@ import {  DxCheckBoxModule,
     DxLoadIndicatorModule,
     DxTemplateModule,
     DxLookupModule,
+    DxTagBoxModule,
+    DxScrollViewModule,
+    DxPivotGridModule,
     BrowserModule,
     HttpClientModule,
     HttpModule,
@@ -137,6 +154,8 @@ import {  DxCheckBoxModule,
     ULRProvider,
     EmpresaProvider,
     DatosEmpresaProvider,
+    DatosUsuarioProvider,
+    DatosLocalProvider,
     LocalesProvider,
     CuentasProvider,
     IvaProvider,
@@ -146,7 +165,10 @@ import {  DxCheckBoxModule,
     EmpleadosProvider,
     ClientesProvider,
     FisicoProvider,
-    FacturasProvider
+    FacturasProvider,
+    LoginProvider,
+    IngresosProvider,
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })

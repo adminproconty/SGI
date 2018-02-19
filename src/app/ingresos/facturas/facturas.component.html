@@ -67,13 +67,31 @@
     <div class="box">
       <div class="box-header with-border">
         <h3 class="box-title">Nueva Factura</h3>
+        <div class="box-tools">
+          <a class="dropdown-toggle">
+            <i class="fa fa-cog"></i>
+          </a>
+        </div>
       </div>
       <div class="box-body">
         <div class="row">
           <div class="col-md-12">
             <div class="col-sm-14" id="VerForm" style="display: block;">
-              <form name="frmSucursal" id="frmSucursal" (submit)="guardar($event)">
 
+              <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <div id="tabs">
+                    <dx-tabs
+                        [dataSource]="tabs"
+                        [selectedIndex]="0"
+                        (onItemClick)="selectTab($event)"
+                        [disabled]="true">
+                    </dx-tabs>
+                  </div>
+                </div>
+              </div>
+
+              <form name="frmSucursal" id="frmSucursal" (submit)="siguiente($event)" *ngIf="tabContent == 'Pedido'">
                 <div class="row">
                   <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
                     <div class="form-group">
@@ -85,6 +103,7 @@
                           displayExpr="nombre"
                           valueExpr="id"
                           placeholder="Seleccione el tipo de documento"
+                          [(value)]="factura.td"
                           (onValueChanged)="cambioTipoDocumento($event)">
                         <dx-validator>
                           <dxi-validation-rule type="required" message="Tipo de documento es requerido"></dxi-validation-rule>
@@ -114,7 +133,7 @@
                 <div class="row">
                   <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
                     <div class="form-group">
-                      <label>Nombre:
+                      <label>Nombre o Razón Social:
                         <span class="required">*</span>
                       </label>
                       <dx-text-box class="form-control"
@@ -130,15 +149,15 @@
 
                   <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
                     <div class="form-group">
-                      <label>Apellido:
+                      <label>Dirección:
                         <span class="required">*</span>
                       </label>
                       <dx-text-box class="form-control"
-                          name="apellido"
-                          [(value)]="factura.apellido"
+                          name="direccion"
+                          [(value)]="factura.direccion"
                           [disabled]="consumidorfinal">
                         <dx-validator>
-                          <dxi-validation-rule type="required" message="Nombre legal es requerido"></dxi-validation-rule>
+                          <dxi-validation-rule type="required" message="Dirección es requerida"></dxi-validation-rule>
                         </dx-validator>
                       </dx-text-box>
                     </div>
@@ -148,38 +167,27 @@
                 <div class="row">
                   <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
                     <div class="form-group">
-                      <label>Correo Electrónico:
-                        <span class="required">*</span>
+                      <label>
+                        Correo Electrónico:
                       </label>
                       <dx-text-box class="form-control"
-                            mode="email"
-                            name="email"
-                            [(value)]="factura.email"
-                            [disabled]="consumidorfinal">
-                        <dx-validator>
-                          <dxi-validation-rule type="email"></dxi-validation-rule>
-                          <dxi-validation-rule type="required" message="Correo electrónico es requerido"></dxi-validation-rule>
-                        </dx-validator>
+                          mode="email"
+                          name="email"
+                          [(value)]="factura.email"
+                          [disabled]="consumidorfinal">
                       </dx-text-box>
                     </div>
                   </div>
 
                   <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
                     <div class="form-group">
-                      <label>Teléfono Celular:
-                        <span class="required">*</span>
+                      <label>
+                        Número Telefónico:
                       </label>
                       <dx-text-box class="form-control"
-                          mask="(X00)0000000"
-                          [maskRules]="phoneRules"
-                          maskInvalidMessage="No cumple con el formato telefónico celular"
-                          [useMaskedValue]="true"
                           name="celular"
                           [(value)]="factura.celular"
                           [disabled]="consumidorfinal">
-                        <dx-validator>
-                          <dxi-validation-rule type="required" message="Teléfono celular es requerido"></dxi-validation-rule>
-                        </dx-validator>
                       </dx-text-box>
                     </div>
                   </div>
@@ -202,7 +210,9 @@
                           (onValueChanged)="cambioProducto($event)">
                         <div *dxTemplate="let item of 'field'">
                           <div class="custom-field">
-                            {{item.codigo}} - {{item.nombre}} ${{item.costo}}
+                            <strong>Código: </strong>{{item.codigo}}
+                            <strong>Nombre</strong> {{item.nombre}}
+                            <strong>Precio:</strong> ${{item.costo}}
                           </div>
                         </div>
                       </dx-lookup>
@@ -214,22 +224,19 @@
                       <label>
                         Cantidad:
                       </label>
-                      <dx-text-box class="form-control"
-                          name="nombre"
-                          mode="number"
-                          [(value)]="factura.cant_producto">
-                      </dx-text-box>
+                      <dx-number-box
+                          [(value)]="factura.cant_producto"
+                          [min]="0"
+                          [max]="factura.min"
+                          [showSpinButtons]="true">
+                      </dx-number-box>
                     </div>
                   </div>
 
                   <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
-                    <dx-button
-                        icon="fa fa-plus"
-                        type="success"
-                        class="btn btn-success"
-                        style="margin-top: 22px;"
-                        (click)="agregarCarrito()">
-                    </dx-button>
+                    <button type="button" class="btn btn-success" style="margin-top: 22px;" (click)="agregarCarrito()">
+                      <i class="fa fa-plus"></i>
+                    </button>
                   </div>
                 </div>
 
@@ -263,7 +270,6 @@
                             validationCancelChanges: validationCancelChanges
                           }">
                       </dxo-editing>
-                      <dxo-search-panel placeholder="Buscar..." [visible]="true"></dxo-search-panel>
 
                       <dxi-column dataField="codigo" caption="Código" [width]="150"></dxi-column>
                       <dxi-column dataField="nombre" caption="Nombre"></dxi-column>
@@ -331,23 +337,267 @@
                   <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
                     <div class="form-group">
                       <label>
-                        ${{factura.total_pagar}}
+                        ${{factura.total}}
                       </label>
                     </div>
                   </div>
                 </div>
 
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
-                  <dx-button [disabled]="guardando"
-                      text="Guardar"
-                      icon="save"
+                  <dx-button
+                      text="Siguiente"
                       type="success"
                       class="btn btn-success pull-right"
                       [useSubmitBehavior]="true"
-                      [disabled]="guardando">
+                      [disabled]="carritoLleno">
                   </dx-button>
                 </div>
               </form>
+
+              <div class="row" *ngIf="tabContent == 'Pago'">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <form name="frmSucursal" id="frmSucursal" (submit)="agregarPago($event)">
+                    <div class="row">
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 left">
+                        <div class="form-group">
+                          <label>
+                            Forma de Pago:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-select-box
+                              [dataSource]="formasPago"
+                              displayExpr="nombre"
+                              valueExpr="id"
+                              placeholder="Seleccione la forma de pago"
+                              (onValueChanged)="cambioFormaPago($event)">
+                          </dx-select-box>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left" *ngIf="formaPago.nombre == 'Efectivo' || formaPago.nombre == 'Pago electrónico'">
+                        <div class="form-group">
+                          <label>Aporte:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-number-box class="form-control"
+                              [(value)]="pago.aporte"
+                              [min]="0"
+                              [showSpinButtons]="true">
+                          </dx-number-box>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 left" *ngIf="formaPago.nombre == 'Tarjeta' || formaPago.nombre == 'Transferencia bancaria' || formaPago.nombre == 'Cheque'">
+                        <div class="form-group">
+                          <label>Cuenta que Acredita:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-select-box
+                              [dataSource]="cuentas"
+                              displayExpr="nombre"
+                              valueExpr="id"
+                              placeholder="Seleccione la cuenta acreditadora"
+                              (onValueChanged)="cambioCuenta($event)">
+                          </dx-select-box>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row" *ngIf="formaPago.nombre == 'Tarjeta' || formaPago.nombre == 'Transferencia bancaria' || formaPago.nombre == 'Cheque'">
+                      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 left">
+                        <div class="form-group">
+                          <label>Banco:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-text-box class="form-control"
+                              name="banco"
+                              [(value)]="pago.banco">
+                          </dx-text-box>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
+                        <div class="form-group">
+                          <label>Tipo de Tarjeta:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-select-box
+                              [dataSource]="tiposTarjetas"
+                              displayExpr="nombre"
+                              valueExpr="id"
+                              placeholder="Seleccione el tipo de tarjeta"
+                              (onValueChanged)="cambioTipoTarjeta($event)">
+                          </dx-select-box>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
+                        <div class="form-group">
+                          <label>Aporte:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-number-box class="form-control"
+                              [(value)]="pago.aporte"
+                              [min]="0"
+                              [showSpinButtons]="true">
+                          </dx-number-box>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row" *ngIf="formaPago.nombre == 'Tarjeta' || formaPago.nombre == 'Transferencia bancaria' || formaPago.nombre == 'Cheque'">
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
+                        <div class="form-group">
+                          <label>Número Telefónico:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-text-box class="form-control"
+                              [(value)]="pago.celular">
+                          </dx-text-box>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
+                        <div class="form-group">
+                          <label>Referencia:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-text-box class="form-control"
+                              name="banco"
+                              [(value)]="pago.referencia">
+                          </dx-text-box>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row" *ngIf="formaPago.nombre == 'Pago electrónico'">
+                      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 left">
+                        <div class="form-group">
+                          <label>Email:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-text-box class="form-control"
+                              name="banco"
+                              [(value)]="pago.email">
+                            <dx-validator>
+                              <dxi-validation-rule type="email"></dxi-validation-rule>
+                            </dx-validator>
+                          </dx-text-box>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row" *ngIf="tabContent == 'Pago'">
+                      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <dx-button
+                            icon="fa fa-plus"
+                            type="success"
+                            [useSubmitBehavior]="true"
+                            class="btn btn-success pull-right">
+                        </dx-button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="tabContent == 'Pago'" style="margin-top: 20px;">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <dx-data-grid
+                      id="gridContainer"
+                      [dataSource]="registroPagos"
+                      [noDataText]="noDataText"
+                      [allowColumnReordering]="true"
+                      (onRowRemoving)="eliminarPago($event)">
+                    <dxo-paging [pageSize]="10"></dxo-paging>
+                    <dxo-pager
+                        infoText="Mostrando {0} to {1} de {2} pagos"
+                        [showInfo]="true"
+                        [showNavigationButtons]="true">
+                    </dxo-pager>
+                    <dxo-editing
+                        mode="row"
+                        [allowDeleting]="true"
+                        [texts]="{
+                          cancelAllChanges: cancelAllChanges,
+                          cancelRowChanges: cancelRowChanges,
+                          confirmDeleteMessage: confirmDeleteMessage,
+                          deleteRow: deleteRow,
+                          editRow: editRow,
+                          saveAllChanges: saveAllChanges,
+                          saveRowChanges: saveRowChanges,
+                          undeleteRow: undeleteRow,
+                          validationCancelChanges: validationCancelChanges
+                        }">
+                    </dxo-editing>
+
+                    <dxi-column dataField="tipo_pago" caption="Forma pago"></dxi-column>
+                    <dxi-column dataField="aporte" caption="Aporte"></dxi-column>
+
+                  </dx-data-grid>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="tabContent == 'Pago'">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 left">
+                  <div class="form-group">
+                    <label>
+                      Neto:
+                    </label>
+                    <dx-text-box class="form-control"
+                        name="banco"
+                        [(value)]="factura.total"
+                        [disabled]="true">
+                    </dx-text-box>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 left">
+                  <div class="form-group">
+                    <label>
+                      Aporte:
+                    </label>
+                    <dx-text-box class="form-control"
+                        name="banco"
+                        [(value)]="factura.cancela"
+                        [disabled]="true">
+                    </dx-text-box>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 left">
+                  <div class="form-group">
+                    <label>
+                      Vuelto:
+                    </label>
+                    <dx-text-box class="form-control"
+                        name="banco"
+                        [(value)]="factura.vuelto"
+                        [disabled]="true">
+                    </dx-text-box>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="tabContent == 'Pago'">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
+                  <dx-button
+                      text="Guardar"
+                      type="success"
+                      class="btn btn-success pull-right"
+                      [useSubmitBehavior]="true"
+                      [disabled]="guardando"
+                      (click)="guardar($event)">
+                  </dx-button>
+                  <dx-button
+                      type="danger"
+                      (click)="atras()"
+                      class="btn btn-danger pull-right"
+                      text="Atras"
+                      style="margin-right: 5px;">
+                  </dx-button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

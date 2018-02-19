@@ -37,6 +37,21 @@ export class  FacturasProvider {
       .map((res: Response) => res.json());
   }
 
+  public getAllFormasPago() {
+    return this.http.get(this.urlProvider.getAllFormasPago())
+      .map((res: Response) => res.json());
+  }
+
+  public getAllTiposTarjetas() {
+    return this.http.get(this.urlProvider.getAllTipoTarjetas())
+      .map((res: Response) => res.json());
+  }
+
+  public getAllCuentas() {
+    return this.http.get(this.urlProvider.getAllCuentas())
+      .map((res: Response) => res.json());
+  }
+
   public getIvaById(objeto: any) {
     return this.http.post(this.urlProvider.getIvaById(), JSON.stringify(objeto), {
       headers: new Headers({ 'Content-Type': 'application/json' })
@@ -51,8 +66,36 @@ export class  FacturasProvider {
       .map((resp: Response) => resp);
   }
 
-  public insert(objeto: any) {
+  public getFormasPagoById(objeto: any) {
+    return this.http.post(this.urlProvider.getFormasPagoById(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-Type': 'application/json' })
+    })
+      .map((resp: Response) => resp);
+  }
+
+  public getByLocalProducto(objeto: any) {
+    return this.http.post(this.urlProvider.getByLocalProducto(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-Type': 'application/json' })
+    })
+      .map((resp: Response) => resp);
+  }
+
+  public insertCliente(objeto: any) {
     return this.http.post(this.urlProvider.insertPersona(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-Type': 'application/json' })
+    })
+      .map((resp: Response) => resp);
+  }
+
+  public insert(objeto: any) {
+    return this.http.post(this.urlProvider.insertFactura(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-Type': 'application/json' })
+    })
+      .map((resp: Response) => resp);
+  }
+
+  public insertPagos(objeto: any) {
+    return this.http.post(this.urlProvider.insertPagos(), JSON.stringify(objeto), {
       headers: new Headers({ 'Content-Type': 'application/json' })
     })
       .map((resp: Response) => resp);
@@ -60,6 +103,13 @@ export class  FacturasProvider {
 
   public update(objeto: Object) {
     return this.http.post(this.urlProvider.updateUsuario(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-type': 'application/json' })
+      })
+      .map((resp: Response) => resp);
+  }
+
+  public updateCliente(objeto: Object) {
+    return this.http.post(this.urlProvider.updatePersona(), JSON.stringify(objeto), {
       headers: new Headers({ 'Content-type': 'application/json' })
       })
       .map((resp: Response) => resp);

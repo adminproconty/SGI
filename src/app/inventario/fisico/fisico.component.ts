@@ -127,7 +127,8 @@ export class FisicoComponent implements OnInit {
     this.nuevo = {
       local_id: 0,
       producto_id: 0,
-      cantidad: 0
+      cantidad: 0,
+      minimo_stock: 0
     };
     this.service.getAllLocales().subscribe(resp => {
       console.log('locales', resp.data);
@@ -183,7 +184,13 @@ export class FisicoComponent implements OnInit {
   }
 
   editarCantidad(e) {
-    this.service.update({id: e.oldData.id, cantidad: e.newData.cantidad}).subscribe(resp => {
+    const editar = {
+      id: e.oldData.id,
+      cantidad: e.newData.cantidad !== undefined ? e.newData.cantidad : e.oldData.cantidad,
+      minimo_stock: e.newData.minimo_stock !== undefined ? e.newData.minimo_stock : e.oldData.minimo_stock,
+    };
+    console.log('a modificar', editar);
+    this.service.update(editar).subscribe(resp => {
       console.log('modificado', resp['_body']);
       if (resp['_body'] === 'true') {
         this.alerts.push(

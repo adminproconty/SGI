@@ -1,0 +1,48 @@
+<div class="login-dark">
+  <form (submit)="entrar($event)">
+    <h2 class="heading">
+      Login
+    </h2>
+    <div *ngFor="let alert of alerts">
+      <alert [type]="alert.type" [dismissible]="true">{{ alert.msg }}</alert>
+    </div>
+    <div class="illustration">
+      <i class="fa fa-lock"></i>
+    </div>
+    <div class="form-group">
+      <dx-text-box class="form-control"
+          mode="email"
+          name="email"
+          [(value)]="login.correo"
+          placeholder="Email">
+        <dx-validator>
+          <dxi-validation-rule type="email" message="No cumple con el formato de email"></dxi-validation-rule>
+          <dxi-validation-rule type="required" message="Correo electrónico es requerido"></dxi-validation-rule>
+        </dx-validator>
+      </dx-text-box>
+    </div>
+    <div class="form-group">
+      <dx-text-box class="form-control"
+          mode="password"
+          name="clave"
+          [(value)]="login.clave"
+          placeholder="Contraseña">
+        <dx-validator>
+          <dxi-validation-rule type="required" message="Contraseña es requerido"></dxi-validation-rule>
+        </dx-validator>
+      </dx-text-box>
+    </div>
+    <div class="form-group">
+      <dx-button
+        text="Entrar"
+        type="default"
+        [useSubmitBehavior]="true"
+        class="btn btn-primary btn-block"
+        [disabled]="entrando">
+      </dx-button>
+    </div>
+    <a class="forgot">
+      ¿Olvidó su contraseña?
+    </a>
+  </form>
+</div>

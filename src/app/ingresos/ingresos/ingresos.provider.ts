@@ -4,42 +4,20 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 
 @Injectable()
-export class  ClientesProvider {
+export class  IngresosProvider {
 
   constructor(
     private http: Http,
     private urlProvider: ULRProvider) {}
 
-  public getAllPersonas() {
+  public all() {
     return this.http.get(this.urlProvider.getAllPersonas())
       .map((res: Response) => res.json());
   }
 
-  public getAllTipoDocumento() {
-    return this.http.get(this.urlProvider.getAllTipoDocumento())
+  public getAllCuentas() {
+    return this.http.get(this.urlProvider.getAllCuentas())
       .map((res: Response) => res.json());
-  }
-
-  public getAllEmpleados() {
-    return this.http.get(this.urlProvider.getAllEmpleados())
-      .map((res: Response) => res.json());
-  }
-
-  public getAllUsuarios() {
-    return this.http.get(this.urlProvider.getAllUsuarios())
-      .map((res: Response) => res.json());
-  }
-
-  public getAllClientes() {
-    return this.http.get(this.urlProvider.getAllClientes())
-      .map((res: Response) => res.json());
-  }
-
-  public insertPersona(objeto: any) {
-    return this.http.post(this.urlProvider.insertPersona(), JSON.stringify(objeto), {
-      headers: new Headers({ 'Content-Type': 'application/json' })
-    })
-      .map((resp: Response) => resp);
   }
 
   public getPersonaInsertada(objeto: any) {
@@ -49,14 +27,14 @@ export class  ClientesProvider {
       .map((resp: Response) => resp);
   }
 
-  public insertUsuario(objeto: any) {
-    return this.http.post(this.urlProvider.insertUsuario(), JSON.stringify(objeto), {
+  public insert(objeto: any) {
+    return this.http.post(this.urlProvider.insertIngresos(), JSON.stringify(objeto), {
       headers: new Headers({ 'Content-Type': 'application/json' })
     })
       .map((resp: Response) => resp);
   }
 
-  public updatePersona(objeto: Object) {
+  public update(objeto: Object) {
     return this.http.post(this.urlProvider.updatePersona(), JSON.stringify(objeto), {
       headers: new Headers({ 'Content-type': 'application/json' })
       })

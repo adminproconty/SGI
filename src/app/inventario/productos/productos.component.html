@@ -206,6 +206,7 @@
                   <dxi-column dataField="descripcion" caption="Descripción" [width]="250"></dxi-column>
                   <dxi-column dataField="unidad" caption="Unidad" [width]="100"></dxi-column>
                   <dxi-column dataField="costo" caption="Costo" [width]="100"></dxi-column>
+                  <dxi-column dataField="servicio" caption="Servicio" [width]="120"></dxi-column>
 
                 </dx-data-grid>
               </div>
@@ -326,6 +327,17 @@
                       <dxi-validation-rule type="required" message="Costo es requerido"></dxi-validation-rule>
                     </dx-validator>
                   </dx-text-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>¿Servicio?</label>
+                  <dx-switch
+                    [value]="servicio"
+                    (onValueChanged)="cambioServicio($event)"></dx-switch>
                 </div>
               </div>
             </div>

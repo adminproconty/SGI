@@ -129,6 +129,12 @@ export class EmpleadosComponent implements OnInit {
     this.service.getAllTipoDocumento().subscribe(resp => {
       console.log('tipos documentos', resp.data);
       this.tipoDocumentos = resp.data;
+      for (let i = 0; i < this.tipoDocumentos.length; i++) {
+        if (this.tipoDocumentos[i].nombre === 'Consumidor final') {
+          const index = this.tipoDocumentos.indexOf(this.tipoDocumentos[i]);
+          this.tipoDocumentos.splice(index, 1);
+        }
+      }
     });
     this.guardando = false;
     this.empleado = {
@@ -137,8 +143,11 @@ export class EmpleadosComponent implements OnInit {
       apellido: '',
       tipo_documento: 0,
       num_documento: '',
+      direccion: '',
       email: '',
+      convencional: '',
       celular: ''
+      opcional: '',
     };
     this.service.all().subscribe(resp => {
       console.log('empleados', resp.data);
@@ -160,11 +169,16 @@ export class EmpleadosComponent implements OnInit {
     const celCod = cel.split(')')[0];
     const celPostCod = cel.split(')')[1];
     this.empleado.celular = celCod + celPostCod;
+    const tlf = this.empleado.convencional.split('(')[1];
+    const tlfCod = tlf.split(')')[0];
+    const tlfPostCod = tlf.split(')')[1];
+    this.empleado.convencional = tlfCod + tlfPostCod;
     console.log('a guardar', this.empleado);
     this.insertarPersona();
   }
 
   insertarPersona() {
+    this.empleado.descripcion = '---';
     this.service.insertPersona(this.empleado).subscribe(resp => {
       console.log('insertar persona', resp['_body']);
       if (resp['_body'] === 'true') {
@@ -192,7 +206,8 @@ export class EmpleadosComponent implements OnInit {
   insertarUsuario(id) {
     const usuarioAgregar = {
       persona_id: id,
-      clave: 'NULL'
+      clave: 'NULL',
+      empleado: 1
     };
     this.service.insertUsuario(usuarioAgregar).subscribe(resp => {
       console.log('insertar empleado', resp['_body']);
@@ -228,9 +243,16 @@ export class EmpleadosComponent implements OnInit {
       apellido: e.newData.apellido !== undefined ? e.newData.apellido : e.oldData.apellido,
       tipo_documento: e.newData.tipo_documento !== undefined ? e.newData.tipo_documento : e.oldData.tipo_documento,
       num_documento: e.newData.num_documento !== undefined ? e.newData.num_documento : e.oldData.num_documento,
+      direccion: e.newData.direccion !== undefined ? e.newData.direccion : e.oldData.direccion,
+      descripcion: '---',
+      convencional: e.newData.convencional !== undefined ? e.newData.convencional : e.oldData.convencional,
       email: e.newData.email !== undefined ? e.newData.email : e.oldData.email,
       celular: e.newData.celular !== undefined ? e.newData.celular : e.oldData.celular,
-      id: e.oldData.persona_id
+      opcional: e.newData.opcional !== undefined ? e.newData.opcional : e.oldData.opcional,
+      empleado: 1,
+      clave: 'NULL',
+      persona_id: e.oldData.persona_id,
+      id: e.oldData.id
     };
     empleadoModif.id = empleadoModif.id * 1;
     empleadoModif.tipo_documento = empleadoModif.tipo_documento * 1;

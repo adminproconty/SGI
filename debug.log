@@ -15,3 +15,25 @@
 [0204/194835.440:ERROR:crash_report_database_win.cc(427)] unexpected header
 [0204/205900.487:ERROR:crash_report_database_win.cc(427)] unexpected header
 [0204/222556.470:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0205/202617.030:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0206/233225.373:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0207/122917.875:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0207/151744.794:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0208/083557.706:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0208/194744.232:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0208/204030.215:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0208/223147.556:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0208/232643.591:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0209/084931.182:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0210/155523.160:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0210/163828.002:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0210/192132.693:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0210/201208.964:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0211/081451.977:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0211/084139.762:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0211/084423.291:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0211/102957.347:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0211/124120.460:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0211/125430.202:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0211/160629.764:ERROR:crash_report_database_win.cc(427)] unexpected header
+[0213/222208.879:ERROR:file_io.cc(134)] WriteFile: Se está cerrando la canalización. (0xE8)

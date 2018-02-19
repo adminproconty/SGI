@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { AplicacionComponent } from './aplicacion/aplicacion.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { EmpresaComponent } from './administrador/empresa/empresa.component';
 import { LocalesComponent } from './administrador/locales/locales.component';
@@ -16,71 +17,81 @@ import { ProveedoresComponent } from './egresos/proveedores/proveedores.componen
 import { EgresosComponent } from './egresos/egresos/egresos.component';
 import { ProductosComponent } from './inventario/productos/productos.component';
 import { FisicoComponent } from './inventario/fisico/fisico.component';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
     {
+      path: 'login',
+      component: LoginComponent
+    }, {
       path: '',
-      component: DashboardComponent
-    }, {
-      path: 'administrador',
-      children: [
-          {
-            path: 'empresa',
-            component: EmpresaComponent
-          }, {
-            path: 'locales',
-            component: LocalesComponent
-          }, {
-            path: 'cuentas',
-            component: CuentasComponent
-          }, {
-            path: 'iva',
-            component: IvaComponent
-          }, {
-            path: 'roles',
-            component: RolesComponent
-          }, {
-            path: 'usuarios',
-            component: UsuariosComponent
-          }, {
-            path: 'empleados',
-            component: EmpleadosComponent
-          }
-        ]
-    }, {
-      path: 'ingresos',
+      component: AplicacionComponent,
       children: [
         {
-          path: 'clientes',
-          component: ClientesComponent
+          path: 'dahsboard',
+          component: DashboardComponent
         }, {
-          path: 'facturas',
-          component: FacturasComponent
+          path: 'administrador',
+          children: [
+              {
+                path: 'empresa',
+                component: EmpresaComponent
+              }, {
+                path: 'locales',
+                component: LocalesComponent
+              }, {
+                path: 'cuentas',
+                component: CuentasComponent
+              }, {
+                path: 'iva',
+                component: IvaComponent
+              }, {
+                path: 'roles',
+                component: RolesComponent
+              }, {
+                path: 'usuarios',
+                component: UsuariosComponent
+              }, {
+                path: 'empleados',
+                component: EmpleadosComponent
+              }
+            ]
         }, {
           path: 'ingresos',
-          component: IngresosComponent
-        }
-      ]
-    }, {
-      path: 'egresos',
-      children: [
-        {
-          path: 'proveedores',
-          component: ProveedoresComponent
+          children: [
+            {
+              path: 'clientes',
+              component: ClientesComponent
+            }, {
+              path: 'facturas',
+              component: FacturasComponent
+            }, {
+              path: 'ingresos',
+              component: IngresosComponent
+            }
+          ]
         }, {
           path: 'egresos',
-          component: EgresosComponent
-        }
-      ]
-    }, {
-      path: 'inventario',
-      children: [
-        {
-          path: 'productos',
-          component: ProductosComponent
+          children: [
+            {
+              path: 'proveedores',
+              component: ProveedoresComponent
+            }, {
+              path: 'egresos',
+              component: EgresosComponent
+            }
+          ]
         }, {
-          path: 'fisico',
-          component: FisicoComponent
+          path: 'inventario',
+          children: [
+            {
+              path: 'productos',
+              component: ProductosComponent
+            }, {
+              path: 'fisico',
+              component: FisicoComponent
+            }
+          ]
         }
       ]
     }

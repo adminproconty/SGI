@@ -5,14 +5,16 @@ export class ULRProvider {
 
   public dominio: String = 'http://127.0.0.1/sgi/api/';
 
+  /*Empresa*/
   public getAllEmpresa() {
-    return this.dominio + 'empresa/getall.php';
+    return this.dominio + 'empresa/getAll.php';
   }
 
   public updateEmpresa() {
     return this.dominio + 'empresa/update.php';
   }
 
+  /*Locales*/
   public getAllLocales() {
     return this.dominio + 'locales/getAll.php';
   }
@@ -25,12 +27,13 @@ export class ULRProvider {
     return this.dominio + 'locales/update.php';
   }
 
+  /*Cuentas*/
   public getAllTipoCuentas() {
-    return this.dominio + 'tipo_cuentas/getall.php';
+    return this.dominio + 'tipo_cuentas/getAll.php';
   }
 
   public getAllCuentas() {
-    return this.dominio + 'cuentas/getall.php';
+    return this.dominio + 'cuentas/getAll.php';
   }
 
   public insertCuenta() {
@@ -41,6 +44,7 @@ export class ULRProvider {
     return this.dominio + 'cuentas/update.php';
   }
 
+  /*IVA*/
   public getAllIVA() {
     return this.dominio + 'iva/getAll.php';
   }
@@ -53,8 +57,13 @@ export class ULRProvider {
     return this.dominio + 'iva/insert.php';
   }
 
+  public updateIva() {
+    return this.dominio + 'iva/update.php';
+  }
+
+  /*Roles*/
   public getAllRoles() {
-    return this.dominio + 'roles/getall.php';
+    return this.dominio + 'roles/getAll.php';
   }
 
   public insertRol() {
@@ -65,10 +74,12 @@ export class ULRProvider {
     return this.dominio + 'roles/update.php';
   }
 
+  /*Tipo Documentos*/
   public getAllTipoDocumento() {
     return this.dominio + 'tipo_documento/getAll.php';
   }
 
+  /*Personas*/
   public getAllPersonas() {
     return this.dominio + 'personas/getAll.php';
   }
@@ -77,12 +88,21 @@ export class ULRProvider {
     return this.dominio + 'personas/insert.php';
   }
 
+  public updatePersona() {
+    return this.dominio + 'personas/update.php';
+  }
+
   public getPersonaInsertada() {
     return this.dominio + 'personas/getByEmpresaDocumento.php';
   }
 
+  /*Usuarios*/
   public getAllUsuarios() {
     return this.dominio + 'usuarios/getAll.php';
+  }
+
+  public getUsuarioById() {
+    return this.dominio + 'usuarios/getById.php';
   }
 
   public insertUsuario() {
@@ -90,9 +110,31 @@ export class ULRProvider {
   }
 
   public updateUsuario() {
-    return this.dominio + 'personas/update.php';
+    return this.dominio + 'usuarios/update.php';
   }
 
+  /*Empleados_Local*/
+  public getAllLocalUsuario() {
+    return this.dominio + 'empleado_local/getAll.php';
+  }
+
+  public getLocalUsuarioByEmpleado() {
+    return this.dominio + 'empleado_local/getByEmpleado.php';
+  }
+
+  public insertEmpleadoLocal() {
+    return this.dominio + 'empleado_local/insert.php';
+  }
+
+  public asignarEmpleadoLocal() {
+    return this.dominio + 'empleado_local/asignar.php';
+  }
+
+  public deleteAsignacion() {
+    return this.dominio + 'empleado_local/delete.php';
+  }
+
+  /*Empleados*/
   public getAllEmpleados() {
     return this.dominio + 'empleados/getAll.php';
   }
@@ -101,10 +143,12 @@ export class ULRProvider {
     return this.dominio + 'personas/getByTipoDocumento.php';
   }
 
+  /*Clientes*/
   public getAllClientes() {
     return this.dominio + 'clientes/getAll.php';
   }
 
+  /*Categorías*/
   public getAllCategorias() {
     return this.dominio + 'categorias/getAll.php';
   }
@@ -133,24 +177,30 @@ export class ULRProvider {
     return this.dominio + 'productos/getIdByCodCategoria.php';
   }
 
-  public getCostoByProducto() {
-    return this.dominio + 'costos/getByProducto.php';
-  }
-
   public insertProducto() {
     return this.dominio + 'productos/insert.php';
-  }
-
-  public insertCosto() {
-    return this.dominio + 'costos/insert.php';
   }
 
   public updateProducto() {
     return this.dominio + 'productos/update.php';
   }
 
+  /*Costos*/
+  public getCostoByProducto() {
+    return this.dominio + 'costos/getByProducto.php';
+  }
+
+  public insertCosto() {
+    return this.dominio + 'costos/insert.php';
+  }
+
+  /*Inventario*/
   public getAllFisico() {
     return this.dominio + 'inventario/getAll.php';
+  }
+
+  public getInvenatrioByLocal() {
+    return this.dominio + 'inventario/getByLocal.php';
   }
 
   public getFisicoByLocalProducto() {
@@ -167,6 +217,51 @@ export class ULRProvider {
 
   public deleteFisico() {
     return this.dominio + 'inventario/delete.php';
+  }
+
+  /*Formas Pago*/
+  public getAllFormasPago() {
+    return this.dominio + 'formas_pago/getAll.php';
+  }
+
+  public getFormasPagoById() {
+    return this.dominio + 'formas_pago/getById.php';
+  }
+
+  public getAllTipoTarjetas() {
+    return this.dominio + 'tipos_tarjetas/getAll.php';
+  }
+
+  public getByLocalProducto() {
+    return this.dominio + 'inventario/getByLocalProducto.php';
+  }
+
+  /*Facturas*/
+  public insertFactura() {
+    return this.dominio + 'facturas/insert.php';
+  }
+
+  /*Pagos factura*/
+  public insertPagos() {
+    return this.dominio + 'pagos_factura/insert.php';
+  }
+
+  /*Login*/
+  public entrar() {
+    return this.dominio + 'login/entrar.php';
+  }
+
+  public localesUsuario() {
+    return this.dominio + 'login/localesUsuario.php';
+  }
+
+  public getDatosEmpresa() {
+    return this.dominio + 'login/getEmpresa.php';
+  }
+
+  /*Ingresos*/
+  public insertIngresos() {
+    return this.dominio + 'ingresos/insert.php';
   }
 
 }

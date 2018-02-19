@@ -5,10 +5,13 @@
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">
-              <img src="" class="img-circle" alt="User Image">
+              <img src="./assets/images/colorTRANS.png" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
-              <p>Empleado</p>
+              <p>
+                {{usuario.nombre}}<br/>
+                {{usuario.apellido}}
+              </p>
               <a><i class="fa fa-circle text-success"></i>Online</a>
             </div>
         </div>
@@ -50,7 +53,7 @@
                     <li [ngClass]="menu.menu.administrador.hijos.iva">
                         <a [routerLink]="['/administrador/iva']" (click)="navegarIva()">
                             <i class="fa fa-tasks" aria-hidden="true"></i>
-                            I.V.A.
+                            Impuestos
                         </a>
                     </li>
                     <li [ngClass]="menu.menu.administrador.hijos.roles">
@@ -113,12 +116,12 @@
                             Proveedores
                         </a>
                     </li>
-                    <li [ngClass]="menu.menu.egresos.hijos.compras">
+                    <!--<li [ngClass]="menu.menu.egresos.hijos.compras">
                         <a (click)="navegarCompras()">
                             <i class="fa fa-cart-plus" aria-hidden="true"></i>
                             Compras
                         </a>
-                    </li>
+                    </li>-->
                     <li [ngClass]="menu.menu.egresos.hijos.egresos">
                         <a (click)="navegarEgresosEgresos()" [routerLink]="['/egresos/egresos']">
                             <i class="fa fa-external-link" aria-hidden="true"></i>
@@ -127,7 +130,7 @@
                     </li>
                 </ul>
             </li>
-            <li [ngClass]="menu.menu.contabilidad.clase">
+            <!--<li [ngClass]="menu.menu.contabilidad.clase">
                 <a (click)="navegarContabilidad()">
                     <i class="fa fa-check-square-o" aria-hidden="true"></i>
                     <span>Contabilidad</span>
@@ -249,7 +252,7 @@
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li>-->
             <li [ngClass]="menu.menu.inventario.clase">
                 <a (click)="navegarInventario()">
                     <i class="fa fa-cubes" aria-hidden="true"></i>
@@ -263,28 +266,28 @@
                             Lista de Productos
                         </a>
                     </li>
-                    <li [ngClass]="menu.menu.inventario.hijos.requision">
+                    <!--<li [ngClass]="menu.menu.inventario.hijos.requision">
                         <a (click)="navegarRequision()">
                             <i class="fa fa-check-circle-o" aria-hidden="true"></i>
                             Requisión
                         </a>
-                    </li>
+                    </li>-->
                     <li [ngClass]="menu.menu.inventario.hijos.fisico">
                         <a (click)="navegarFisico()" [routerLink]="['/inventario/fisico']">
                             <i class="fa fa-cube" aria-hidden="true"></i>
                             Físico
                         </a>
                     </li>
-                    <li [ngClass]="menu.menu.inventario.hijos.cardex">
+                    <!--<li [ngClass]="menu.menu.inventario.hijos.cardex">
                         <a (click)="navegarCardex()">
                             <i class="fa fa-heart" aria-hidden="true"></i>
                             Cardex
                         </a>
-                    </li>
+                    </li>-->
                 </ul>
             </li>
             <li>
-                <a>
+                <a (click)="cerrarSesion()">
                     <i class="fa fa-power-off" aria-hidden="true"></i>
                     <span>Cerrar Sesión</span>
                 </a>

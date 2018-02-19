@@ -1,13 +1,13 @@
 <header class="main-header">
-    
+
         <!-- Logo -->
         <a href="" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>SGC</b></span>
+            <span class="logo-mini"><b>SGI</b></span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>SGC</b>CDI NEW SKY</span>
+            <span class="logo-lg"><b>Proconty</b> SGI</span>
         </a>
-    
+
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">
             <!-- Sidebar toggle button-->
@@ -20,10 +20,10 @@
                     <!-- Messages: style can be found in dropdown.less-->
                     <!-- Notifications: style can be found in dropdown.less -->
                     <li dropdown class="dropdown notifications-menu">
-                        <a dropdownToggle class="dropdown-toggle">
+                        <!--<a dropdownToggle class="dropdown-toggle">
                             <i class="fa fa-bell-o"></i>
                             <span class="label label-warning">Hoy</span>
-                        </a>
+                        </a>-->
                         <ul *dropdownMenu class="dropdown-menu">
                             <li class="header">Estadísticas del día de hoy</li>
                             <li>
@@ -33,13 +33,13 @@
                                         <a href="#">
                                             <i class="fa fa-warning text-yellow"></i> Total Compras: $;
                                         </a>
-                          
+
                                     </li>
                                     <li>
                                         <a href="#">
                                             <i class="fa fa-shopping-cart text-green"></i> Total Ventas: $;
                                         </a>
-                                    </li>                  
+                                    </li>
                                 </ul>
                             </li>
                             <li class="footer"><a href="#">Ver todo</a></li>
@@ -48,19 +48,18 @@
                     <!-- User Account: style can be found in dropdown.less -->
                     <li dropdown class="dropdown user user-menu">
                         <a dropdownToggle class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="assets/images/Logo New Sky letras.png" class="user-image" alt="User Image">
-                            <span class="hidden-xs">Sucursal - Nombre de la empresa</span>
+                            <!--<img src="assets/images/Logo New Sky letras.png" class="user-image" alt="User Image">-->
+                            <span class="hidden-xs">{{local.local_nombre}} - {{empresa.nombre_comercial}}</span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
-                                <img src="assets/images/Logo New Sky letras.png" class="img-circle" alt="User Image">
+                                <!--<img src="assets/images/Logo New Sky letras.png" class="img-circle" alt="User Image">-->
                                 <p>
-                                    Empleado - Tipo de usuario
-                                    <small>Tipo de usuario, Sucursal Dirección </small>
+                                  {{usuario.email}} - {{usuario.nombre}} {{usuario.apellido}}
+                                  <small> {{local.local_nombre}} - {{empresa.nombre_comercial}} </small>
                                 </p>
                             </li>
-                      
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
@@ -74,6 +73,6 @@
                     </li>
                 </ul>
             </div>
-    
+
         </nav>
 </header>

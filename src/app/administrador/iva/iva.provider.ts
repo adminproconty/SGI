@@ -1,3 +1,4 @@
+
 import { ULRProvider } from './../../providers/url.providers';
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
@@ -23,7 +24,7 @@ export class  IvaProvider {
   }
 
   public update(objeto: Object) {
-    return this.http.post(this.urlProvider.updateCuenta(), JSON.stringify(objeto), {
+    return this.http.post(this.urlProvider.updateIva(), JSON.stringify(objeto), {
       headers: new Headers({ 'Content-type': 'application/json' })
       })
       .map((resp: Response) => resp);

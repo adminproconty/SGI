@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, TemplateRef, OnInit } from '@angular/core';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 import { NavegationProvider } from '../../navegation/navegation.provider';
 import { FacturasProvider } from './facturas.provider';
+import { DatosLocalProvider } from '../../providers/datos.local.provider';
+import { DatosUsuarioProvider } from '../../providers/datos.usuario.provider';
 
 @Component({
   selector: 'app-facturas',
@@ -35,10 +39,25 @@ export class FacturasComponent implements OnInit {
   productos: any = [];
   producto: any = {};
   ivas: any = [];
+  formasPago: any = [];
+  formaPago: any = {};
+
+  modalRef: BsModalRef;
+  backClick: boolean;
+  pago: any = {};
+  tiposTarjetas: any = [];
+  cuentas: any = [];
+  registroPagos: any = [];
+  tabs: any = [];
+  tabContent: string;
+  carritoLleno: boolean;
 
   constructor(
     private navegation: NavegationProvider,
-    private service: FacturasProvider) {
+    private modalService: BsModalService,
+    private service: FacturasProvider,
+    private datosLocal: DatosLocalProvider,
+    private datosUsuario: DatosUsuarioProvider) {
     this.navegation.setMenu(
       {
         escritorio: '',
@@ -115,6 +134,19 @@ export class FacturasComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.tabs = [
+      {
+        id: 0,
+        text: 'Pedido',
+        content: 'Pedido'
+      }, {
+        id: 1,
+        text: 'Pago',
+        content: 'Pago'
+      }
+    ];
+    this.carritoLleno = false;
+    this.tabContent = 'Pedido';
     this.noDataText = 'No hay data';
     this.cancelAllChanges = 'Cancelar';
     this.cancelRowChanges = 'Cancelar';
@@ -129,7 +161,7 @@ export class FacturasComponent implements OnInit {
     this.phoneRules = {
         X: /[02-9]/
     };
-    this.guardando = false;
+    this.guardando = true;
     this.facturando = false;
     this.service.getAllTipoDocumentos().subscribe(resp => {
       console.log('tipo documentos', resp.data);
@@ -137,20 +169,26 @@ export class FacturasComponent implements OnInit {
     });
     this.consumidorfinal = false;
     this.factura = {
-      persona_id: undefined,
-      tipo_documento: undefined,
-      documento: undefined,
-      nombre: undefined,
-      apellido: undefined,
-      email: undefined,
-      celular: undefined,
+      factura_id: undefined,
+      local_id: this.datosLocal.datos.local_id,
+      usuario_id: this.datosUsuario.datos.empleado_id,
+      persona_id: '',
+      tipo_documento: 0,
+      documento: '',
+      direccion: '',
+      nombre: '',
+      apellido: '',
+      email: '',
+      celular: '',
       cant_producto: 1,
+      min: 0,
       productos: [],
-      iva_id: undefined,
-      iva: undefined,
-      subtotal: undefined,
-      total_iva: undefined,
-      total_pagar: undefined
+      iva_id: '',
+      iva: 0,
+      subtotal: 0,
+      total_iva: 0,
+      total: 0,
+      pagos: []
     };
     this.service.getAllProductos().subscribe(resp => {
       console.log('productos', resp.data);
@@ -167,18 +205,102 @@ export class FacturasComponent implements OnInit {
         cantidad: 0,
         pt: 0
       };
+      this.service.getByLocalProducto({
+        local_id: this.datosLocal.datos.local_id,
+        producto_id: this.producto.id
+      }).subscribe(res => {
+        const local = JSON.parse(res['_body']);
+        console.log('inventario producto', local);
+        this.factura.min = local.data[0].cantidad * 1;
+      });
     });
     this.service.getAllIvas().subscribe(resp => {
       console.log('ivas', resp.data);
       this.ivas = resp.data;
-      this.factura.iva_id = this.ivas[0].id;
+      this.factura.iva_id = this.ivas[0].id * 1;
       this.factura.iva = this.ivas[0].cantidad;
     });
+    this.service.getAllFormasPago().subscribe(resp => {
+      console.log('formas pago', resp.data);
+      this.formasPago = resp.data;
+    });
+    this.service.getAllTiposTarjetas().subscribe(resp => {
+      console.log('tipos tarjetas', resp.data);
+      this.tiposTarjetas = resp.data;
+    });
+    this.service.getAllCuentas().subscribe(resp => {
+      console.log('cuentas', resp.data);
+      this.cuentas = resp.data;
+    });
+    this.pago = {
+      cxc_id: 'NULL',
+      forma_pago: 'NULL',
+      tipo_pago: 'NULL',
+      cuenta_id: 'NULL',
+      aporte: 0,
+      banco: 'NULL',
+      tipo_tarjeta: 'NULL',
+      referencia: 'NULL',
+      celular: 'NULL',
+      email: 'NULL'
+    };
+    this.carrito = [];
+    this.registroPagos = [];
+  }
+
+  openModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(
+      template,
+      Object.assign({}, {ignoreBackdropClick: this.backClick}, { })
+    );
+  }
+
+  cancelar() {
+    this.modalRef.hide();
   }
 
   guardar(e) {
     e.preventDefault();
     this.guardando = true;
+    this.factura.productos = this.carrito;
+    this.factura.pagos = this.registroPagos;
+    console.log('guardar', this.factura);
+    this.service.insert(this.factura).subscribe(resp => {
+      console.log('factura agregada', resp['_body']);
+      if (resp['_body'] === 'false') {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+      } else {
+        this.agregarPagos(resp['_body']);
+      }
+    });
+  }
+
+  agregarPagos(factura) {
+    this.factura.factura_id = factura * 1;
+    this.service.insertPagos(this.factura).subscribe(resp => {
+      console.log('agregado BD pagos', resp['_body']);
+      if (resp['_body'] === 'true') {
+        this.alerts.push(
+          {
+            type: 'success',
+            msg: 'Guardado exitoso'
+          }
+        );
+        this.ngOnInit();
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+      }
+    });
   }
 
   cambioTipoDocumento(e) {
@@ -194,11 +316,11 @@ export class FacturasComponent implements OnInit {
     } else {
       this.consumidorfinal = false;
       this.factura.tipo_documento = e.value * 1;
-      this.factura.documento = undefined;
-      this.factura.nombre = undefined;
-      this.factura.apellido = undefined,
-      this.factura.email = undefined,
-      this.factura.celular = undefined;
+      this.factura.documento = '';
+      this.factura.nombre = '';
+      this.factura.apellido = '',
+      this.factura.email = '',
+      this.factura.celular = '';
     }
   }
 
@@ -208,6 +330,11 @@ export class FacturasComponent implements OnInit {
 
   eliminarProducto(e) {
     console.log('carrito', this.carrito);
+    if (this.carrito.length < 1) {
+      this.carritoLleno = false;
+    } else {
+      this.carritoLleno = false;
+    }
   }
 
   agregarCarrito() {
@@ -226,12 +353,15 @@ export class FacturasComponent implements OnInit {
       num_documento: e.value}).subscribe(resp => {
         const data = JSON.parse(resp['_body']);
         console.log('cliente consultado', data);
-        this.factura.persona_id = data.data[0].id;
-        this.factura.documento = data.data[0].num_documento;
-        this.factura.nombre = data.data[0].nombre;
-        this.factura.apellido = data.data[0].apellido;
-        this.factura.email = data.data[0].email;
-        this.factura.celular = data.data[0].celular;
+        if (data.data.length > 0) {
+          this.factura.persona_id = data.data[0].id;
+          this.factura.documento = data.data[0].num_documento;
+          this.factura.nombre = data.data[0].nombre;
+          this.factura.apellido = data.data[0].apellido;
+          this.factura.email = data.data[0].email;
+          this.factura.celular = data.data[0].celular;
+          this.factura.direccion  = data.data[0].direccion;
+        }
     });
   }
 
@@ -252,6 +382,14 @@ export class FacturasComponent implements OnInit {
         cantidad: 0,
         pt: 0
       };
+      this.service.getByLocalProducto({
+        local_id: this.datosLocal.datos.local_id,
+        producto_id: this.producto.id
+      }).subscribe(res => {
+        const local = JSON.parse(res['_body']);
+        console.log('inventario producto', local);
+        this.factura.min = local.data[0].cantidad * 1;
+      });
     });
   }
 
@@ -273,7 +411,8 @@ export class FacturasComponent implements OnInit {
     if (!item) {
       return '';
     }
-    return item.codigo + ' - ' + item.nombre + ' $' + item.costo;
+    return 'Código: ' + item.codigo +
+            ' Nombre: ' + item.nombre + ' Precio: $' + item.costo;
   }
 
   displayIvas(item) {
@@ -291,7 +430,7 @@ export class FacturasComponent implements OnInit {
     let total = 0;
     if (this.carrito.length > 0) {
       for (let i = 0; i < this.carrito.length; i++) {
-        total = total + this.carrito[i].pt;
+        total = total + this.carrito[i].pt * 1;
       }
     }
     this.factura.subtotal = total * 1;
@@ -302,7 +441,7 @@ export class FacturasComponent implements OnInit {
   calcularCostoIva(subtotal) {
     let costoIva;
     costoIva = subtotal * this.factura.iva / 100;
-    this.factura.total_iva = costoIva.toFixed(2);
+    this.factura.total_iva = costoIva.toFixed(2) * 1;
     console.log('cálculo costo iva', costoIva);
     this.calcularTotal(costoIva, subtotal);
   }
@@ -310,7 +449,173 @@ export class FacturasComponent implements OnInit {
   calcularTotal(iva, subtotal) {
     const i = iva * 1;
     const sub = subtotal * 1;
-    this.factura.total_pagar = (i + sub).toFixed(2);
+    this.factura.total = (i + sub).toFixed(2);
+    this.factura.total = this.factura.total * 1;
+  }
+
+  cambioFormaPago(e) {
+    const formaId = e.value * 1;
+    this.service.getFormasPagoById({id: formaId}).subscribe(resp => {
+      const forma = JSON.parse(resp['_body']);
+      this.formaPago = forma.data[0];
+      console.log('forma pago', this.formaPago);
+      this.pago.tipo_pago = this.formaPago.nombre;
+    });
+    this.pago.forma_pago = e.value * 1;
+  }
+
+  cambioTipoTarjeta(e) {
+    this.pago.tipo_tarjeta = e.value * 1;
+  }
+
+  cambioCuenta(e) {
+    this.pago.cuenta_id = e.value * 1;
+  }
+
+  eliminarPago(e) {
+    console.log('eliminar pago', e);
+    console.log('registroPago', this.registroPagos);
+    if (this.registroPagos.length > 0) {
+      let paga = 0;
+      let neto = 0;
+      for (let i = 0; i < this.registroPagos.length; i++) {
+        paga = paga + this.registroPagos[i].aporte * 1;
+      }
+      this.factura.cancela = paga;
+      neto = this.factura.total * 1;
+      this.factura.vuelto =  (this.factura.cancela - neto).toFixed(2);
+      if (this.factura.cancela >= neto) {
+        this.guardando = false;
+      } else {
+        this.guardando = true;
+      }
+    } else {
+      this.factura.cancela = 0;
+      this.factura.vuelto = 0;
+    }
+  }
+
+  agregarPago(e) {
+    e.preventDefault();
+    console.log('pago', this.pago);
+    this.registroPagos.push(this.pago);
+    this.pago = {
+      cxc_id: 'NULL',
+      cuenta_id: 'NULL',
+      aporte: 0,
+      vuelto: 0,
+      banco: 'NULL',
+      tipo_tarjeta: 'NULL',
+      referencia: 'NULL',
+      celular: 'NULL',
+      email: 'NULL'
+    };
+
+    let paga = 0;
+    let neto = 0;
+    for (let i = 0; i < this.registroPagos.length; i++) {
+      paga = paga + this.registroPagos[i].aporte * 1;
+    }
+    this.factura.cancela = paga;
+    neto = this.factura.total * 1;
+    this.factura.vuelto =  (this.factura.cancela - neto).toFixed(2);
+    if (this.factura.cancela >= neto) {
+      this.guardando = false;
+    } else {
+      this.guardando = true;
+    }
+    console.log('agrega pago tabla', this.registroPagos);
+  }
+
+  insertarPago(e) {
+    console.log('insertar pago', e);
+  }
+
+  selectTab(e) {
+    this.tabContent = this.tabs[e.itemIndex].content;
+  }
+
+  siguiente(e) {
+    e.preventDefault();
+    this.service.getByTipoDocumento({
+      tipo_documento: this.factura.tipo_documento,
+      num_documento: this.factura.documento}).subscribe(resp => {
+        const data = JSON.parse(resp['_body']);
+        console.log('cliente consultado', data);
+        if (data.data.length > 0) {
+          this.service.updateCliente({
+            nombre: this.factura.nombre,
+            apellido: data.data[0].apellido,
+            tipo_documento: this.factura.tipo_documento,
+            num_documento: this.factura.documento,
+            direccion: this.factura.direccion,
+            descripcion: data.data[0].descripcion,
+            email: this.factura.email,
+            celular: this.factura.celular,
+            id: this.factura.persona_id
+          }).subscribe(res => {
+            console.log(res['_body']);
+            if (res['_body'] !== 'true') {
+              this.alerts.push(
+                {
+                  type: 'danger',
+                  msg: 'Error al conectarse con la BD, por favor contacte al administrador del sistema'
+                }
+              );
+            }
+          });
+          this.factura.persona_id = data.data[0].id;
+          this.factura.documento = data.data[0].num_documento;
+          this.factura.nombre = data.data[0].nombre;
+          this.factura.apellido = data.data[0].apellido;
+          this.factura.email = data.data[0].email;
+          this.factura.celular = data.data[0].celular;
+          this.tabContent = 'Pago';
+        } else {
+          this.service.insertCliente({
+            empresa_id: 1,
+            nombre: this.factura.nombre,
+            apellido: '---',
+            tipo_documento: this.factura.tipo_documento,
+            num_documento: this.factura.documento,
+            direccion: this.factura.direccion,
+            descripcion: this.factura.nombre,
+            email: this.factura.email,
+            celular: this.factura.celular
+          }).subscribe(res => {
+            console.log('cliente agregado', res['_body']);
+            if (res['_body'] !== 'true') {
+              this.alerts.push(
+                {
+                  type: 'danger',
+                  msg: 'Error al conectarse con la BD, por favor contacte al administrador del sistema'
+                }
+              );
+            } else {
+              this.service.getByTipoDocumento({
+                tipo_documento: this.factura.tipo_documento,
+                num_documento: this.factura.documento}).subscribe(r => {
+                  const datos = JSON.parse(r['_body']);
+                  console.log('cliente consultado', datos);
+                  if (datos.data.length > 0) {
+                    this.factura.persona_id = datos.data[0].id;
+                    this.factura.documento = datos.data[0].num_documento;
+                    this.factura.nombre = datos.data[0].nombre;
+                    this.factura.apellido = datos.data[0].apellido;
+                    this.factura.email = datos.data[0].email;
+                    this.factura.celular = datos.data[0].celular;
+                    this.factura.direccion  = datos.data[0].direccion;
+                  }
+              });
+            }
+          });
+          this.tabContent = 'Pago';
+        }
+    });
+  }
+
+  atras() {
+    this.tabContent = 'Pedido';
   }
 
 }
