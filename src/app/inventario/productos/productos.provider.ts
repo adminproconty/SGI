@@ -15,6 +15,18 @@ export class  ProductosProvider {
       .map((res: Response) => res.json());
   }
 
+  public getallIVA() {
+    return this.http.get(this.urlProvider.getAllIVA())
+      .map((res: Response) => res.json());
+  }
+
+  public getIvaById(objeto: any) {
+    return this.http.post(this.urlProvider.getIvaById(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-Type': 'application/json' })
+    })
+      .map((resp: Response) => resp);
+  }
+
   public insertCategoria(objeto: any) {
     return this.http.post(this.urlProvider.insertCategoria(), JSON.stringify(objeto), {
       headers: new Headers({ 'Content-Type': 'application/json' })

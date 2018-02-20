@@ -146,7 +146,9 @@ export class ClientesComponent implements OnInit {
       num_documento: '',
       direccion: '',
       email: '',
-      celular: ''
+      convencional: '',
+      celular: '',
+      opcional: ''
     };
     this.service.getAllClientes().subscribe(resp => {
       console.log('clientes', resp.data);
@@ -164,6 +166,14 @@ export class ClientesComponent implements OnInit {
   guardar(e) {
     e.preventDefault();
     this.guardando = true;
+    const cel = this.cliente.celular.split('(')[1];
+    const celCod = cel.split(')')[0];
+    const celPostCod = cel.split(')')[1];
+    this.cliente.celular = celCod + celPostCod;
+    const tlf = this.cliente.convencional.split('(')[1];
+    const tlfCod = tlf.split(')')[0];
+    const tlfPostCod = tlf.split(')')[1];
+    this.cliente.convencional = tlfCod + tlfPostCod;
     console.log('a guardar', this.cliente);
     this.insertarPersona();
   }
@@ -206,7 +216,9 @@ export class ClientesComponent implements OnInit {
       direccion: e.newData.direccion !== undefined ? e.newData.direccion : e.oldData.direccion,
       descripcion: e.newData.descripcion !== undefined ? e.newData.descripcion : e.oldData.descripcion,
       email: e.newData.email !== undefined ? e.newData.email : e.oldData.email,
+      convencional: e.newData.convencional !== undefined ? e.newData.convencional : e.oldData.convencional,
       celular: e.newData.celular !== undefined ? e.newData.celular : e.oldData.celular,
+      opcional: e.newData.opcional !== undefined ? e.newData.opcional : e.oldData.opcional,
       id: e.oldData.id
     };
     clienteModif.id = clienteModif.id * 1;

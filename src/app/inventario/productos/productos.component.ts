@@ -44,6 +44,8 @@ export class ProductosComponent implements OnInit {
   };
   guardando: boolean;
   servicio: boolean;
+  activo: boolean;
+  ivas: any = [];
 
   constructor(
     private navegation: NavegationProvider,
@@ -125,6 +127,10 @@ export class ProductosComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.service.getallIVA().subscribe(resp => {
+      console.log('IVA', resp.data);
+      this.ivas = resp.data;
+    });
     this.noDataText = 'No hay data';
     this.cancelAllChanges = 'Cancelar';
     this.cancelRowChanges = 'Cancelar';
@@ -148,7 +154,9 @@ export class ProductosComponent implements OnInit {
       codigo: '',
       descripcion: '',
       costo: undefined,
-      servicio: 0
+      servicio: 0,
+      activo: 1,
+      iva_id: 0
     };
     this.guardando = false;
     this.service.allCategorias().subscribe(resp => {
@@ -160,6 +168,7 @@ export class ProductosComponent implements OnInit {
       this.productos = resp.data;
     });
     this.servicio = false;
+    this.activo = true;
   }
 
   openModal(template: TemplateRef<any>) {
@@ -257,24 +266,15 @@ export class ProductosComponent implements OnInit {
     console.log('editar', e);
     const catModif = {
       id: e.oldData.id,
-      nombre: '',
-      abreviatura: '',
-      descripcion: ''
+      nombre: e.newData.nombre !== undefined ? e.newData.nombre : e.oldData.nombre,
+      abreviatura: e.newData.abreviatura !== undefined ? e.newData.abreviatura : e.oldData.abreviatura,
+      descripcion: e.newData.descripcion !== undefined ? e.newData.descripcion : e.oldData.descripcion,
+      activo: e.newData.activo !== undefined ? e.newData.activo : e.oldData.activo
     };
-    if (e.newData.nombre) {
-      catModif.nombre = e.newData.nombre;
+    if (catModif.activo === true) {
+      catModif.activo = 1;
     } else {
-      catModif.nombre = e.oldData.nombre;
-    }
-    if (e.newData.descripcion) {
-      catModif.descripcion = e.newData.descripcion;
-    } else {
-      catModif.descripcion = e.oldData.descripcion;
-    }
-    if (e.newData.abreviatura) {
-      catModif.abreviatura = e.newData.abreviatura;
-    } else {
-      catModif.abreviatura = e.oldData.abreviatura;
+      catModif.activo = 0;
     }
     this.service.updateCategoria(catModif).subscribe(resp => {
       console.log('cat modificada', resp['_body']);
@@ -320,12 +320,19 @@ export class ProductosComponent implements OnInit {
       codigo: e.newData.codigo !== undefined ? e.newData.codigo : e.oldData.codigo,
       descripcion: e.newData.descripcion !== undefined ? e.newData.descripcion : e.oldData.descripcion,
       servicio: e.newData.servicio !== undefined ? e.newData.servicio : e.oldData.servicio,
+      activo: e.newData.activo !== undefined ? e.newData.activo : e.oldData.activo,
+      iva_id: e.newData.iva_id !== undefined ? e.newData.iva_id : e.oldData.iva_id,
       id: e.oldData.id
     };
     if (prodModif.servicio === true) {
       prodModif.servicio = 1;
     } else {
       prodModif.servicio = 0;
+    }
+    if (prodModif.activo === true) {
+      prodModif.activo = 1;
+    } else {
+      prodModif.activo = 0;
     }
     if (e.newData.costo) {
       this.service.updateProducto(prodModif).subscribe(resp => {
@@ -397,6 +404,31 @@ export class ProductosComponent implements OnInit {
     } else {
       this.producto.servicio = 0;
     }
+  }
+
+  cambioActivo(e) {
+    if (e.value === true) {
+      this.producto.activo = 1;
+    } else {
+      this.producto.activo = 0;
+    }
+  }
+
+  displayIvas(item) {
+    if (!item) {
+      return '';
+    }
+    return item.nombre + ' - ' + item.cantidad + '%';
+  }
+
+  cambioIva(e) {
+    console.log('cambio iva', e);
+    const codigo = e.value * 1;
+    this.service.getIvaById({id: codigo}).subscribe(resp => {
+      const data = JSON.parse(resp['_body']);
+      console.log('iva consultado', data);
+      this.producto.iva_id = data.id * 1;
+    });
   }
 
 }

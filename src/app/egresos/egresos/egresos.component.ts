@@ -27,6 +27,7 @@ export class EgresosComponent implements OnInit {
   egresosDirecto: any = [];
   transferencias: any = [];
   tarjetas: any = [];
+  cheques: any = [];
 
   constructor(private navegation: NavegationProvider) {
     this.navegation.setMenu(
@@ -148,15 +149,20 @@ export class EgresosComponent implements OnInit {
         icon: 'fa fa-exchange',
         content: 'Transferencia'
       }, {
+        id: 2,
+        text: 'Cheque',
+        icon: 'fa fa-money',
+        content: 'Cheque'
+      }, {
         id: 3,
         text: 'Tarjeta',
         icon: 'fa fa-credit-card',
         content: 'Tarjeta'
       }, {
         id: 4,
-        text: 'CXP',
+        text: 'CXC',
         icon: 'fa fa-calendar',
-        content: 'CXP'
+        content: 'CXC'
       }
     ];
     this.tabContent = this.tabs[0].content;
@@ -201,6 +207,14 @@ export class EgresosComponent implements OnInit {
   }
 
   eliminarTransferencia(e) {
+    console.log('eliminar', e);
+  }
+
+  editarCheque(e) {
+    console.log('editar', e);
+  }
+
+  eliminarCheque(e) {
     console.log('eliminar', e);
   }
 

@@ -170,6 +170,7 @@
                     [noDataText]="noDataText"
                     keyExpr="id"
                     [allowColumnReordering]="true"
+                    [columnAutoWidth]="true"
                     (onRowUpdating)="editarProducto($event)">
                   <dxo-paging [pageSize]="10"></dxo-paging>
                   <dxo-pager
@@ -207,6 +208,14 @@
                   <dxi-column dataField="unidad" caption="Unidad" [width]="100"></dxi-column>
                   <dxi-column dataField="costo" caption="Costo" [width]="100"></dxi-column>
                   <dxi-column dataField="servicio" caption="Servicio" [width]="120"></dxi-column>
+                  <dxi-column dataField="activo" caption="Activo" [width]="120"></dxi-column>
+                  <dxi-column dataField="iva_id" caption="I.V.A." [width]="150">
+                    <dxo-lookup
+                        [dataSource]="ivas"
+                        displayExpr="cantidad"
+                        valueExpr="id">
+                    </dxo-lookup>
+                  </dxi-column>
 
                 </dx-data-grid>
               </div>
@@ -316,7 +325,7 @@
             <div class="row">
               <div class="col-md-12 left">
                 <div class="form-group">
-                  <label>Costo:
+                  <label>PVP:
                     <span class="required">*</span>
                   </label>
                   <dx-text-box class="form-control"
@@ -324,7 +333,7 @@
                       mode="float"
                       [(value)]="producto.costo">
                     <dx-validator>
-                      <dxi-validation-rule type="required" message="Costo es requerido"></dxi-validation-rule>
+                      <dxi-validation-rule type="required" message="PVP es requerido"></dxi-validation-rule>
                     </dx-validator>
                   </dx-text-box>
                 </div>
@@ -334,10 +343,39 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group">
+                  <label>I.V.A.</label>
+                  <dx-lookup
+                      [items]="ivas"
+                      [displayExpr]="displayIvas"
+                      valueExpr="id"
+                      [value]="ivas[0].id"
+                      fieldTemplate="field"
+                      (onValueChanged)="cambioIva($event)">
+                    <div *dxTemplate="let item of 'field'">
+                      <div class="custom-field">
+                        {{item.nombre}} - {{item.cantidad}}%
+                      </div>
+                    </div>
+                  </dx-lookup>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
                   <label>¿Servicio?</label>
                   <dx-switch
                     [value]="servicio"
                     (onValueChanged)="cambioServicio($event)"></dx-switch>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>¿Activo?</label>
+                  <dx-switch
+                    [value]="activo"
+                    (onValueChanged)="cambioActivo($event)"></dx-switch>
                 </div>
               </div>
             </div>

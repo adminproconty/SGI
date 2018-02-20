@@ -181,13 +181,45 @@
 
                   <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
                     <div class="form-group">
-                      <label>
-                        Número Telefónico:
+                      <label>Teléfono Convencional:
                       </label>
                       <dx-text-box class="form-control"
+                          mask="(X0)0000000"
+                          [maskRules]="phoneRules"
+                          maskInvalidMessage="No cumple con el formato telefónico convencional"
+                          [useMaskedValue]="true"
+                          name="telefono"
+                          [(value)]="factura.convencional">
+                      </dx-text-box>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
+                    <div class="form-group">
+                      <label>Número Celular:
+                        <span class="required">*</span>
+                      </label>
+                      <dx-text-box class="form-control"
+                          mask="(X00)0000000"
+                          [maskRules]="phoneRules"
+                          maskInvalidMessage="No cumple con el formato telefónico celular"
+                          [useMaskedValue]="true"
                           name="celular"
-                          [(value)]="factura.celular"
-                          [disabled]="consumidorfinal">
+                          [(value)]="factura.celular">
+                      </dx-text-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
+                    <div class="form-group">
+                      <label>Teléfono Opcional:
+                      </label>
+                      <dx-text-box class="form-control"
+                          mode="number"
+                          name="telefono"
+                          [(value)]="factura.opcional">
                       </dx-text-box>
                     </div>
                   </div>

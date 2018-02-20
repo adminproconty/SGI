@@ -64,7 +64,9 @@
                   <dxi-column dataField="direccion" caption="Dirección"></dxi-column>
                   <dxi-column dataField="descripcion" caption="Descripción"></dxi-column>
                   <dxi-column dataField="email" caption="Email"></dxi-column>
+                  <dxi-column dataField="convencional" caption="Convencional"></dxi-column>
                   <dxi-column dataField="celular" caption="Celular"></dxi-column>
+                  <dxi-column dataField="opcional" caption="Opcional"></dxi-column>
 
                 </dx-data-grid>
               </div>
@@ -191,15 +193,47 @@
             <div class="row">
               <div class="col-md-12 left">
                 <div class="form-group">
-                  <label>Número Telefónico:
+                  <label>Teléfono Convencional:
+                  </label>
+                  <dx-text-box class="form-control"
+                      mask="(X0)0000000"
+                      [maskRules]="phoneRules"
+                      maskInvalidMessage="No cumple con el formato telefónico convencional"
+                      [useMaskedValue]="true"
+                      name="telefono"
+                      [(value)]="cliente.convencional">
+                  </dx-text-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <label>Número Celular:
                     <span class="required">*</span>
                   </label>
                   <dx-text-box class="form-control"
+                      mask="(X00)0000000"
+                      [maskRules]="phoneRules"
+                      maskInvalidMessage="No cumple con el formato telefónico celular"
+                      [useMaskedValue]="true"
                       name="celular"
                       [(value)]="cliente.celular">
-                    <dx-validator>
-                      <dxi-validation-rule type="required" message="Número telefónico es requerido"></dxi-validation-rule>
-                    </dx-validator>
+                  </dx-text-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <label>Teléfono Opcional:
+                  </label>
+                  <dx-text-box class="form-control"
+                      mode="number"
+                      name="telefono"
+                      [(value)]="cliente.opcional">
                   </dx-text-box>
                 </div>
               </div>
