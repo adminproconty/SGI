@@ -182,6 +182,7 @@ export class FacturasComponent implements OnInit {
     this.consumidorfinal = false;
     this.factura = {
       factura_id: undefined,
+      serie: 'S-00-001',
       local_id: this.datosLocal.datos.local_id,
       usuario_id: this.datosUsuario.datos.empleado_id,
       persona_id: '',
@@ -310,7 +311,7 @@ export class FacturasComponent implements OnInit {
         this.alerts.push(
           {
             type: 'success',
-            msg: 'Guardado exitoso'
+            msg: 'Factura S-000-001' + factura + 'agregada exitosamente'
           }
         );
         this.ngOnInit();

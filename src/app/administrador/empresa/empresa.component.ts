@@ -101,6 +101,8 @@ export class EmpresaComponent implements OnInit {
 
   ngOnInit() {
     this.empresa = this.infoEmpresa.datos;
+    this.empresa.serie = 'S-000-001';
+    this.empresa.factura = '15';
     this.guardando = false;
     this.dismissible = true;
   }

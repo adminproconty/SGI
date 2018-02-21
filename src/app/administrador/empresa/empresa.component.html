@@ -139,6 +139,36 @@
                                             </dx-text-box>
                                         </div>
                                     </div>
+
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
+                                      <div class="form-group">
+                                        <label>Serie Facturación:
+                                          <span class="required">*</span>
+                                        </label>
+                                        <dx-text-box class="form-control"
+                                            name="direccion"
+                                            [(value)]="empresa.serie">
+                                          <dx-validator>
+                                            <dxi-validation-rule type="required" message="Dirección es requerida"></dxi-validation-rule>
+                                          </dx-validator>
+                                        </dx-text-box>
+                                      </div>
+                                    </div>
+
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
+                                      <div class="form-group">
+                                        <label>Iniciar Factura Nº:
+                                          <span class="required">*</span>
+                                        </label>
+                                        <dx-text-box class="form-control"
+                                            name="direccion"
+                                            [(value)]="empresa.factura">
+                                          <dx-validator>
+                                            <dxi-validation-rule type="required" message="Dirección es requerida"></dxi-validation-rule>
+                                          </dx-validator>
+                                        </dx-text-box>
+                                      </div>
+                                    </div>
                                 </div>
 
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
