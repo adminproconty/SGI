@@ -146,8 +146,8 @@ export class EmpleadosComponent implements OnInit {
       direccion: '',
       email: '',
       convencional: '',
-      celular: ''
-      opcional: '',
+      celular: '',
+      opcional: ''
     };
     this.service.all().subscribe(resp => {
       console.log('empleados', resp.data);

@@ -177,6 +177,10 @@ export class ULRProvider {
     return this.dominio + 'productos/getIdByCodCategoria.php';
   }
 
+  public getProductoByLocal() {
+    return this.dominio + 'inventario/getByLocal.php';
+  }
+
   public insertProducto() {
     return this.dominio + 'productos/insert.php';
   }

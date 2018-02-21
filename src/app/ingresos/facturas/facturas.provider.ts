@@ -52,6 +52,11 @@ export class  FacturasProvider {
       .map((res: Response) => res.json());
   }
 
+  public getAllClientes() {
+    return this.http.get(this.urlProvider.getAllClientes())
+      .map((res: Response) => res.json());
+  }
+
   public getIvaById(objeto: any) {
     return this.http.post(this.urlProvider.getIvaById(), JSON.stringify(objeto), {
       headers: new Headers({ 'Content-Type': 'application/json' })
@@ -75,6 +80,13 @@ export class  FacturasProvider {
 
   public getByLocalProducto(objeto: any) {
     return this.http.post(this.urlProvider.getByLocalProducto(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-Type': 'application/json' })
+    })
+      .map((resp: Response) => resp);
+  }
+
+  public getProductoByLocal(objeto: any) {
+    return this.http.post(this.urlProvider.getProductoByLocal(), JSON.stringify(objeto), {
       headers: new Headers({ 'Content-Type': 'application/json' })
     })
       .map((resp: Response) => resp);

@@ -37,3 +37,5 @@
 [0211/125430.202:ERROR:crash_report_database_win.cc(427)] unexpected header
 [0211/160629.764:ERROR:crash_report_database_win.cc(427)] unexpected header
 [0213/222208.879:ERROR:file_io.cc(134)] WriteFile: Se está cerrando la canalización. (0xE8)
+[0221/095610.347:ERROR:file_io.cc(134)] WriteFile: Se está cerrando la canalización. (0xE8)
+[0221/114907.004:ERROR:file_io.cc(134)] WriteFile: Se está cerrando la canalización. (0xE8)

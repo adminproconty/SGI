@@ -51,6 +51,9 @@ export class FacturasComponent implements OnInit {
   tabs: any = [];
   tabContent: string;
   carritoLleno: boolean;
+  clientes: any = [];
+  clienteConsultado: boolean;
+  marcasTarjetas: any = [];
 
   constructor(
     private navegation: NavegationProvider,
@@ -134,6 +137,15 @@ export class FacturasComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.marcasTarjetas = [
+      {
+        id: 1,
+        nombre: 'Visa'
+      }, {
+        id: 2,
+        nombre: 'Mastercard'
+      }
+    ];
     this.tabs = [
       {
         id: 0,
@@ -180,11 +192,13 @@ export class FacturasComponent implements OnInit {
       apellido: '',
       email: '',
       celular: '',
+      convencional: '',
+      opcional: '',
       cant_producto: 1,
       min: 0,
       productos: [],
-      iva_id: '',
-      iva: 0,
+      iva_cero: 0,
+      iva_doce: 0,
       subtotal: 0,
       total_iva: 0,
       total: 0,
@@ -203,7 +217,8 @@ export class FacturasComponent implements OnInit {
         descripcio: this.productos[0].descripcion,
         costo: this.productos[0].costo,
         cantidad: 0,
-        pt: 0
+        pt: 0,
+        desc: ''
       };
       this.service.getByLocalProducto({
         local_id: this.datosLocal.datos.local_id,
@@ -212,6 +227,8 @@ export class FacturasComponent implements OnInit {
         const local = JSON.parse(res['_body']);
         console.log('inventario producto', local);
         this.factura.min = local.data[0].cantidad * 1;
+        this.producto.iva_id = local.data[0].iva_id;
+        this.producto.iva = local.data[0].iva;
       });
     });
     this.service.getAllIvas().subscribe(resp => {
@@ -246,6 +263,11 @@ export class FacturasComponent implements OnInit {
     };
     this.carrito = [];
     this.registroPagos = [];
+    this.service.getAllClientes().subscribe(resp => {
+      console.log('clientes', resp.data);
+      this.clientes = resp.data;
+    });
+    this.clienteConsultado = false;
   }
 
   openModal(template: TemplateRef<any>) {
@@ -256,7 +278,7 @@ export class FacturasComponent implements OnInit {
   }
 
   cancelar() {
-    this.modalRef.hide();
+    this.ngOnInit();
   }
 
   guardar(e) {
@@ -340,10 +362,32 @@ export class FacturasComponent implements OnInit {
   agregarCarrito() {
     this.producto.cantidad = this.factura.cant_producto * 1;
     const pt = this.factura.cant_producto * this.producto.costo * 1;
-    this.producto.pt = pt.toFixed(2);
-    this.carrito.push(this.producto);
-    console.log('agregado', this.producto);
-    this.calcularSubTotal();
+    const iva = this.producto.cantidad * this.producto.iva / 100;
+    if (this.factura.min > 0) {
+      this.producto.pt = pt.toFixed(2);
+      this.producto.total_iva = iva;
+      this.carrito.push(this.producto);
+      console.log('agregado', this.producto);
+      this.calcularSubTotal();
+      this.service.getByLocalProducto({
+        local_id: this.datosLocal.datos.local_id,
+        producto_id: this.producto.id
+      }).subscribe(res => {
+        const local = JSON.parse(res['_body']);
+        console.log('inventario producto', local);
+        for (let i = 0; i < local.data.length; i++) {
+          for (let j = 0; j < this.carrito.length; j++) {
+            if (local.data[i].codigo === this.carrito[j].codigo) {
+              const valor = local.data[i].cantidad * 1;
+              const resto = this.carrito[j].cantidad * 1;
+              local.data[i].cantidad = valor - resto;
+            }
+          }
+        }
+        this.factura.min = local.data[0].cantidad * 1;
+        this.factura.cant_producto = 0;
+      });
+    }
   }
 
   documentoChanged(e) {
@@ -361,12 +405,26 @@ export class FacturasComponent implements OnInit {
           this.factura.email = data.data[0].email;
           this.factura.celular = data.data[0].celular;
           this.factura.direccion  = data.data[0].direccion;
+          this.factura.convencional  = data.data[0].convencional;
+          this.factura.opcional  = data.data[0].opcional;
+          this.clienteConsultado = true;
+        } else {
+          this.factura.persona_id = 0;
+          this.factura.nombre = '';
+          this.factura.apellido = '';
+          this.factura.email = '';
+          this.factura.celular = '';
+          this.factura.direccion  = '';
+          this.factura.convencional  = '';
+          this.factura.opcional  = '';
+          this.clienteConsultado = false;
         }
     });
   }
 
   cambioProducto(e) {
     console.log('cambio producto', e);
+    this.factura.cant_producto = 0;
     this.service.getproductoById({id: e.value}).subscribe(resp => {
       const datos = JSON.parse(resp['_body']);
       console.log('producto', datos.data);
@@ -388,7 +446,18 @@ export class FacturasComponent implements OnInit {
       }).subscribe(res => {
         const local = JSON.parse(res['_body']);
         console.log('inventario producto', local);
-        this.factura.min = local.data[0].cantidad * 1;
+        for (let i = 0; i < this.carrito.length; i++) {
+          if (this.carrito[i].codigo === this.producto.codigo) {
+            const cantidad = local.data[0].cantidad * 1;
+            console.log('cantidad local', cantidad);
+            const resto = this.carrito[i].cantidad;
+            console.log('cantidad carrito', resto);
+            this.factura.min = cantidad - resto;
+            console.log('cantidad max', this.factura.min);
+          }
+        }
+        this.producto.iva_id = local.data[0].iva_id;
+        this.producto.iva = local.data[0].iva;
       });
     });
   }
@@ -439,9 +508,13 @@ export class FacturasComponent implements OnInit {
   }
 
   calcularCostoIva(subtotal) {
-    let costoIva;
-    costoIva = subtotal * this.factura.iva / 100;
-    this.factura.total_iva = costoIva.toFixed(2) * 1;
+    let costoIva = 0;
+    for (let i = 0; i < this.carrito.length; i++) {
+      if (this.carrito[i].total_iva > 0) {
+        costoIva = costoIva + this.carrito[i].total_iva;
+      }
+    }
+    this.factura.total_iva = costoIva;
     console.log('cálculo costo iva', costoIva);
     this.calcularTotal(costoIva, subtotal);
   }
@@ -537,85 +610,75 @@ export class FacturasComponent implements OnInit {
 
   siguiente(e) {
     e.preventDefault();
-    this.service.getByTipoDocumento({
-      tipo_documento: this.factura.tipo_documento,
-      num_documento: this.factura.documento}).subscribe(resp => {
-        const data = JSON.parse(resp['_body']);
-        console.log('cliente consultado', data);
-        if (data.data.length > 0) {
-          this.service.updateCliente({
-            nombre: this.factura.nombre,
-            apellido: data.data[0].apellido,
-            tipo_documento: this.factura.tipo_documento,
-            num_documento: this.factura.documento,
-            direccion: this.factura.direccion,
-            descripcion: data.data[0].descripcion,
-            email: this.factura.email,
-            celular: this.factura.celular,
-            id: this.factura.persona_id
-          }).subscribe(res => {
-            console.log(res['_body']);
-            if (res['_body'] !== 'true') {
-              this.alerts.push(
-                {
-                  type: 'danger',
-                  msg: 'Error al conectarse con la BD, por favor contacte al administrador del sistema'
-                }
-              );
+    console.log('fctura', this.factura);
+    if (this.clienteConsultado === true) {
+      this.service.updateCliente({
+        nombre: this.factura.nombre,
+        apellido: '---',
+        tipo_documento: this.factura.tipo_documento,
+        num_documento: this.factura.documento,
+        direccion: this.factura.direccion,
+        descripcion: this.factura.nombre,
+        email: this.factura.email,
+        celular: this.factura.celular,
+        convencional: this.factura.convencional,
+        opcional: this.factura.opcional,
+        id: this.factura.persona_id
+      }).subscribe(res => {
+        console.log(res['_body']);
+        if (res['_body'] !== 'true') {
+          this.alerts.push(
+            {
+              type: 'danger',
+              msg: 'Error al conectarse con la BD, por favor contacte al administrador del sistema'
             }
-          });
-          this.factura.persona_id = data.data[0].id;
-          this.factura.documento = data.data[0].num_documento;
-          this.factura.nombre = data.data[0].nombre;
-          this.factura.apellido = data.data[0].apellido;
-          this.factura.email = data.data[0].email;
-          this.factura.celular = data.data[0].celular;
-          this.tabContent = 'Pago';
-        } else {
-          this.service.insertCliente({
-            empresa_id: 1,
-            nombre: this.factura.nombre,
-            apellido: '---',
-            tipo_documento: this.factura.tipo_documento,
-            num_documento: this.factura.documento,
-            direccion: this.factura.direccion,
-            descripcion: this.factura.nombre,
-            email: this.factura.email,
-            celular: this.factura.celular
-          }).subscribe(res => {
-            console.log('cliente agregado', res['_body']);
-            if (res['_body'] !== 'true') {
-              this.alerts.push(
-                {
-                  type: 'danger',
-                  msg: 'Error al conectarse con la BD, por favor contacte al administrador del sistema'
-                }
-              );
-            } else {
-              this.service.getByTipoDocumento({
-                tipo_documento: this.factura.tipo_documento,
-                num_documento: this.factura.documento}).subscribe(r => {
-                  const datos = JSON.parse(r['_body']);
-                  console.log('cliente consultado', datos);
-                  if (datos.data.length > 0) {
-                    this.factura.persona_id = datos.data[0].id;
-                    this.factura.documento = datos.data[0].num_documento;
-                    this.factura.nombre = datos.data[0].nombre;
-                    this.factura.apellido = datos.data[0].apellido;
-                    this.factura.email = datos.data[0].email;
-                    this.factura.celular = datos.data[0].celular;
-                    this.factura.direccion  = datos.data[0].direccion;
-                  }
-              });
-            }
-          });
-          this.tabContent = 'Pago';
+          );
         }
-    });
+      });
+    } else {
+      this.service.insertCliente({
+        empresa_id: 1,
+        nombre: this.factura.nombre,
+        apellido: '---',
+        tipo_documento: this.factura.tipo_documento,
+        num_documento: this.factura.documento,
+        direccion: this.factura.direccion,
+        descripcion: this.factura.nombre,
+        email: this.factura.email,
+        convencional: this.factura.convencional,
+        celular: this.factura.celular,
+        opcional: this.factura.opcional
+      }).subscribe(res => {
+        console.log('cliente agregado', res['_body']);
+        if (res['_body'] !== 'true') {
+          this.alerts.push(
+            {
+              type: 'danger',
+              msg: 'Error al conectarse con la BD, por favor contacte al administrador del sistema'
+            }
+          );
+        } else {
+          this.service.getByTipoDocumento({
+            tipo_documento: this.factura.tipo_documento,
+            num_documento: this.factura.documento}).subscribe(r => {
+              const datos = JSON.parse(r['_body']);
+              console.log('cliente consultado', datos);
+              if (datos.data.length > 0) {
+                this.factura.persona_id = datos.data[0].id;
+              }
+          });
+        }
+      });
+    }
+    this.tabContent = 'Pago';
   }
 
   atras() {
     this.tabContent = 'Pedido';
+  }
+
+  cambioFecha(e) {
+    console.log('cambio fecha', e);
   }
 
 }
