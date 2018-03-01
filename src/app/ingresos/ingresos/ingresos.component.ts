@@ -177,8 +177,7 @@ export class IngresosComponent implements OnInit {
       referencia: '',
       documento: '',
       total: 0.0,
-      tipo_ingreso: '',
-      ingresos: []
+      tipo_ingreso: ''
     };
   }
 
@@ -195,10 +194,11 @@ export class IngresosComponent implements OnInit {
           }
         );
       } else {
+        /*this.guardarIngresosDirectos(resp['_body']);*/
         this.alerts.push(
           {
             type: 'success',
-            msg: 'Guardado exitoso'
+            msg: 'Ingreso Nº ' + resp['_body'] + ' Guardado exitoso'
           }
         );
         this.ngOnInit();
@@ -206,11 +206,59 @@ export class IngresosComponent implements OnInit {
     });
   }
 
+  guardarIngresosDirectos(idingreso) {
+    for (let i = 0; i < this.ingresoDirecto.length; i++) {
+      this.ingresoDirecto[i].ingresos_id = idingreso * 1;
+      this.service.insertDirectos(this.ingresoDirecto[i]).subscribe(resp => {
+        console.log('resp ingreso directo', resp['_body']);
+        if (resp['_body'] === 'false') {
+          this.alerts.push(
+            {
+              type: 'danger',
+              msg: 'Error, por favor contacte al administrador del sistema'
+            }
+          );
+        }
+      });
+    }
+    console.log('guarda directos', this.ingresoDirecto);
+    this.alerts.push(
+      {
+        type: 'success',
+        msg: 'Ingreso Nº ' + idingreso + ' Guardado exitoso'
+      }
+    );
+    this.ngOnInit();
+  }
+
   cancelar() {}
 
   selectTab(e) {
     this.tabContent = this.tabs[e.itemIndex].content;
-    this.ingresos.tipo_ingresos = this.tabs[e.itemIndex].content;
+    switch (this.tabContent) {
+      case 'Ingreso directo':
+        this.ingresos.tipo_ingresos = 1;
+        break;
+
+      case 'Transferencia':
+        this.ingresos.tipo_ingresos = 2;
+        break;
+
+      case 'Cheque':
+        this.ingresos.tipo_ingresos = 3;
+        break;
+
+      case 'Tarjeta':
+        this.ingresos.tipo_ingresos = 4;
+        break;
+
+      case 'CXC':
+        this.ingresos.tipo_ingresos = 5;
+        break;
+
+      default:
+        break;
+    }
   }
 
   editarIngresoDirecto(e) {

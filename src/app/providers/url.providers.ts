@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class ULRProvider {
 
-  public dominio: String = 'http://127.0.0.1/sgi/api/';
+  public dominio: String = 'http://localhost/SGI/api/';
 
   /*Empresa*/
   public getAllEmpresa() {
@@ -245,9 +245,18 @@ export class ULRProvider {
     return this.dominio + 'facturas/insert.php';
   }
 
+  public getAllFacturas() {
+    return this.dominio + 'facturas/getAll.php';
+  }
+
   /*Pagos factura*/
   public insertPagos() {
     return this.dominio + 'pagos_factura/insert.php';
+  }
+
+  /*Productos Factura*/
+  public insertarProductosFactura() {
+    return this.dominio + 'productos_factura/insert.php';
   }
 
   /*Login*/
@@ -266,6 +275,10 @@ export class ULRProvider {
   /*Ingresos*/
   public insertIngresos() {
     return this.dominio + 'ingresos/insert.php';
+  }
+
+  public insertIngresosDirectos() {
+    return this.dominio + 'ingresos_directos/insert.php';
   }
 
 }

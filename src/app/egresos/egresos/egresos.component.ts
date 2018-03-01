@@ -28,6 +28,7 @@ export class EgresosComponent implements OnInit {
   transferencias: any = [];
   tarjetas: any = [];
   cheques: any = [];
+  alerts: any = [];
 
   constructor(private navegation: NavegationProvider) {
     this.navegation.setMenu(
@@ -186,7 +187,16 @@ export class EgresosComponent implements OnInit {
     ];
   }
 
-  guardar() {}
+  guardar(e) {
+    e.preventDefault();
+    this.alerts.push(
+      {
+        type: 'success',
+        msg: 'Egreso Guardado exitoso'
+      }
+    );
+    this.ngOnInit();
+  }
 
   cancelar() {}
 

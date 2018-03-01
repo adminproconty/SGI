@@ -1,3 +1,11 @@
 input[type="text"]{
     text-align: center;
 }
+
+nav.navbar.navbar-static-top {
+  background-color: #3498db;
+}
+
+a.logo {
+  background: #3498db;
+}

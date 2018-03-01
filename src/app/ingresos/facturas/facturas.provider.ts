@@ -11,7 +11,7 @@ export class  FacturasProvider {
     private urlProvider: ULRProvider) {}
 
   public all() {
-    return this.http.get(this.urlProvider.getAllPersonas())
+    return this.http.get(this.urlProvider.getAllFacturas())
       .map((res: Response) => res.json());
   }
 
@@ -108,6 +108,13 @@ export class  FacturasProvider {
 
   public insertPagos(objeto: any) {
     return this.http.post(this.urlProvider.insertPagos(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-Type': 'application/json' })
+    })
+      .map((resp: Response) => resp);
+  }
+
+  public insertProductosFactura(objeto: any) {
+    return this.http.post(this.urlProvider.insertarProductosFactura(), JSON.stringify(objeto), {
       headers: new Headers({ 'Content-Type': 'application/json' })
     })
       .map((resp: Response) => resp);

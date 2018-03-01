@@ -54,6 +54,8 @@ export class FacturasComponent implements OnInit {
   clientes: any = [];
   clienteConsultado: boolean;
   marcasTarjetas: any = [];
+  detalleFactura: any = {};
+  detallar: boolean;
 
   constructor(
     private navegation: NavegationProvider,
@@ -203,7 +205,8 @@ export class FacturasComponent implements OnInit {
       subtotal: 0,
       total_iva: 0,
       total: 0,
-      pagos: []
+      pagos: [],
+      estatus_id: 0
     };
     this.service.getAllProductos().subscribe(resp => {
       console.log('productos', resp.data);
@@ -251,16 +254,24 @@ export class FacturasComponent implements OnInit {
       this.cuentas = resp.data;
     });
     this.pago = {
+      factura_id: 0,
       cxc_id: 'NULL',
-      forma_pago: 'NULL',
-      tipo_pago: 'NULL',
-      cuenta_id: 'NULL',
+      metodo_id: 0,
+      tipo_pago: '',
+      cuenta_id: '',
       aporte: 0,
-      banco: 'NULL',
-      tipo_tarjeta: 'NULL',
-      referencia: 'NULL',
-      celular: 'NULL',
-      email: 'NULL'
+      banco: '',
+      tipo_tarjeta_id: '',
+      marca_tarjeta_id: '',
+      numero_tarjeta: '',
+      fecha_vencimiento_tarjeta: '',
+      seguridad_tarjeta: '',
+      autorizacion_tarjeta: '',
+      titular: '',
+      numero_cheque: '',
+      codigo_transferencia: '',
+      telefono: '',
+      email: ''
     };
     this.carrito = [];
     this.registroPagos = [];
@@ -269,6 +280,11 @@ export class FacturasComponent implements OnInit {
       this.clientes = resp.data;
     });
     this.clienteConsultado = false;
+    this.service.all().subscribe(resp => {
+      console.log('facturas', resp.data);
+      this.facturas = resp.data;
+    });
+    this.detallar = false;
   }
 
   openModal(template: TemplateRef<any>) {
@@ -288,6 +304,17 @@ export class FacturasComponent implements OnInit {
     this.factura.productos = this.carrito;
     this.factura.pagos = this.registroPagos;
     console.log('guardar', this.factura);
+    let credito = 0;
+    for (let i = 0; i < this.registroPagos.length; i++) {
+      if (this.registroPagos[i].tipo_pago === 'Crédito') {
+        credito = 1;
+      }
+    }
+    if (credito === 0) {
+      this.factura.estatus_id = 2;
+    } else {
+      this.factura.estatus_id = 1;
+    }
     this.service.insert(this.factura).subscribe(resp => {
       console.log('factura agregada', resp['_body']);
       if (resp['_body'] === 'false') {
@@ -308,10 +335,27 @@ export class FacturasComponent implements OnInit {
     this.service.insertPagos(this.factura).subscribe(resp => {
       console.log('agregado BD pagos', resp['_body']);
       if (resp['_body'] === 'true') {
+        this.agregarProductos(factura);
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+      }
+    });
+  }
+
+  agregarProductos(factura) {
+    this.factura.factura_id = factura * 1;
+    this.service.insertProductosFactura(this.factura).subscribe(resp => {
+      console.log('agregado BD productos', resp['_body']);
+      if (resp['_body'] === 'true') {
         this.alerts.push(
           {
             type: 'success',
-            msg: 'Factura S-000-001' + factura + 'agregada exitosamente'
+            msg: 'Factura Nº ' + factura + 'agregada exitosamente'
           }
         );
         this.ngOnInit();
@@ -351,19 +395,24 @@ export class FacturasComponent implements OnInit {
     this.facturando = true;
   }
 
-  eliminarProducto(e) {
+  eliminarProducto(producto) {
     console.log('carrito', this.carrito);
-    if (this.carrito.length < 1) {
-      this.carritoLleno = false;
+    const index = this.carrito.indexOf(producto);
+    this.carrito.splice(index, 1);
+    if (this.carrito.length > 0) {
+      this.calcularSubTotal();
     } else {
-      this.carritoLleno = false;
+      this.factura.total_iva = 0;
+      this.factura.iva_cero = 0;
+      this.factura.total = 0;
+      this.factura.subtotal = 0;
     }
   }
 
   agregarCarrito() {
     this.producto.cantidad = this.factura.cant_producto * 1;
     const pt = this.factura.cant_producto * this.producto.costo * 1;
-    const iva = this.producto.cantidad * this.producto.iva / 100;
+    const iva = pt * this.producto.iva / 100;
     if (this.factura.min > 0) {
       this.producto.pt = pt.toFixed(2);
       this.producto.total_iva = iva;
@@ -386,7 +435,7 @@ export class FacturasComponent implements OnInit {
           }
         }
         this.factura.min = local.data[0].cantidad * 1;
-        this.factura.cant_producto = 0;
+        this.factura.cant_producto = 1;
       });
     }
   }
@@ -425,7 +474,7 @@ export class FacturasComponent implements OnInit {
 
   cambioProducto(e) {
     console.log('cambio producto', e);
-    this.factura.cant_producto = 0;
+    this.factura.cant_producto = 1;
     this.service.getproductoById({id: e.value}).subscribe(resp => {
       const datos = JSON.parse(resp['_body']);
       console.log('producto', datos.data);
@@ -437,6 +486,7 @@ export class FacturasComponent implements OnInit {
         unidad: datos.data[0].unidad,
         codigo: datos.data[0].codigo,
         descripcio: datos.data[0].descripcion,
+        desc: '',
         costo: datos.data[0].costo,
         cantidad: 0,
         pt: 0
@@ -503,18 +553,22 @@ export class FacturasComponent implements OnInit {
         total = total + this.carrito[i].pt * 1;
       }
     }
-    this.factura.subtotal = total * 1;
+    this.factura.subtotal = (total * 1).toFixed(2);
     this.calcularCostoIva(total);
     console.log('calcula subtotal', total);
   }
 
   calcularCostoIva(subtotal) {
     let costoIva = 0;
+    let detalleIva = 0;
     for (let i = 0; i < this.carrito.length; i++) {
       if (this.carrito[i].total_iva > 0) {
         costoIva = costoIva + this.carrito[i].total_iva;
+      } else if (this.carrito[i].total_iva === 0) {
+        detalleIva = detalleIva + (this.carrito[i].pt * 1);
       }
     }
+    this.factura.detalle_iva = detalleIva.toFixed(2);
     this.factura.total_iva = costoIva;
     console.log('cálculo costo iva', costoIva);
     this.calcularTotal(costoIva, subtotal);
@@ -533,22 +587,46 @@ export class FacturasComponent implements OnInit {
       const forma = JSON.parse(resp['_body']);
       this.formaPago = forma.data[0];
       console.log('forma pago', this.formaPago);
-      this.pago.tipo_pago = this.formaPago.nombre;
+      this.pago = {
+        factura_id: 0,
+        cxc_id: 'NULL',
+        metodo_id: this.formaPago.id * 1,
+        tipo_pago: this.formaPago.nombre,
+        cuenta_id: '',
+        aporte: 0,
+        banco: '',
+        tipo_tarjeta_id: '',
+        marca_tarjeta_id: '',
+        numero_tarjeta: '',
+        fecha_vencimiento_tarjeta: '',
+        seguridad_tarjeta: '',
+        autorizacion_tarjeta: '',
+        titular: '',
+        numero_cheque: '',
+        codigo_transferencia: '',
+        telefono: '',
+        email: ''
+      };
     });
-    this.pago.forma_pago = e.value * 1;
+    this.pago.metodo_id = e.value * 1;
   }
 
   cambioTipoTarjeta(e) {
-    this.pago.tipo_tarjeta = e.value * 1;
+    this.pago.tipo_tarjeta_id = e.value * 1;
+  }
+
+  cambioMarcaTarjeta(e) {
+    this.pago.marca_tarjeta_id = e.value * 1;
   }
 
   cambioCuenta(e) {
     this.pago.cuenta_id = e.value * 1;
   }
 
-  eliminarPago(e) {
-    console.log('eliminar pago', e);
+  eliminarPago(pago) {
     console.log('registroPago', this.registroPagos);
+    const index = this.registroPagos.indexOf(pago);
+    this.registroPagos.splice(index, 1);
     if (this.registroPagos.length > 0) {
       let paga = 0;
       let neto = 0;
@@ -573,17 +651,6 @@ export class FacturasComponent implements OnInit {
     e.preventDefault();
     console.log('pago', this.pago);
     this.registroPagos.push(this.pago);
-    this.pago = {
-      cxc_id: 'NULL',
-      cuenta_id: 'NULL',
-      aporte: 0,
-      vuelto: 0,
-      banco: 'NULL',
-      tipo_tarjeta: 'NULL',
-      referencia: 'NULL',
-      celular: 'NULL',
-      email: 'NULL'
-    };
 
     let paga = 0;
     let neto = 0;
@@ -663,7 +730,7 @@ export class FacturasComponent implements OnInit {
             tipo_documento: this.factura.tipo_documento,
             num_documento: this.factura.documento}).subscribe(r => {
               const datos = JSON.parse(r['_body']);
-              console.log('cliente consultado', datos);
+              console.log('cliente consultado siguiente', datos);
               if (datos.data.length > 0) {
                 this.factura.persona_id = datos.data[0].id;
               }
@@ -675,11 +742,22 @@ export class FacturasComponent implements OnInit {
   }
 
   atras() {
+    this.clienteConsultado = true;
     this.tabContent = 'Pedido';
   }
 
   cambioFecha(e) {
     console.log('cambio fecha', e);
+  }
+
+  openDetalle(data) {
+    console.log('factura a detallar', data);
+    this.detalleFactura = data.data;
+    this.detallar = true;
+  }
+
+  noDetallar() {
+    this.detallar = false;
   }
 
 }

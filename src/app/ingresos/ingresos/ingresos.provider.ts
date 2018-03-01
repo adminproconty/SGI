@@ -34,6 +34,13 @@ export class  IngresosProvider {
       .map((resp: Response) => resp);
   }
 
+  public insertDirectos(objeto: any) {
+    return this.http.post(this.urlProvider.insertIngresosDirectos(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-Type': 'application/json' })
+    })
+      .map((resp: Response) => resp);
+  }
+
   public update(objeto: Object) {
     return this.http.post(this.urlProvider.updatePersona(), JSON.stringify(objeto), {
       headers: new Headers({ 'Content-type': 'application/json' })
