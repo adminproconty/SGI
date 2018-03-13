@@ -1,4 +1,4 @@
-import { Component, TemplateRef, OnInit } from '@angular/core';
+import { Component, TemplateRef, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
@@ -6,6 +6,7 @@ import { NavegationProvider } from '../../navegation/navegation.provider';
 import { FacturasProvider } from './facturas.provider';
 import { DatosLocalProvider } from '../../providers/datos.local.provider';
 import { DatosUsuarioProvider } from '../../providers/datos.usuario.provider';
+import * as jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-facturas',
@@ -14,6 +15,8 @@ import { DatosUsuarioProvider } from '../../providers/datos.usuario.provider';
 })
 
 export class FacturasComponent implements OnInit {
+  @ViewChild('imprimir') imprimir: ElementRef;
+
   noDataText: string;
   cancelAllChanges: string;
   cancelRowChanges: string;
@@ -358,7 +361,12 @@ export class FacturasComponent implements OnInit {
             msg: 'Factura Nº ' + factura + 'agregada exitosamente'
           }
         );
-        this.ngOnInit();
+        this.service.getFacturaById({id: factura}).subscribe(res => {
+          const facturaImp = JSON.parse(res['_body']);
+          console.log('factura a imprimir', facturaImp);
+          this.detalleFactura = facturaImp.data[0];
+        });
+        this.imprimirFactura(factura);
       } else {
         this.alerts.push(
           {
@@ -368,6 +376,24 @@ export class FacturasComponent implements OnInit {
         );
       }
     });
+  }
+
+  imprimirFactura(factura) {
+    const doc = new jsPDF();
+    const specialElementHandlers = {
+      '#editor': function(element, renderer) {
+        return true;
+      }
+    };
+
+    const content = this.imprimir.nativeElement;
+    doc.fromHTML(content.innerHTML, 15, 15, {
+      'width': 190,
+      'elementHandlers': specialElementHandlers
+    });
+    const nameDoc = 'Factura Nº ' + factura + '.pdf';
+    doc.save(nameDoc);
+    this.ngOnInit();
   }
 
   cambioTipoDocumento(e) {
@@ -758,6 +784,10 @@ export class FacturasComponent implements OnInit {
 
   noDetallar() {
     this.detallar = false;
+  }
+
+  print() {
+    window.print();
   }
 
 }

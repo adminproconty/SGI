@@ -1,0 +1,52 @@
+#imprimir{
+  display: none;
+}
+
+@media print{
+
+  div#noImprimir {
+    display: none;
+  }
+
+  #imprimir{
+    display: block;
+  }
+
+  #imprimir header {
+    display: none;
+  }
+
+  #imprimir footer {
+    display: none;
+  }
+
+  #imprimir table tr td {
+    text-align: center;
+    font-size: 0.9em;
+  }
+
+  #imprimir #datosFactura div.col-lg-4.col-md-4.col-sm-4.col-xs-12 {
+    width: 33%;
+    font-size: 0.9em;
+  }
+
+  #imprimir #datosFactura div.col-lg-4.col-md-4.col-sm-4.col-xs-12 .form-group label {
+    margin-right: 5px;
+  }
+
+  #imprimir #datosCliente div.col-lg-3.col-md-3.col-sm-6.col-xs-12 {
+    width: 25%;
+    font-size: 0.9em;
+  }
+
+  #imprimir #datosCliente div.col-lg-3.col-md-3.col-sm-6.col-xs-12 .from-group label {
+    margin-right: 5px;
+  }
+
+  #imprimir #totales div.col-lg-2.col-lg-offset-10.col-md-4.col-md-offset-8.col-sm-4.col-xs-4 {
+    width: 25%;
+    float: right;
+    text-align: right;
+  }
+
+}

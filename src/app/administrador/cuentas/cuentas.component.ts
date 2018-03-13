@@ -34,7 +34,7 @@ export class CuentasComponent implements OnInit {
     nombre: '',
     fuente: 0,
     numero: '',
-    banco: '',
+    banco_id: 0,
     tipo: 0,
     saldo: 0.0,
     email: ''
@@ -42,14 +42,23 @@ export class CuentasComponent implements OnInit {
   guardando: boolean;
   alerts: any = [];
   detalle: any = {
-    nombre: '',
-    fuente: 0,
-    numero: '',
-    banco: '',
-    tipo: 0,
-    saldo: 0.0,
-    email: ''
+    id: undefined,
+    empresa_id: undefined,
+    tipo_fuente: undefined,
+    nombre: undefined,
+    numero: undefined,
+    banco: undefined,
+    banco_id: undefined,
+    tipo: undefined,
+    bnco_tipo_cuenta: undefined,
+    saldo: undefined,
+    email: undefined
   };
+  bancos: any = [];
+  tarjeta: any = {};
+  tipos_tarjetas: any = [];
+  marcaTarjetas: any = [];
+  tarjetas: any = [];
 
   constructor(
     private navegation: NavegationProvider,
@@ -155,6 +164,29 @@ export class CuentasComponent implements OnInit {
       this.cuentas = resp.data;
       console.log('cuentas', resp.data);
     });
+    this.service.getAllBancos().subscribe(resp => {
+      console.log('bancos', resp.data);
+      this.bancos = resp.data;
+    });
+    this.tarjeta = {
+      nombre: '',
+      numero: '',
+      tipo_tarjeta_id: '',
+      marca_tarjeta_id: '',
+      cuenta_id: ''
+    };
+    this.service.getAllTiposTarjetas().subscribe(resp => {
+      console.log('tipos trabajos', resp.data);
+      this.tipos_tarjetas = resp.data;
+    });
+    this.service.getAllMarcasTarjetas().subscribe(resp => {
+      console.log('marcas tarjetas', resp.data);
+      this.marcaTarjetas = resp.data;
+    });
+    this.service.getAllTarjetas().subscribe(resp => {
+      console.log('tarjetas', resp.data);
+      this.tarjetas = resp.data;
+    });
   }
 
   openModal(template: TemplateRef<any>) {
@@ -172,8 +204,10 @@ export class CuentasComponent implements OnInit {
       tipo_fuente: detalles.data.tipo_fuente,
       nombre: detalles.data.nombre,
       numero: detalles.data.bnco_numero,
-      banco: detalles.data.bnco_nombre,
+      banco: detalles.data.bnco_id,
+      banco_id: detalles.data.bnco_id,
       tipo: detalles.data.bnco_tipo_cuenta,
+      bnco_tipo_cuenta: detalles.data.bnco_tipo_cuenta,
       saldo: detalles.data.bnco_saldo_inicial,
       email: detalles.data.email
     };
@@ -204,7 +238,7 @@ export class CuentasComponent implements OnInit {
         nombre: this.nueva.nombre,
         tipo_fuente: this.nueva.fuente,
         bnco_numero: 'NULL',
-        bnco_nombre: 'NULL',
+        bnco_id: 'NULL',
         bnco_tipo_cuenta: 'NULL',
         bnco_saldo_inicial: 'NULL',
         email: this.nueva.email
@@ -215,7 +249,7 @@ export class CuentasComponent implements OnInit {
         nombre: this.nueva.nombre,
         tipo_fuente: this.nueva.fuente,
         bnco_numero: this.nueva.numero,
-        bnco_nombre: this.nueva.banco,
+        bnco_id: this.nueva.banco_id,
         bnco_tipo_cuenta: this.nueva.tipo,
         bnco_saldo_inicial: this.nueva.saldo,
         email: this.nueva.email
@@ -261,13 +295,14 @@ export class CuentasComponent implements OnInit {
 
   editar(e) {
     e.preventDefault();
-    console.log('para editar', e);
+    console.log('para editar', this.detalle);
     const datosModif = {
       id: this.detalle.id * 1,
       nombre: this.detalle.nombre,
+      tipo_fuente: this.detalle.tipo_fuente,
       bnco_numero: this.detalle.numero,
-      bnco_nombre: this.detalle.banco,
-      bnco_tipo_cuenta: this.detalle.tipo,
+      bnco_id: this.detalle.banco_id,
+      bnco_tipo_cuenta: this.detalle.bnco_tipo_cuenta,
       bnco_saldo_inicial: this.detalle.saldo,
       email: this.detalle.email
     };
@@ -290,6 +325,7 @@ export class CuentasComponent implements OnInit {
         );
       }
       this.ngOnInit();
+      this.cancelar();
     });
   }
 
@@ -322,6 +358,97 @@ export class CuentasComponent implements OnInit {
     const tipo = e.value * 1;
     this.nueva.tipo = tipo;
     this.detalle.tipo = tipo;
+  }
+
+  cambioBanco(e) {
+    console.log('cambio banco', e);
+    const id = e.value * 1;
+    this.nueva.banco_id = id;
+  }
+
+  cambioBancoDetalle(e) {
+    console.log('cambio banco detalle', e);
+    const id = e.value * 1;
+    this.detalle.banco_id = id;
+  }
+
+  cambioTipoCuentaDetalle(e) {
+    console.log('cambio tipo cuenta detalle', e);
+    const id = e.value * 1;
+    this.detalle.bnco_tipo_cuenta = id;
+  }
+
+  cambioTipoTarjeta(e) {
+    console.log('cambio tipo tarjeta', e);
+    const id = e.value * 1;
+    this.tarjeta.tipo_tarjeta_id = id;
+  }
+
+  cambioMarcaTarjeta(e) {
+    console.log('cambio marcas tarjetas', e);
+    const id = e.value * 1;
+    this.tarjeta.marca_tarjeta_id = id;
+  }
+
+  cambioCuenta(e) {
+    console.log('cambio cuenta', e);
+    const id = e.value * 1;
+    this.tarjeta.cuenta_id = id;
+  }
+
+  guardarTarjeta(e) {
+    e.preventDefault();
+    this.service.insertTarjeta(this.tarjeta).subscribe(resp => {
+      console.log('guardar tarjeta', resp['_body']);
+      if (resp['_body'] === 'true') {
+        this.alerts.push(
+          {
+            type: 'success',
+            msg: 'Guardado exitoso'
+          }
+        );
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+      }
+      this.cancelar();
+      this.ngOnInit();
+    });
+  }
+
+  editarTarjeta(e) {
+    const tarjetaModif = {
+      nombre: e.newData.nombre !== undefined ? e.newData.nombre : e.oldData.nombre,
+      numero: e.newData.numero !== undefined ? e.newData.numero : e.oldData.numero,
+      tipo_tarjeta_id: e.newData.tipo_tarjeta_id !== undefined ? e.newData.tipo_tarjeta_id : e.oldData.tipo_tarjeta_id,
+      marca_tarjeta_id: e.newData.marca_tarjeta_id !== undefined ? e.newData.marca_tarjeta_id : e.oldData.marca_tarjeta_id,
+      cuenta_id: e.newData.cuenta_id !== undefined ? e.newData.cuenta_id : e.oldData.cuenta_id,
+      id: e.oldData.id
+    };
+    console.log('a editar tarjeta', tarjetaModif);
+    this.service.updateTarjeta(tarjetaModif).subscribe(resp => {
+      console.log('tarjeta modificada', resp['_body']);
+      if (resp['_body'] === 'true') {
+        this.alerts.push(
+          {
+            type: 'success',
+            msg: 'Modificado exitosamente'
+          }
+        );
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+      }
+      this.ngOnInit();
+    });
   }
 
 }

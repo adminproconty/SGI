@@ -15,6 +15,13 @@ export class  FacturasProvider {
       .map((res: Response) => res.json());
   }
 
+  public getFacturaById(objeto: any) {
+    return this.http.post(this.urlProvider.getFacturaById(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-Type': 'application/json' })
+    })
+      .map((resp: Response) => resp);
+  }
+
   public getAllTipoDocumentos() {
     return this.http.get(this.urlProvider.getAllTipoDocumento())
       .map((res: Response) => res.json());

@@ -27,6 +27,15 @@ export class ULRProvider {
     return this.dominio + 'locales/update.php';
   }
 
+  /*Bancos*/
+  public getAllBancos() {
+    return this.dominio + 'bancos/getAll.php';
+  }
+
+  public getBancoById() {
+    return this.dominio + 'bancos/getById.php';
+  }
+
   /*Cuentas*/
   public getAllTipoCuentas() {
     return this.dominio + 'tipo_cuentas/getAll.php';
@@ -249,6 +258,10 @@ export class ULRProvider {
     return this.dominio + 'facturas/getAll.php';
   }
 
+  public getFacturaById() {
+    return this.dominio + 'facturas/getById.php';
+  }
+
   /*Pagos factura*/
   public insertPagos() {
     return this.dominio + 'pagos_factura/insert.php';
@@ -273,12 +286,59 @@ export class ULRProvider {
   }
 
   /*Ingresos*/
+  public getAllINgresos() {
+    return this.dominio + 'ingresos/getAll.php';
+  }
+
   public insertIngresos() {
     return this.dominio + 'ingresos/insert.php';
   }
 
   public insertIngresosDirectos() {
     return this.dominio + 'ingresos_directos/insert.php';
+  }
+
+  public insertIngresosTransferencia() {
+    return this.dominio + 'ingresos_transferencia/insert.php';
+  }
+
+  public insertIngresosTarjeta() {
+    return this.dominio + 'ingresos_tarjeta/insert.php';
+  }
+
+  public insertIngresosCheque() {
+    return this.dominio + 'ingresos_cheque/insert.php';
+  }
+
+  /*Marcas tarjetas*/
+  public getAllMarcasTarjetas() {
+    return this.dominio + 'marcas_tarjetas/getAll.php';
+  }
+
+  /*Tarjetas*/
+  public insertTarjeta() {
+    return this.dominio + 'tarjetas/insert.php';
+  }
+
+  public getAllTarjetas() {
+    return this.dominio + 'tarjetas/getAll.php';
+  }
+
+  public updateTarjeta() {
+    return this.dominio + 'tarjetas/update.php';
+  }
+
+  /*Proveedores*/
+  public insertProveedor() {
+    return this.dominio + 'proveedores/insert.php';
+  }
+
+  public getAllProveedores() {
+    return this.dominio + 'proveedores/getAll.php';
+  }
+
+  public updateProveedores() {
+    return this.dominio + 'proveedores/update.php';
   }
 
 }

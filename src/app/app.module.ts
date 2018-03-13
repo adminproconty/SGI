@@ -65,6 +65,7 @@ import { FisicoProvider } from './inventario/fisico/fisico.provider';
 import { FacturasProvider } from './ingresos/facturas/facturas.provider';
 import { LoginProvider } from './login/login.provider';
 import { IngresosProvider } from './ingresos/ingresos/ingresos.provider';
+import { ProveedoresProvider } from './egresos/proveedores/proveedores.provider';
 
 
 import {  DxCheckBoxModule,
@@ -168,6 +169,7 @@ import {  DxCheckBoxModule,
     FacturasProvider,
     LoginProvider,
     IngresosProvider,
+    ProveedoresProvider,
     DatePipe
   ],
   bootstrap: [AppComponent]

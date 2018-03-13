@@ -3,6 +3,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 import { NavegationProvider } from '../../navegation/navegation.provider';
+import { ProveedoresProvider } from './proveedores.provider';
 
 @Component({
   selector: 'app-proveedores',
@@ -28,10 +29,14 @@ export class ProveedoresComponent implements OnInit {
   tipoDocumentos: any = [];
   phonePattern: any;
   phoneRules: any;
+  proveedor: any = {};
+  guardando: boolean;
+  alerts: any = [];
 
   constructor(
     private navegation: NavegationProvider,
-    private modalService: BsModalService) {
+    private modalService: BsModalService,
+    private service: ProveedoresProvider) {
     this.navegation.setMenu(
       {
         escritorio: '',
@@ -134,6 +139,19 @@ export class ProveedoresComponent implements OnInit {
     this.phoneRules = {
         X: /[02-9]/
     };
+    this.service.all().subscribe(resp => {
+      console.log('proveedores', resp.data);
+      this.proveedores = resp.data;
+    });
+    this.proveedor.empresa_id = 1;
+    this.proveedor.documento = '';
+    this.proveedor.nombre = '';
+    this.proveedor.direccion = '';
+    this.proveedor.email = '';
+    this.proveedor.convencional = '';
+    this.proveedor.celular = '';
+    this.proveedor.opcional = '';
+    this.guardando = false;
   }
 
   openModal(template: TemplateRef<any>) {
@@ -143,7 +161,45 @@ export class ProveedoresComponent implements OnInit {
     );
   }
 
-  guardar() {}
+  guardar(e) {
+    e.preventDefault();
+    this.guardando = true;
+    console.log('a guardar', this.proveedor);
+    if (this.proveedor.correo === '') {
+      this.proveedor.correo = 'NULL';
+    }
+    if (this.proveedor.convencional === '') {
+      this.proveedor.convencional = 'NULL';
+    }
+    if (this.proveedor.celular === '') {
+      this.proveedor.celular = 'NULL';
+    }
+    if (this.proveedor.opcional === '') {
+      this.proveedor.opcional = 'NULL';
+    }
+    this.service.insert(this.proveedor).subscribe(resp => {
+      console.log('insert', resp['_body']);
+      if (resp['_body'] === 'true') {
+        this.alerts.push(
+          {
+            type: 'success',
+            msg: 'Proveedor agregado exitosamente'
+          }
+        );
+        this.ngOnInit();
+        this.cancelar();
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+        this.ngOnInit();
+        this.cancelar();
+      }
+    });
+  }
 
   cancelar() {
     this.modalRef.hide();
@@ -151,10 +207,43 @@ export class ProveedoresComponent implements OnInit {
 
   editar(e) {
     console.log('editar', e);
+    const proveedorModif = {
+      id: e.oldData.id,
+      tipo_documento_id: e.newData.tipo_documento_id !== undefined ? e.newData.tipo_documento_id : e.oldData.tipo_documento_id,
+      documento: e.newData.documento !== undefined ? e.newData.documento : e.oldData.documento,
+      nombre: e.newData.nombre !== undefined ? e.newData.nombre : e.oldData.nombre,
+      direccion: e.newData.direccion !== undefined ? e.newData.direccion : e.oldData.direccion,
+      email: e.newData.email !== undefined ? e.newData.email : e.oldData.email,
+      convencional: e.newData.convencional !== undefined ? e.newData.convencional : e.oldData.convencional,
+      celular: e.newData.celular !== undefined ? e.newData.celular : e.oldData.celular,
+      opcional: e.newData.opcional !== undefined ? e.newData.opcional : e.oldData.opcional
+    };
+    this.service.update(proveedorModif).subscribe(resp => {
+      console.log('update', resp['_body']);
+      if (resp['_body'] === 'true') {
+        this.alerts.push(
+          {
+            type: 'success',
+            msg: 'Modificado exitosamente'
+          }
+        );
+        this.ngOnInit();
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+        this.ngOnInit();
+      }
+    });
   }
 
-  eliminar(e) {
-    console.log('eliminar', e);
+  cambioTipoDocumento(e) {
+    const id = e.value * 1;
+    console.log('cambio tipo documento', e);
+    this.proveedor.tipo_documento_id = id;
   }
 
 }

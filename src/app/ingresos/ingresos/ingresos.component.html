@@ -6,7 +6,7 @@
   </div>
 </div>
 
-<div class="row">
+<div class="row" *ngIf="nuevo">
   <div class="col-md-12">
     <div class="box">
       <div class="box-header with-border">
@@ -37,7 +37,8 @@
                       </label>
                       <dx-date-box
                           (onValueChanged)="cambioFecha($event)"
-                          invalidDateMessage="La fecha debe tener el siguiente formato: dd/MM/yyyy">
+                          invalidDateMessage="La fecha debe tener el siguiente formato: dd/MM/yyyy"
+                          [value]="fecha">
                           <dx-validator>
                               <dxi-validation-rule type="required" message="Fecha es requerida"></dxi-validation-rule>
                           </dx-validator>
@@ -62,8 +63,8 @@
 
                   <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 left">
                     <div class="form-group">
-                      <label>Cuenta:
-                        <span class="required">*</span>
+                      <label>
+                        Cuenta:
                       </label>
                       <dx-select-box
                         [dataSource]="cuentas"
@@ -208,11 +209,23 @@
                         </dxo-editing>
                         <dxo-search-panel placeholder="Buscar..." [visible]="true"></dxo-search-panel>
 
-                        <dxi-column dataField="Fecha" caption="Fecha" [width]="130" dataType="date"></dxi-column>
-                        <dxi-column dataField="BancoR" caption="Banco Receptor"></dxi-column>
-                        <dxi-column dataField="BancoE" caption="Banco Emisor"></dxi-column>
-                        <dxi-column dataField="Monto" caption="Monto" [width]="130" dataType="number"></dxi-column>
-                        <dxi-column dataField="Codigo" caption="Código Referencia" [width]="130"></dxi-column>
+                        <dxi-column dataField="fecha" caption="Fecha" [width]="130" dataType="date"></dxi-column>
+                        <dxi-column dataField="banco_receptor_id" caption="Banco Receptor">
+                            <dxo-lookup
+                              [dataSource]="bancos"
+                              displayExpr="nombre"
+                              valueExpr="id">
+                            </dxo-lookup>
+                        </dxi-column>
+                        <dxi-column dataField="banco_emisor_id" caption="Banco Emisor">
+                            <dxo-lookup
+                              [dataSource]="bancos"
+                              displayExpr="nombre"
+                              valueExpr="id">
+                            </dxo-lookup>
+                        </dxi-column>
+                        <dxi-column dataField="monto" caption="Monto" [width]="130" dataType="number"></dxi-column>
+                        <dxi-column dataField="referencia" caption="Código Referencia" [width]="130"></dxi-column>
                       </dx-data-grid>
 
                       <dx-data-grid *ngIf="tabContent=='Cheque'"
@@ -249,49 +262,72 @@
                         <dxo-search-panel placeholder="Buscar..." [visible]="true"></dxo-search-panel>
 
                         <dxi-column dataField="fecha" caption="Fecha" [width]="130" dataType="date"></dxi-column>
-                        <dxi-column dataField="banco" caption="Banco"></dxi-column>
-                        <dxi-column dataField="numero" caption="Número Cheque" [width]="130"></dxi-column>
+                        <dxi-column dataField="banco_id" caption="Banco">
+                          <dxo-lookup
+                              [dataSource]="bancos"
+                              displayExpr="nombre"
+                              valueExpr="id">
+                          </dxo-lookup>
+                        </dxi-column>
+                        <dxi-column dataField="numero" caption="Número Cheque" [width]="130" dataType="number"></dxi-column>
                         <dxi-column dataField="titular" caption="Títular Cuenta" [width]="130"></dxi-column>
                         <dxi-column dataField="monto" caption="Monto" [width]="130" dataType="float"></dxi-column>
                       </dx-data-grid>
 
                       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top: 15px;" *ngIf="tabContent=='Tarjeta'">
-                        <div class="col-lg-8 col-md-8 col-sm-6 col-xs-6">
-                          <div class="form-group">
-                            <label>Tarjeta:
-                              <span class="required">*</span>
-                            </label>
-                            <dx-select-box
-                                [dataSource]="tarjetas"
-                                displayExpr="banco"
-                                valueExpr="id"
-                                placeholder="Seleccione una tarjeta">
-                              <dx-validator>
-                                <dxi-validation-rule type="required" message="Tarjeta es requerida"></dxi-validation-rule>
-                              </dx-validator>
-                            </dx-select-box>
-                          </div>
-                        </div>
+                        <dx-data-grid
+                            id="gridContainer"
+                            [dataSource]="ingresosTarjetas"
+                            [noDataText]="noDataText"
+                            keyExpr="ID"
+                            [allowColumnReordering]="true"
+                            (onRowUpdating)="editarTransferencia($event)"
+                            (onRowRemoving)="eliminarTransferencia($event)">
+                          <dxo-paging [pageSize]="10"></dxo-paging>
+                          <dxo-pager
+                              infoText="Mostrando {0} to {1} de {2} ingresos"
+                              [showInfo]="true"
+                              [showNavigationButtons]="true">
+                          </dxo-pager>
+                          <dxo-editing
+                              mode="row"
+                              [allowUpdating]="true"
+                              [allowDeleting]="true"
+                              [allowAdding]="true"
+                              [texts]="{
+                                cancelAllChanges: cancelAllChanges,
+                                cancelRowChanges: cancelRowChanges,
+                                confirmDeleteMessage: confirmDeleteMessage,
+                                deleteRow: deleteRow,
+                                editRow: editRow,
+                                saveAllChanges: saveAllChanges,
+                                saveRowChanges: saveRowChanges,
+                                undeleteRow: undeleteRow,
+                                validationCancelChanges: validationCancelChanges
+                              }">
+                          </dxo-editing>
+                          <dxo-search-panel placeholder="Buscar..." [visible]="true"></dxo-search-panel>
 
-                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6">
-                          <div class="form-group">
-                            <label>Cantidad:
-                              <span class="required">*</span>
-                            </label>
-                            <dx-text-box class="form-control"
-                                name="cantidadTarjeta"
-                                mode="number">
-                              <dx-validator>
-                                <dxi-validation-rule type="required" message="Cantidad es requerida"></dxi-validation-rule>
-                              </dx-validator>
-                            </dx-text-box>
-                          </div>
-                        </div>
+                          <dxi-column dataField="fecha" caption="Fecha" [width]="130" dataType="date"></dxi-column>
+                          <dxi-column dataField="tarjeta_id" caption="Tarjeta">
+                            <dxo-lookup
+                              [dataSource]="tarjetas"
+                              displayExpr="nombre"
+                              valueExpr="id"
+                              placeholder="Seleccione una tarjeta"
+                              itemTemplate="tarjetasTemplate">
+                              <div *dxTemplate="let tarjeta of 'tarjetasTemplate'">
+                                {{tarjeta.numero}}, {{tarjeta.tipo_tarjeta}}, {{tarjeta.marca_tarjeta}}, {{tarjeta.banco}}
+                              </div>
+                            </dxo-lookup>
+                          </dxi-column>
+                          <dxi-column dataField="monto" caption="Monto" dataType="float" [width]="130"></dxi-column>
+                        </dx-data-grid>
                       </div>
                   </div>
                 </div>
 
-                <div class="row">
+                <!--<div class="row">
                   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
                     <div class="form-group col-lg-3 col-lg-offset-9 col-md-3 col-md-offset-9 col-sm-4 col-sm-offset-8 col-xs-12">
                       <label>
@@ -303,7 +339,7 @@
                           [disabled]="true">
                       </dx-text-box>
                     </div>
-                  </div>
+                  </div>-->
 
                   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
                     <dx-button
@@ -322,7 +358,6 @@
                         style="margin-right: 5px;">
                     </dx-button>
                   </div>
-                </div>
               </form>
             </div>
           </div>
@@ -331,3 +366,313 @@
     </div>
   </div>
 </div>
+
+<div class="row" *ngIf="!nuevo">
+  <div class="col-md-12">
+    <div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title">Registro de Ingresos</h3>
+      </div>
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="col-sm-14" id="VerForm" style="display: block;">
+              <button class="btn btn-success" style="margin-bottom: 40px;" (click)="crear()">
+                <i class="fa fa-plus"></i>
+                Nuevo
+              </button>
+
+              <div id="VerListado" class="dataTables_wrapper form-inline dt-bootstrap">
+                <dx-data-grid
+                    id="gridContainer"
+                    [dataSource]="ingresos"
+                    [noDataText]="noDataText"
+                    keyExpr="id"
+                    [allowColumnReordering]="true">
+                  <dxo-paging [pageSize]="10"></dxo-paging>
+                  <dxo-pager
+                      infoText="Mostrando {0} to {1} de {2} ingresos"
+                      [showInfo]="true"
+                      [showNavigationButtons]="true">
+                  </dxo-pager>
+                  <dxo-editing
+                      mode="row"
+                      [texts]="{
+                        cancelAllChanges: cancelAllChanges,
+                        cancelRowChanges: cancelRowChanges,
+                        confirmDeleteMessage: confirmDeleteMessage,
+                        deleteRow: deleteRow,
+                        editRow: editRow,
+                        saveAllChanges: saveAllChanges,
+                        saveRowChanges: saveRowChanges,
+                        undeleteRow: undeleteRow,
+                        validationCancelChanges: validationCancelChanges
+                      }">
+                  </dxo-editing>
+                  <dxo-search-panel placeholder="Buscar..." [visible]="true"></dxo-search-panel>
+
+                  <dxi-column dataField="fecha" caption="Fecha" [width]="150"></dxi-column>
+                  <dxi-column dataField="descripcion" caption="Descripción"></dxi-column>
+                  <dxi-column dataField="recibo" caption="Recibo" [width]="150"></dxi-column>
+                  <dxi-column dataField="referencia" caption="Referencia" [width]="150"></dxi-column>
+                  <dxi-column dataField="documento" caption="Documento" [width]="150"></dxi-column>
+                  <dxi-column dataField="ingreso" caption="Tipo de Ingreso" [width]="200"></dxi-column>
+                  <dxi-column cellTemplate="detailTemplate"></dxi-column>
+
+                    <div *dxTemplate="let data of 'detailTemplate'">
+                      <a (click)="verDetalles(data, detallar)">Ver detalles</a>
+                    </div>
+                </dx-data-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #detallar>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="col-sm-14" id="VerForm" style="display: block;">
+          <div class="row">
+            <div class="col-md-12 left">
+              <div class="form-group">
+                <label>
+                  Fecha:
+                </label>
+                {{detalles.fecha}}
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12 left">
+              <div class="form-group">
+                <label>
+                  Descripción (Observación):
+                </label>
+                {{detalles.descripcion}}
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12 left">
+              <div class="form-group">
+                <label>
+                  Recibo:
+                </label>
+                {{detalles.recibo}}
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12 left">
+              <div class="form-group">
+                <label>
+                  Documento:
+                </label>
+                {{detalles.documento}}
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12 left">
+              <div class="form-group">
+                <label>
+                  Referencia:
+                </label>
+                {{detalles.referencia}}
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12 left">
+              <div class="form-group">
+                <label>
+                  Tipo de Ingreso:
+                </label>
+                {{detalles.ingreso}}
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12 left">
+
+              <table class="table" *ngIf="detalles.ingreso=='Directo'">
+                <thead>
+                  <tr>
+                    <th>
+                      cuenta
+                    </th>
+                    <th>
+                      Debe
+                    </th>
+                    <th>
+                      Haber
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let ingreso of detalles.ingresos">
+                    <td>
+                      {{ingreso.cuenta}}
+                    </td>
+                    <td>
+                      {{ingreso.debe}}
+                    </td>
+                    <td>
+                      {{ingreso.haber}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <table class="table" *ngIf="detalles.ingreso=='Transferencia'">
+                <thead>
+                  <tr>
+                    <th>
+                      Fecha
+                    </th>
+                    <th>
+                      Banco Emisor
+                    </th>
+                    <th>
+                      Banco Receptor
+                    </th>
+                    <th>
+                      Monto
+                    </th>
+                    <th>
+                      Referencia
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let ingreso of detalles.ingresos">
+                    <td>
+                      {{ingreso.fecha}}
+                    </td>
+                    <td>
+                      {{ingreso.banco_emisor}}
+                    </td>
+                    <td>
+                      {{ingreso.banco_receptor}}
+                    </td>
+                    <td>
+                      {{ingreso.monto}}
+                    </td>
+                    <td>
+                      {{ingreso.referencia}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <table class="table" *ngIf="detalles.ingreso=='Tarjeta'">
+                <thead>
+                  <tr>
+                    <th>
+                      Fecha
+                    </th>
+                    <th>
+                      Nº Tarjeta
+                    </th>
+                    <th>
+                      Tipo
+                    </th>
+                    <th>
+                      Banco
+                    </th>
+                    <th>
+                      Monto
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let ingreso of detalles.ingresos">
+                    <td>
+                      {{ingreso.fecha}}
+                    </td>
+                    <td>
+                      {{ingreso.numero}}
+                    </td>
+                    <td>
+                      {{ingreso.tipo_tarjeta}}
+                    </td>
+                    <td>
+                      {{ingreso.banco}}
+                    </td>
+                    <td>
+                      {{ingreso.monto}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <table class="table" *ngIf="detalles.ingreso=='Cheque'">
+                <thead>
+                  <tr>
+                    <th>
+                      Fecha
+                    </th>
+                    <th>
+                      Banco
+                    </th>
+                    <th>
+                      Nº Cheque
+                    </th>
+                    <th>
+                      Titular
+                    </th>
+                    <th>
+                      Monto
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let ingreso of detalles.ingresos">
+                    <td>
+                      {{ingreso.fecha}}
+                    </td>
+                    <td>
+                      {{ingreso.banco}}
+                    </td>
+                    <td>
+                      {{ingreso.numero}}
+                    </td>
+                    <td>
+                      {{ingreso.titular}}
+                    </td>
+                    <td>
+                      {{ingreso.monto}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
+              <dx-button
+                  icon="fa fa-remove"
+                  type="danger"
+                  (click)="cerrar()"
+                  class="btn btn-danger pull-right"
+                  text="Cerrar"
+                  style="margin-right: 5px;">
+              </dx-button>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</ng-template>
