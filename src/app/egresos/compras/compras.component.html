@@ -1,0 +1,727 @@
+<div class="row" id="noImprimir">
+  <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+    <div *ngFor="let alert of alerts">
+      <alert [type]="alert.type" [dismissible]="true">{{ alert.msg }}</alert>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title">Nueva Compra</h3>
+      </div>
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="col-sm-14" id="VerForm" style="display: block;">
+
+              <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <div id="tabs">
+                    <dx-tabs
+                        [dataSource]="tabs"
+                        [selectedIndex]="0"
+                        (onItemClick)="selectTab($event)"
+                        [disabled]="true">
+                    </dx-tabs>
+                  </div>
+                </div>
+              </div>
+
+              <form name="frmSucursal" id="frmSucursal" (submit)="siguiente($event)" *ngIf="tabContent == 'Pedido' && visualizar">
+                <div class="row">
+                  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 left">
+                    <div class="form-group">
+                      <label>Compra #
+                        <span class="required">*</span>
+                      </label>
+                      <dx-text-box class="form-control"
+                          [disabled]="true">
+                      </dx-text-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 left">
+                    <div class="form-group">
+                      <label>¿Stock Inicial?
+                        <span class="required">*</span>
+                      </label>
+                      <dx-switch style="display: block;"
+                          [value]="stock_inicial"
+                          (onValueChanged)="cambioStockInicial($event)"></dx-switch>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
+                    <div class="form-group">
+                      <label>Proveedor:
+                        <span class="required">*</span>
+                      </label>
+                      <dx-lookup
+                          class="field-customization"
+                          [items]="proveedores"
+                          [displayExpr]="displayProveedores"
+                          valueExpr="id"
+                          title="Seleccione un proveedor"
+                          [value]="proveedores[0].id"
+                          (onValueChanged)="cambioProveedor($event)">
+                      </dx-lookup>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 left">
+                    <div class="form-group">
+                      <label>Serie:
+                        <span class="required">*</span>
+                      </label>
+                      <dx-text-box class="form-control"
+                          name="compra.serie"
+                          [(value)]="compra.serie">
+                      </dx-text-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 left">
+                    <div class="form-group">
+                      <label>Documento:
+                        <span class="required">*</span>
+                      </label>
+                      <dx-text-box class="form-control"
+                          name="documento"
+                          [(value)]="compra.documento">
+                      </dx-text-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 left">
+                    <div class="form-group">
+                      <label>Autorización:
+                        <span class="required">*</span>
+                      </label>
+                      <dx-text-box class="form-control"
+                          name="autorizacion"
+                          [(value)]="compra.autorizacion">
+                      </dx-text-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 left">
+                    <div class="form-group">
+                      <label>Fecha Comprobante:
+                        <span class="required">*</span>
+                      </label>
+                      <dx-date-box
+                          (onValueChanged)="cambioFechaComprobante($event)"
+                          invalidDateMessage="La fecha debe tener el siguiente formato: dd/MM/yyyy">
+                          <dx-validator>
+                            <dxi-validation-rule type="required" message="Fecha comprobante es requerida"></dxi-validation-rule>
+                          </dx-validator>
+                      </dx-date-box>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 left">
+                    <div class="form-group">
+                      <label>Fecha Ingreso Bodega:
+                        <span class="required">*</span>
+                      </label>
+                      <dx-date-box
+                          (onValueChanged)="cambioFechaIngreso($event)"
+                          invalidDateMessage="La fecha debe tener el siguiente formato: dd/MM/yyyy">
+                          <dx-validator>
+                            <dxi-validation-rule type="required" message="Fecha ingreso es requerida"></dxi-validation-rule>
+                          </dx-validator>
+                      </dx-date-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 left">
+                    <div class="form-group">
+                      <label>Fecha Caducidad:
+                        <span class="required">*</span>
+                      </label>
+                      <dx-date-box
+                          (onValueChanged)="cambioFechaCaducidad($event)"
+                          invalidDateMessage="La fecha debe tener el siguiente formato: dd/MM/yyyy">
+                          <dx-validator>
+                            <dxi-validation-rule type="required" message="Fecha caducidad es requerida"></dxi-validation-rule>
+                          </dx-validator>
+                      </dx-date-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 left">
+                    <div class="form-group">
+                      <label>Vencimiento:
+                        <span class="required">*</span>
+                      </label>
+                      <dx-date-box
+                          (onValueChanged)="cambioVencimiento($event)"
+                          invalidDateMessage="La fecha debe tener el siguiente formato: dd/MM/yyyy">
+                          <dx-validator>
+                            <dxi-validation-rule type="required" message="Vencimiento es requerido"></dxi-validation-rule>
+                          </dx-validator>
+                      </dx-date-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 left">
+                    <div class="form-group">
+                      <label>Descripción:
+                        <span class="required">*</span>
+                      </label>
+                      <dx-text-box class="form-control"
+                          name="descripcion"
+                          [(value)]="compra.descripcion">
+                      </dx-text-box>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <label>
+                        Producto:
+                      </label>
+                      <dx-lookup
+                          class="field-customization"
+                          [items]="productos"
+                          [displayExpr]="displayProductos"
+                          valueExpr="id"
+                          title="Seleccione un producto"
+                          [value]="productos[0].id"
+                          fieldTemplate="field"
+                          (onValueChanged)="cambioProducto($event)">
+                        <div *dxTemplate="let item of 'field'">
+                          <strong>Código: </strong>{{item.codigo}}
+                          <strong>Nombre</strong> {{item.nombre}}
+                        </div>
+                      </dx-lookup>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <label>
+                        Cantidad:
+                      </label>
+                      <dx-number-box
+                          [(value)]="producto.cantidad"
+                          [min]="1"
+                          [showSpinButtons]="true">
+                      </dx-number-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <label>
+                        Precio Unitario:
+                      </label>
+                      <dx-number-box
+                          [(value)]="producto.precio_unitario"
+                          [min]="1"
+                          [showSpinButtons]="true">
+                      </dx-number-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <label>
+                        I.V.A.
+                      </label>
+                      <dx-lookup
+                          [items]="ivas"
+                          [displayExpr]="displayIvas"
+                          valueExpr="id"
+                          [value]="ivas[0].id"
+                          fieldTemplate="field"
+                          (onValueChanged)="cambioIVA($event)">
+                        <div *dxTemplate="let item of 'field'">
+                          <div class="custom-field">
+                            {{item.nombre}} - {{item.cantidad}}%
+                          </div>
+                        </div>
+                      </dx-lookup>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <label>
+                        Local
+                      </label>
+                      <dx-select-box
+                          [dataSource]="locales"
+                          displayExpr="nombre"
+                          valueExpr="id"
+                          placeholder="Seleccione local"
+                          (onValueChanged)="cambioLocal($event)">
+                      </dx-select-box>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+                    <button type="button" class="btn btn-info pull-right" style="margin-top: 22px;"
+                        (click)="agregarCarrito()">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th width="150">Código</th>
+                          <th>Nombre</th>
+                          <th width="120">Cantidad</th>
+                          <th width="150">Precio Unitario</th>
+                          <th width="150">Subtotal</th>
+                          <th width="150">I.V.A.</th>
+                          <th width="150">Precio Total</th>
+                          <th>Acción</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let producto of carrito">
+                          <td>{{producto.codigo}}</td>
+                          <td>{{producto.nombre}}</td>
+                          <td>{{producto.cantidad}}</td>
+                          <td>{{producto.precio_unitario}}</td>
+                          <td>{{producto.subtotal}}</td>
+                          <td>{{producto.total_iva}}</td>
+                          <td>{{producto.total}}</td>
+                          <td>
+                            <button class="btn btn-danger" (click)="eliminarProducto(producto)">
+                              <i class="fa fa-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                    <label>
+                      Subtotal:
+                    </label>
+                    <div class="form-group">
+                      <div class="input-group has-error">
+                        <input id="txtImpuesto" type="text" class="form-control"
+                          style="text-align:right;" [(value)]="compra.subtotal" name="compra.subtotal" disabled>
+                        <div class="input-group-addon">$</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                    <label>
+                      IVA 12%
+                    </label>
+                    <div class="form-group">
+                      <div class="input-group has-error">
+                        <input id="txtImpuesto" type="text" class="form-control"
+                          style="text-align:right;" [(value)]="compra.total_iva" name="compra.total_iva" disabled>
+                        <div class="input-group-addon">%</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                    <label>
+                      IVA 0%
+                    </label>
+                    <div class="form-group">
+                      <div class="input-group has-error">
+                        <input id="txtImpuesto" type="text" class="form-control"
+                          style="text-align:right;" [(value)]="compra.detalle_iva" name="compra.detalle_iva" disabled>
+                        <div class="input-group-addon">$</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                    <label>
+                      Total:
+                    </label>
+                    <div class="form-group">
+                      <div class="input-group has-error">
+                        <input id="txtImpuesto" type="text" class="form-control"
+                          style="text-align:right;" [(value)]="compra.total"
+                          name="compra.total.toFixed(2)" disabled>
+                        <div class="input-group-addon">$</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
+                  <dx-button
+                      text="Siguiente"
+                      type="info"
+                      class="btn btn-info pull-right"
+                      [useSubmitBehavior]="true">
+                  </dx-button>
+                  <dx-button
+                      type="danger"
+                      (click)="cancelar()"
+                      class="btn btn-danger pull-right"
+                      text="Cancelar"
+                      style="margin-right: 5px;">
+                  </dx-button>
+                </div>
+              </form>
+
+              <div class="row" *ngIf="tabContent == 'Pago' && visualizar">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <form name="frmSucursal" id="frmSucursal" (submit)="agregarPago($event)">
+                    <div class="row">
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 left">
+                        <div class="form-group">
+                          <label>
+                            Forma de Pago:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-select-box
+                              [dataSource]="formasPago"
+                              displayExpr="nombre"
+                              valueExpr="id"
+                              placeholder="Seleccione la forma de pago"
+                              (onValueChanged)="cambioFormaPago($event)">
+                          </dx-select-box>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
+                        <div class="form-group">
+                          <label>Valor:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-number-box class="form-control"
+                              [(value)]="pago.cantidad_cancelada"
+                              [min]="0"
+                              [showSpinButtons]="true">
+                          </dx-number-box>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row" *ngIf="formaPago.nombre == 'Tarjeta'">
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 left">
+                        <div class="form-group">
+                          <label>Tarjeta:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-select-box
+                              [dataSource]="tarjetas"
+                              displayExpr="nombre"
+                              valueExpr="id"
+                              placeholder="Seleccione la una tarjeta"
+                              (onValueChanged)="cambioTarjeta($event)">
+                              <dx-validator>
+                                <dxi-validation-rule type="required" message="Tarjeta es requerida"></dxi-validation-rule>
+                              </dx-validator>
+                          </dx-select-box>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 left">
+                        <div class="form-group">
+                          <label>Débito/Crédito:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-text-box class="form-control"
+                              [value]="pago.tipo_tarjeta"
+                              [disabled]="true">
+                          </dx-text-box>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row" *ngIf="formaPago.nombre == 'Tarjeta'">
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 left">
+                        <div class="form-group">
+                          <label>
+                            Tipo de Tarjeta:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-text-box class="form-control"
+                              [value]="pago.marca_tarjeta"
+                              [disabled]="true">
+                          </dx-text-box>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 left">
+                        <div class="form-group">
+                          <label>
+                            Banco:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-text-box class="form-control"
+                              [value]="pago.banco"
+                              [disabled]="true">
+                          </dx-text-box>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row" *ngIf="formaPago.nombre == 'Tarjeta'">
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 left">
+                        <div class="form-group">
+                          <label>
+                            Código de Autorización:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-text-box class="form-control"
+                              mode="number"
+                              [(value)]="pago.autorizacion_tarjeta">
+                            <dx-validator>
+                              <dxi-validation-rule type="required" message="Código de autorización es requerido"></dxi-validation-rule>
+                            </dx-validator>
+                          </dx-text-box>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 left">
+                        <div class="form-group">
+                          <label>
+                            Observación:
+                          </label>
+                          <dx-text-box class="form-control default"
+                              name="banco"
+                              [(value)]="pago.observacion">
+                          </dx-text-box>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row" *ngIf="formaPago.nombre == 'Transferencia bancaria'">
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
+                        <div class="form-group">
+                          <label>Cuenta:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-select-box
+                              [dataSource]="cuentas"
+                              displayExpr="nombre"
+                              valueExpr="id"
+                              placeholder="Seleccione la cuenta debitadora"
+                              (onValueChanged)="cambioCuenta($event)">
+                            <dx-validator>
+                              <dxi-validation-rule type="required" message="Cuenta es requerida"></dxi-validation-rule>
+                            </dx-validator>
+                          </dx-select-box>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
+                        <div class="form-group">
+                          <label>
+                            Detalles cuenta debitada:
+                          </label>
+                          <dx-text-box class="form-control"
+                              name="banco"
+                              [value]="pago.detalles_cuenta"
+                              [disabled]="true">
+                          </dx-text-box>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
+                        <div class="form-group">
+                          <label>Banco receptor:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-select-box
+                              [dataSource]="bancos"
+                              displayExpr="nombre"
+                              valueExpr="id"
+                              placeholder="Seleccione el banco receptor"
+                              (onValueChanged)="cambioBancoReceptor($event)">
+                              <dx-validator>
+                                <dxi-validation-rule type="required" message="Banco receptor es requerido"></dxi-validation-rule>
+                              </dx-validator>
+                          </dx-select-box>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 left">
+                        <div class="form-group">
+                          <label>
+                            Código de Transferencia:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-text-box class="form-control"
+                              [(value)]="pago.codigo_transferencia">
+                            <dx-validator>
+                              <dxi-validation-rule type="required" message="Código referencia es requerido"></dxi-validation-rule>
+                            </dx-validator>
+                          </dx-text-box>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 left">
+                        <div class="form-group">
+                          <label>
+                            Observación:
+                          </label>
+                          <dx-text-box class="form-control default"
+                              [(value)]="pago.observacion">
+                          </dx-text-box>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row" *ngIf="formaPago.nombre == 'Cheque'">
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
+                        <div class="form-group">
+                          <label>Cuenta:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-select-box
+                              [dataSource]="cuentas"
+                              displayExpr="nombre"
+                              valueExpr="id"
+                              placeholder="Seleccione la cuenta debitadora"
+                              (onValueChanged)="cambioCuenta($event)">
+                            <dx-validator>
+                              <dxi-validation-rule type="required" message="Cuenta es requerida"></dxi-validation-rule>
+                            </dx-validator>
+                          </dx-select-box>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 left">
+                        <div class="form-group">
+                          <label>
+                            Detalles cuenta cheque:
+                          </label>
+                          <dx-text-box class="form-control"
+                              name="banco"
+                              [value]="pago.detalles_cuenta"
+                              [disabled]="true">
+                          </dx-text-box>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 left">
+                        <div class="form-group">
+                          <label>
+                            Número del Cheque:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-text-box class="form-control"
+                              name="banco"
+                              [(value)]="pago.numero_cheque">
+                            <dx-validator>
+                              <dxi-validation-rule type="required" message="Nº del cheque es requerido"></dxi-validation-rule>
+                            </dx-validator>
+                          </dx-text-box>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 left">
+                        <div class="form-group">
+                          <label>
+                            Observación:
+                          </label>
+                          <dx-text-box class="form-control default"
+                              [(value)]="pago.observacion">
+                          </dx-text-box>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row" *ngIf="formaPago.nombre == 'Pago electrónico'">
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                          <label>Institución:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-text-box class="form-control"
+                              name="banco"
+                              [(value)]="pago.institucion">
+                            <dx-validator>
+                              <dxi-validation-rule type="required" message="institución es requerida"></dxi-validation-rule>
+                            </dx-validator>
+                          </dx-text-box>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                          <label>Observación:
+                            <span class="required">*</span>
+                          </label>
+                          <dx-text-box class="form-control"
+                              name="banco"
+                              [(value)]="pago.observacion">
+                            <dx-validator>
+                              <dxi-validation-rule type="required" message="Observación es requerida"></dxi-validation-rule>
+                            </dx-validator>
+                          </dx-text-box>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row" *ngIf="tabContent == 'Pago'">
+                      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <dx-button
+                            style=" color: #fff;
+                            background-color: #31b0d5;
+                            border-color: #269abc;"
+                            icon="fa fa-plus"
+                            type="info"
+                            [useSubmitBehavior]="true"
+                            class="btn btn-info pull-right">
+                        </dx-button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="tabContent == 'Pago'" style="margin-top: 20px;">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                  <table class="table">
+                    <tr>
+                      <th>Tipo de Pago</th>
+                      <th>Valor</th>
+                      <th>Acción</th>
+                    </tr>
+                    <tbody>
+                      <tr *ngFor="let pago of pagos">
+                        <td>{{pago.metodo}}</td>
+                        <td>{{pago.cantidad_cancelada}}</td>
+                        <td>
+                          <button class="btn btn-danger" (click)="eliminarPago(pago)">
+                            <i class="fa fa-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

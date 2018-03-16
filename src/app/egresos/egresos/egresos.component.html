@@ -141,6 +141,12 @@
                       [noDataText]="noDataText"
                       keyExpr="ID"
                       [allowColumnReordering]="true"
+                      [showColumnLines]="false"
+                      [showRowLines]="true"
+                      [showBorders]="false"
+                      [rowAlternationEnabled]="true"
+                      (onContentReady)="onContentReady($event)"
+                      (onCellPrepared)="onCellPrepared($event)"
                       (onRowUpdating)="editarEgresoDirecto($event)"
                       (onRowRemoving)="eliminarEgresoDirecto($event)">
                     <dxo-paging [pageSize]="10"></dxo-paging>
@@ -179,6 +185,12 @@
                           [noDataText]="noDataText"
                           keyExpr="ID"
                           [allowColumnReordering]="true"
+                          [showColumnLines]="false"
+                          [showRowLines]="true"
+                          [showBorders]="false"
+                          [rowAlternationEnabled]="true"
+                          (onContentReady)="onContentReady($event)"
+                          (onCellPrepared)="onCellPrepared($event)"
                           (onRowUpdating)="editarTransferencia($event)"
                           (onRowRemoving)="eliminarTransferencia($event)">
                         <dxo-paging [pageSize]="10"></dxo-paging>
@@ -219,6 +231,12 @@
                           [noDataText]="noDataText"
                           keyExpr="ID"
                           [allowColumnReordering]="true"
+                          [showColumnLines]="false"
+                          [showRowLines]="true"
+                          [showBorders]="false"
+                          [rowAlternationEnabled]="true"
+                          (onContentReady)="onContentReady($event)"
+                          (onCellPrepared)="onCellPrepared($event)"
                           (onRowUpdating)="editarCheque($event)"
                           (onRowRemoving)="eliminarCheque($event)">
                         <dxo-paging [pageSize]="10"></dxo-paging>
@@ -306,10 +324,10 @@
                     <dx-button
                         text="Guardar"
                         icon="save"
-                        type="success"
+                        type="info"
                         [useSubmitBehavior]="true"
                         (click)="guardar($event)"
-                        class="btn btn-success pull-right">
+                        class="btn btn-info pull-right">
                     </dx-button>
                     <dx-button
                         icon="fa fa-remove"

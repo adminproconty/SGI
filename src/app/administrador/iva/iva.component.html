@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="col-sm-14" id="VerForm" style="display: block;">
-                            <button class="btn btn-success" style="margin-bottom: 40px;" (click)="openModal(template)">
+                            <button class="btn btn-info" style="margin-bottom: 40px;" (click)="openModal(template)">
                                 <i class="fa fa-plus"></i>
                                 Nuevo
                             </button>
@@ -28,6 +28,13 @@
                                     [noDataText]="noDataText"
                                     keyExpr="id"
                                     [allowColumnReordering]="true"
+                                    [allowColumnReordering]="true"
+                                    [showColumnLines]="false"
+                                    [showRowLines]="true"
+                                    [showBorders]="false"
+                                    [rowAlternationEnabled]="true"
+                                    (onContentReady)="onContentReady($event)"
+                                    (onCellPrepared)="onCellPrepared($event)"
                                     (onRowUpdating)="editar($event)">
                                     <dxo-paging [pageSize]="10"></dxo-paging>
 									                  <dxo-pager
@@ -111,9 +118,9 @@
                             <dx-button
                                 text="Guardar"
                                 icon="save"
-                                type="success"
+                                type="info"
                                 [useSubmitBehavior]="true"
-                                class="btn btn-success pull-right"
+                                class="btn btn-info pull-right"
                                 [disabled]="guardando">
                             </dx-button>
                             <dx-button

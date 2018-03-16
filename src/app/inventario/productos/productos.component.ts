@@ -135,10 +135,10 @@ export class ProductosComponent implements OnInit {
     this.cancelAllChanges = 'Cancelar';
     this.cancelRowChanges = 'Cancelar';
     this.confirmDeleteMessage = 'Todos los registros a este local serán borrados también, ¿está seguro?';
-    this.deleteRow = 'Eliminar';
-    this.editRow = 'Editar';
-    this.saveAllChanges = 'Guardar';
-    this.saveRowChanges = 'Guardar';
+    this.deleteRow = '';
+    this.editRow = '';
+    this.saveAllChanges = '';
+    this.saveRowChanges = '';
     this.undeleteRow = 'No eliminar';
     this.validationCancelChanges = 'Cancelar';
     this.categoria = {
@@ -429,6 +429,40 @@ export class ProductosComponent implements OnInit {
       console.log('iva consultado', data);
       this.producto.iva_id = data.id * 1;
     });
+  }
+
+  onContentReady(e) {
+    e.component.columnOption('command:edit', {
+       visibleIndex: -1,
+       width: 80
+     });
+  }
+
+  onCellPrepared(e) {
+    if (e.rowType === 'data' && e.column.command === 'edit') {
+        const isEditing = e.row.isEditing,
+            cellElement = e.cellElement;
+
+          if (isEditing) {
+            const saveLink = cellElement.querySelector('.dx-link-save'),
+                cancelLink = cellElement.querySelector('.dx-link-cancel');
+
+            saveLink.classList.add('dx-icon-save');
+            cancelLink.classList.add('dx-icon-revert');
+
+            saveLink.textContent = '';
+            cancelLink.textContent = '';
+          } else {
+            const editLink = cellElement.querySelector('.dx-link-edit'),
+                deleteLink = cellElement.querySelector('.dx-link-delete');
+
+            editLink.classList.add('dx-icon-edit');
+            deleteLink.classList.add('dx-icon-trash');
+
+            editLink.textContent = '';
+            deleteLink.textContent = '';
+          }
+    }
   }
 
 }

@@ -16,7 +16,7 @@
         <div class="row">
           <div class="col-md-12">
             <div class="col-sm-14" id="VerForm" style="display: block;">
-              <button class="btn btn-success" style="margin-bottom: 40px;" (click)="openModal(nuevacategoria)">
+              <button class="btn btn-info" style="margin-bottom: 40px;" (click)="openModal(nuevacategoria)">
                 <i class="fa fa-plus"></i>
                 Nueva
               </button>
@@ -27,6 +27,12 @@
                     [noDataText]="noDataText"
                     keyExpr="id"
                     [allowColumnReordering]="true"
+                    [showColumnLines]="false"
+                    [showRowLines]="true"
+                    [showBorders]="false"
+                    [rowAlternationEnabled]="true"
+                    (onContentReady)="onContentReady($event)"
+                    (onCellPrepared)="onCellPrepared($event)"
                     (onRowUpdating)="editarCategoria($event)">
                   <dxo-paging [pageSize]="10"></dxo-paging>
                   <dxo-pager
@@ -127,9 +133,9 @@
                             <dx-button
                                 text="Guardar"
                                 icon="save"
-                                type="success"
+                                type="info"
                                 [useSubmitBehavior]="true"
-                                class="btn btn-success pull-right"
+                                class="btn btn-info pull-right"
                                 [disabled]="guardando">
                             </dx-button>
                             <dx-button
@@ -159,7 +165,7 @@
         <div class="row">
           <div class="col-md-12">
             <div class="col-sm-14" id="VerForm" style="display: block;">
-              <button class="btn btn-success" style="margin-bottom: 40px;" (click)="openModal(nuevoproducto)">
+              <button class="btn btn-info" style="margin-bottom: 40px;" (click)="openModal(nuevoproducto)">
                 <i class="fa fa-plus"></i>
                 Nuevo
               </button>
@@ -171,6 +177,12 @@
                     keyExpr="id"
                     [allowColumnReordering]="true"
                     [columnAutoWidth]="true"
+                    [showColumnLines]="false"
+                    [showRowLines]="true"
+                    [showBorders]="false"
+                    [rowAlternationEnabled]="true"
+                    (onContentReady)="onContentReady($event)"
+                    (onCellPrepared)="onCellPrepared($event)"
                     (onRowUpdating)="editarProducto($event)">
                   <dxo-paging [pageSize]="10"></dxo-paging>
                   <dxo-pager
@@ -384,9 +396,9 @@
               <dx-button
                   text="Guardar"
                   icon="save"
-                  type="success"
+                  type="info"
                   [useSubmitBehavior]="true"
-                  class="btn btn-success pull-right"
+                  class="btn btn-info pull-right"
                   [disabled]="guardando">
               </dx-button>
               <dx-button

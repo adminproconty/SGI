@@ -47,6 +47,7 @@ import { ProductosComponent } from './inventario/productos/productos.component';
 import { FacturasComponent } from './ingresos/facturas/facturas.component';
 import { FisicoComponent } from './inventario/fisico/fisico.component';
 import { LoginComponent } from './login/login.component';
+import { ComprasComponent } from './egresos/compras/compras.component';
 
 import { NavegationProvider } from './navegation/navegation.provider';
 import { EmpresaProvider } from './administrador/empresa/empresa.provider';
@@ -66,6 +67,7 @@ import { FacturasProvider } from './ingresos/facturas/facturas.provider';
 import { LoginProvider } from './login/login.provider';
 import { IngresosProvider } from './ingresos/ingresos/ingresos.provider';
 import { ProveedoresProvider } from './egresos/proveedores/proveedores.provider';
+import { ComprasProvider } from './egresos/compras/compras.provider';
 
 
 import {  DxCheckBoxModule,
@@ -112,7 +114,8 @@ import {  DxCheckBoxModule,
     ProductosComponent,
     FacturasComponent,
     FisicoComponent,
-    LoginComponent
+    LoginComponent,
+    ComprasComponent
   ],
   imports: [
     DxCheckBoxModule,
@@ -170,6 +173,7 @@ import {  DxCheckBoxModule,
     LoginProvider,
     IngresosProvider,
     ProveedoresProvider,
+    ComprasProvider,
     DatePipe
   ],
   bootstrap: [AppComponent]

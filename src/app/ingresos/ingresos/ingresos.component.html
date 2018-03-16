@@ -144,6 +144,12 @@
                           [noDataText]="noDataText"
                           keyExpr="ID"
                           [allowColumnReordering]="true"
+                          [showColumnLines]="false"
+                          [showRowLines]="true"
+                          [showBorders]="false"
+                          [rowAlternationEnabled]="true"
+                          (onContentReady)="onContentReady($event)"
+                          (onCellPrepared)="onCellPrepared($event)"
                           (onRowUpdating)="editarIngresoDirecto($event)"
                           (onRowRemoving)="eliminarIngresoDirecto($event)">
                         <dxo-paging [pageSize]="10"></dxo-paging>
@@ -182,6 +188,12 @@
                           [noDataText]="noDataText"
                           keyExpr="ID"
                           [allowColumnReordering]="true"
+                          [showColumnLines]="false"
+                          [showRowLines]="true"
+                          [showBorders]="false"
+                          [rowAlternationEnabled]="true"
+                          (onContentReady)="onContentReady($event)"
+                          (onCellPrepared)="onCellPrepared($event)"
                           (onRowUpdating)="editarTransferencia($event)"
                           (onRowRemoving)="eliminarTransferencia($event)">
                         <dxo-paging [pageSize]="10"></dxo-paging>
@@ -234,6 +246,12 @@
                           [noDataText]="noDataText"
                           keyExpr="ID"
                           [allowColumnReordering]="true"
+                          [showColumnLines]="false"
+                          [showRowLines]="true"
+                          [showBorders]="false"
+                          [rowAlternationEnabled]="true"
+                          (onContentReady)="onContentReady($event)"
+                          (onCellPrepared)="onCellPrepared($event)"
                           (onRowUpdating)="editarCheque($event)"
                           (onRowRemoving)="eliminarCheque($event)">
                         <dxo-paging [pageSize]="10"></dxo-paging>
@@ -281,6 +299,12 @@
                             [noDataText]="noDataText"
                             keyExpr="ID"
                             [allowColumnReordering]="true"
+                            [showColumnLines]="false"
+                            [showRowLines]="true"
+                            [showBorders]="false"
+                            [rowAlternationEnabled]="true"
+                            (onContentReady)="onContentReady($event)"
+                            (onCellPrepared)="onCellPrepared($event)"
                             (onRowUpdating)="editarTransferencia($event)"
                             (onRowRemoving)="eliminarTransferencia($event)">
                           <dxo-paging [pageSize]="10"></dxo-paging>
@@ -345,9 +369,9 @@
                     <dx-button
                         text="Guardar"
                         icon="save"
-                        type="success"
+                        type="info"
                         [useSubmitBehavior]="true"
-                        class="btn btn-success pull-right">
+                        class="btn btn-info pull-right">
                     </dx-button>
                     <dx-button
                         icon="fa fa-remove"
@@ -377,7 +401,7 @@
         <div class="row">
           <div class="col-md-12">
             <div class="col-sm-14" id="VerForm" style="display: block;">
-              <button class="btn btn-success" style="margin-bottom: 40px;" (click)="crear()">
+              <button class="btn btn-info" style="margin-bottom: 40px;" (click)="crear()">
                 <i class="fa fa-plus"></i>
                 Nuevo
               </button>
@@ -388,7 +412,13 @@
                     [dataSource]="ingresos"
                     [noDataText]="noDataText"
                     keyExpr="id"
-                    [allowColumnReordering]="true">
+                    [allowColumnReordering]="true"
+                    [showColumnLines]="false"
+                    [showRowLines]="true"
+                    [showBorders]="false"
+                    [rowAlternationEnabled]="true"
+                    (onContentReady)="onContentReady($event)"
+                    (onCellPrepared)="onCellPrepared($event)">
                   <dxo-paging [pageSize]="10"></dxo-paging>
                   <dxo-pager
                       infoText="Mostrando {0} to {1} de {2} ingresos"
@@ -420,7 +450,9 @@
                   <dxi-column cellTemplate="detailTemplate"></dxi-column>
 
                     <div *dxTemplate="let data of 'detailTemplate'">
-                      <a (click)="verDetalles(data, detallar)">Ver detalles</a>
+                      <button class="btn btn-info" (click)="verDetalles(data, detallar)">
+                        <i class="fa fa-eye"></i>
+                      </button>
                     </div>
                 </dx-data-grid>
               </div>

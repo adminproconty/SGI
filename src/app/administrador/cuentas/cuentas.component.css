@@ -1,3 +1,63 @@
 a{
   cursor: pointer;
 }
+
+/deep/ .dx-command-edit .dx-link {
+  text-decoration: none;
+  font-size: 18px;
+  margin: 0 3px;
+}
+/deep/ .dx-command-edit .dx-link:hover {
+   opacity: 0.8;
+}
+/deep/ #select-position {
+  display: inline-block;
+  vertical-align: middle;
+}
+/deep/ .select-position span {
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+/deep/ .dx-datagrid .dx-row-lines > td {
+  border-bottom: 1px solid #5bc0de;
+}
+
+/deep/ .dx-datagrid-headers .dx-datagrid-table .dx-row > td {
+  border-bottom: 1px solid #5bc0de;
+}
+
+dx-text-box {
+  text-align: center;
+  border-color: #269abc;
+}
+
+dx-text-box.form-control.default {
+  border: 1px solid #ddd;
+}
+
+/deep/ .dx-invalid.dx-texteditor {
+  border-color: rgba(217, 83, 79, 0.4);
+}
+
+dx-button.btn.btn-info.pull-right.dx-button.dx-button-info.dx-widget.dx-button-has-icon.dx-button-has-text {
+  color: #fff;
+  background-color: #31b0d5;
+  border-color: #269abc;
+}
+
+/deep/ dx-button.btn.btn-info.pull-right.dx-button.dx-button-info.dx-widget.dx-button-has-icon.dx-button-has-text
+  div.dx-button-content i.dx-icon.dx-icon-save {
+    color: #fff;
+}
+
+/deep/ dx-select-box div.dx-dropdowneditor-input-wrapper.dx-selectbox-container
+  div.dx-texteditor-container input {
+    background-color: #eee;
+    opacity: 1;
+  }
+
+/deep/ .dx-scrollview-content {
+  background-color: #eee;
+  opacity: 1;
+}

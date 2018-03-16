@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="col-sm-14" id="VerForm" style="display: block;">
-                            <button class="btn btn-success" style="margin-bottom: 40px;" (click)="openModal(template)">
+                            <button class="btn btn-info" style="margin-bottom: 40px;" (click)="openModal(template)">
                                 <i class="fa fa-plus"></i>
                                 Nuevo Usuario
                             </button>
@@ -34,6 +34,12 @@
                                     keyExpr="id"
                                     [allowColumnReordering]="true"
                                     [allowColumnResizing]="true"
+                                    [showColumnLines]="false"
+                                    [showRowLines]="true"
+                                    [showBorders]="false"
+                                    [rowAlternationEnabled]="true"
+                                    (onContentReady)="onContentReady($event)"
+                                    (onCellPrepared)="onCellPrepared($event)"
                                     (onRowUpdating)="editar($event)"
                                     [columnAutoWidth]="true">
                                     <dxo-paging [pageSize]="10"></dxo-paging>
@@ -99,7 +105,7 @@
         <div class="row">
           <div class="col-md-12">
             <div class="col-sm-14" id="VerForm" style="display: block;">
-              <button class="btn btn-success" style="margin-bottom: 40px;" (click)="openModal(modalAsignar)">
+              <button class="btn btn-info" style="margin-bottom: 40px;" (click)="openModal(modalAsignar)">
                 <i class="fa fa-plus"></i>
                 Asignar Usuario a Local(es)
               </button>
@@ -111,6 +117,12 @@
                     keyExpr="id"
                     [allowColumnReordering]="true"
                     [allowColumnResizing]="true"
+                    [showColumnLines]="false"
+                    [showRowLines]="true"
+                    [showBorders]="false"
+                    [rowAlternationEnabled]="true"
+                    (onContentReady)="onContentReady($event)"
+                    (onCellPrepared)="onCellPrepared($event)"
                     (onRowRemoving)="eliminarLocalUsuario($event)">
                   <dxo-paging [pageSize]="10"></dxo-paging>
                   <dxo-pager
@@ -365,9 +377,9 @@
                             <dx-button
                                 text="Guardar"
                                 icon="save"
-                                type="success"
+                                type="info"
                                 [useSubmitBehavior]="true"
-                                class="btn btn-success pull-right"
+                                class="btn btn-info pull-right"
                                 [disabled]="guardando">
                             </dx-button>
                             <dx-button
@@ -444,9 +456,9 @@
               <dx-button
                   text="Guardar"
                   icon="save"
-                  type="success"
+                  type="info"
                   [useSubmitBehavior]="true"
-                  class="btn btn-success pull-right"
+                  class="btn btn-info pull-right"
                   [disabled]="guardando">
               </dx-button>
               <dx-button

@@ -123,19 +123,16 @@
 
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 left">
                                         <div class="form-group">
-                                            <label>Teléfono Celular:
-                                                <span class="required">*</span>
+                                            <label>
+                                              Teléfono Celular:
                                             </label>
-                                            <dx-text-box class="form-control"
+                                            <dx-text-box class="form-control default"
                                                     mask="(X00) 000-0000"
                                                     [maskRules]="phoneRules"
                                                     maskInvalidMessage="No cumple con el formato telefónico celular"
                                                     [useMaskedValue]="true"
                                                     name="celular"
                                                     [(value)]="empresa.celular">
-                                                <dx-validator>
-                                                    <dxi-validation-rule type="required" message="Teléfono celular es requerido"></dxi-validation-rule>
-                                                </dx-validator>
                                             </dx-text-box>
                                         </div>
                                     </div>
@@ -175,8 +172,8 @@
                                     <dx-button [disabled]="guardando"
                                         text="Guardar"
                                         icon="save"
-                                        type="success"
-                                        class="btn btn-success pull-right"
+                                        type="info"
+                                        class="btn btn-info pull-right"
                                         (onClick)="guardar()">
                                     </dx-button>
                                 </div>

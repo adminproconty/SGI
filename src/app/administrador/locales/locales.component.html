@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="col-sm-14" id="VerForm" style="display: block;">
-                            <button class="btn btn-success" style="margin-bottom: 40px;" (click)="openModal(template)">
+                            <button class="btn btn-info" style="margin-bottom: 40px;" (click)="openModal(template)">
                                 <i class="fa fa-plus"></i>
                                 Nuevo
                             </button>
@@ -29,10 +29,15 @@
                                       [dataSource]="locales"
                                       [noDataText]="noDataText"
                                       keyExpr="id"
-                                      [showBorders]="true"
+                                      [showColumnLines]="false"
+                                      [showRowLines]="true"
+                                      [showBorders]="false"
+                                      [rowAlternationEnabled]="true"
                                       [allowColumnReordering]="true"
                                       (onRowUpdating)="editar($event)"
-                                      [columnAutoWidth]="true">
+                                      [columnAutoWidth]="true"
+                                      (onContentReady)="onContentReady($event)"
+                                      (onCellPrepared)="onCellPrepared($event)">
                                       <dxo-paging [pageSize]="10"></dxo-paging>
                                       <dxo-pager
                                           infoText="Mostrando {0} to {1} de {2} locales"
@@ -118,7 +123,7 @@
                                 <div class="form-group">
                                     <label>Correo Electrónico:
                                     </label>
-                                    <dx-text-box class="form-control"
+                                    <dx-text-box class="form-control default"
                                             mode="email"
                                             name="nuevo.email"
                                             [(value)]="nuevo.email">
@@ -173,8 +178,8 @@
                             <dx-button [disabled]="guardando"
                                 text="Guardar"
                                 icon="save"
-                                type="success"
-                                class="btn btn-success pull-right"
+                                type="info"
+                                class="btn btn-info pull-right"
                                 [useSubmitBehavior]="true">
                             </dx-button>
                             <dx-button [disabled]="guardando"

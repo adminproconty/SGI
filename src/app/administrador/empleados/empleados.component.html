@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="col-sm-14" id="VerForm" style="display: block;">
-                            <button class="btn btn-success" style="margin-bottom: 40px;" (click)="openModal(template)">
+                            <button class="btn btn-info" style="margin-bottom: 40px;" (click)="openModal(template)">
                                 <i class="fa fa-plus"></i>
                                 Nuevo Empleado
                             </button>
@@ -28,6 +28,12 @@
                                         [noDataText]="noDataText"
                                         keyExpr="id"
                                         [allowColumnReordering]="true"
+                                        [showColumnLines]="false"
+                                        [showRowLines]="true"
+                                        [showBorders]="false"
+                                        [rowAlternationEnabled]="true"
+                                        (onContentReady)="onContentReady($event)"
+                                        (onCellPrepared)="onCellPrepared($event)"
                                         (onRowUpdating)="editar($event)">
                                     <dxo-paging [pageSize]="10"></dxo-paging>
                                         <dxo-pager
@@ -197,9 +203,10 @@
             <div class="row">
               <div class="col-md-12 left">
                 <div class="form-group">
-                  <label>Teléfono Convencional:
+                  <label>
+                    Teléfono Convencional:
                   </label>
-                  <dx-text-box class="form-control"
+                  <dx-text-box class="form-control default"
                       mask="(X0)0000000"
                       [maskRules]="phoneRules"
                       maskInvalidMessage="No cumple con el formato telefónico convencional"
@@ -235,9 +242,10 @@
             <div class="row">
               <div class="col-md-12 left">
                 <div class="form-group">
-                  <label>Teléfono Opcional:
+                  <label>
+                    Teléfono Opcional:
                   </label>
-                  <dx-text-box class="form-control"
+                  <dx-text-box class="form-control default"
                       mode="number"
                       name="telefono"
                       [(value)]="empleado.opcional">
@@ -250,9 +258,9 @@
               <dx-button
                   text="Guardar"
                   icon="save"
-                  type="success"
+                  type="info"
                   [useSubmitBehavior]="true"
-                  class="btn btn-success pull-right">
+                  class="btn btn-info pull-right">
               </dx-button>
               <dx-button
                   icon="fa fa-remove"

@@ -115,12 +115,12 @@
                             Proveedores
                         </a>
                     </li>
-                    <!--<li [ngClass]="menu.menu.egresos.hijos.compras">
-                        <a (click)="navegarCompras()">
+                    <li [ngClass]="menu.menu.egresos.hijos.compras">
+                        <a (click)="navegarCompras()" [routerLink]="['/egresos/compras']">
                             <i class="fa fa-cart-plus" aria-hidden="true"></i>
                             Compras
                         </a>
-                    </li>-->
+                    </li>
                     <li [ngClass]="menu.menu.egresos.hijos.egresos">
                         <a (click)="navegarEgresosEgresos()" [routerLink]="['/egresos/egresos']">
                             <i class="fa fa-external-link" aria-hidden="true"></i>

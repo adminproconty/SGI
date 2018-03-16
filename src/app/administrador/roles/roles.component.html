@@ -53,9 +53,9 @@
                                     <dx-button
                                         text="Guardar"
                                         icon="save"
-                                        type="success"
+                                        type="info"
                                         [useSubmitBehavior]="true"
-                                        class="btn btn-success pull-right">
+                                        class="btn btn-info pull-right">
                                     </dx-button>
                                 </div>
                             </form>
@@ -84,6 +84,12 @@
                     [noDataText]="noDataText"
                     keyExpr="id"
                     [allowColumnReordering]="true"
+                    [showColumnLines]="false"
+                    [showRowLines]="true"
+                    [showBorders]="false"
+                    [rowAlternationEnabled]="true"
+                    (onContentReady)="onContentReady($event)"
+                    (onCellPrepared)="onCellPrepared($event)"
                     (onRowUpdating)="editar($event)">
                   <dxo-paging [pageSize]="10"></dxo-paging>
                   <dxo-pager

@@ -16,7 +16,7 @@
         <div class="row">
           <div class="col-md-12">
             <div class="col-5" id="VerForm" style="display: block;">
-              <button class="btn btn-success" style="margin-bottom: 40px;" (click)="nuevafactura()">
+              <button class="btn btn-info" style="margin-bottom: 40px;" (click)="nuevafactura()">
                 <i class="fa fa-plus"></i>
                 Nueva Factura
               </button>
@@ -26,7 +26,13 @@
                     [dataSource]="facturas"
                     [noDataText]="noDataText"
                     keyExpr="id"
-                    [allowColumnReordering]="true">
+                    [allowColumnReordering]="true"
+                    [showColumnLines]="false"
+                    [showRowLines]="true"
+                    [showBorders]="false"
+                    [rowAlternationEnabled]="true"
+                    (onContentReady)="onContentReady($event)"
+                    (onCellPrepared)="onCellPrepared($event)">
                   <dxo-paging [pageSize]="10"></dxo-paging>
                   <dxo-pager
                       infoText="Mostrando {0} to {1} de {2} I.V.A."
@@ -59,7 +65,9 @@
                   <dxi-column dataField="estatus" caption="Estatus" [width]="120"></dxi-column>
                   <dxi-column cellTemplate="detailTemplate"></dxi-column>
                   <div *dxTemplate="let data of 'detailTemplate'">
-                    <a (click)="openDetalle(data)">Ver detalles</a>
+                    <button class="btn btn-info" (click)="openDetalle(data)">
+                      <i class="fa fa-eye"></i>
+                    </button>
                   </div>
 
                 </dx-data-grid>
@@ -299,9 +307,9 @@
         <div class="row">
           <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <dx-button
-                type="success"
+                type="info"
                 (click)="print()"
-                class="btn btn-danger pull-right"
+                class="btn btn-info pull-right"
                 text="Imprimir"
                 style="margin-left: 15px;">
             </dx-button>
@@ -421,7 +429,7 @@
                       <label>
                         Correo Electrónico:
                       </label>
-                      <dx-text-box class="form-control"
+                      <dx-text-box class="form-control default"
                           mode="email"
                           name="email"
                           [(value)]="factura.email"
@@ -434,7 +442,7 @@
                     <div class="form-group">
                       <label>Teléfono Convencional:
                       </label>
-                      <dx-text-box class="form-control"
+                      <dx-text-box class="form-control default"
                           mask="(X0)0000000"
                           [maskRules]="phoneRules"
                           [useMaskedValue]="true"
@@ -450,7 +458,7 @@
                     <div class="form-group">
                       <label>Número Celular:
                       </label>
-                      <dx-text-box class="form-control"
+                      <dx-text-box class="form-control default"
                           mask="(X00)0000000"
                           [maskRules]="phoneRules"
                           maskInvalidMessage="No cumple con el formato telefónico celular"
@@ -465,7 +473,7 @@
                     <div class="form-group">
                       <label>Teléfono Opcional:
                       </label>
-                      <dx-text-box class="form-control"
+                      <dx-text-box class="form-control default"
                           name="telefono"
                           [(value)]="factura.opcional">
                       </dx-text-box>
@@ -476,7 +484,7 @@
                     <div class="form-group">
                       <label>Serie:
                       </label>
-                      <dx-text-box class="form-control"
+                      <dx-text-box class="form-control default"
                           name="telefono"
                           [(value)]="factura.serie">
                       </dx-text-box>
@@ -487,7 +495,7 @@
                     <div class="form-group">
                       <label>Autorización:
                       </label>
-                      <dx-text-box class="form-control"
+                      <dx-text-box class="form-control default"
                           name="telefono"
                           [(value)]="factura.autorizacion">
                       </dx-text-box>
@@ -526,7 +534,7 @@
                       <label>
                         Descripción:
                       </label>
-                      <dx-text-box class="form-control"
+                      <dx-text-box class="form-control default"
                           name="descripcion"
                           [(value)]="producto.desc">
                       </dx-text-box>
@@ -548,7 +556,7 @@
                   </div>
 
                   <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
-                    <button type="button" class="btn btn-success" style="margin-top: 22px;"
+                    <button type="button" class="btn btn-info" style="margin-top: 22px;"
                         (click)="agregarCarrito()">
                       <i class="fa fa-plus"></i>
                     </button>
@@ -575,7 +583,11 @@
                           <td>{{producto.cantidad}}</td>
                           <td>{{producto.costo}}</td>
                           <td>{{producto.pt}}</td>
-                          <td><a (click)="eliminarProducto(producto)" >Eliminar</a></td>
+                          <td>
+                            <button class="btn btn-danger" (click)="eliminarProducto(producto)">
+                              <i class="fa fa-trash"></i>
+                            </button>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
@@ -588,7 +600,7 @@
                       Subtotal
                     </label>
                     <div class="form-group">
-                      <div class="input-group has-success">
+                      <div class="input-group has-error">
                         <input id="txtImpuesto" type="text" class="form-control"
                           style="text-align:right;" [(value)]="factura.subtotal" name="factura.subtotal" disabled>
                         <div class="input-group-addon">$</div>
@@ -601,7 +613,7 @@
                       IVA 12%
                     </label>
                     <div class="form-group">
-                      <div class="input-group has-success">
+                      <div class="input-group has-error">
                         <input id="txtImpuesto" type="text" class="form-control"
                           style="text-align:right;" [(value)]="factura.total_iva" name="factura.total_iva" disabled>
                         <div class="input-group-addon">%</div>
@@ -614,7 +626,7 @@
                       IVA 0%
                     </label>
                     <div class="form-group">
-                      <div class="input-group has-success">
+                      <div class="input-group has-error">
                         <input id="txtImpuesto" type="text" class="form-control"
                           style="text-align:right;" [(value)]="factura.detalle_iva" name="factura.detalle_iva" disabled>
                         <div class="input-group-addon">$</div>
@@ -627,7 +639,7 @@
                       Total:
                     </label>
                     <div class="form-group">
-                      <div class="input-group has-success">
+                      <div class="input-group has-error">
                         <input id="txtImpuesto" type="text" class="form-control"
                           style="text-align:right;" [(value)]="factura.total"
                           name="factura.total.toFixed(2)" disabled>
@@ -640,8 +652,8 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
                   <dx-button
                       text="Siguiente"
-                      type="success"
-                      class="btn btn-success pull-right"
+                      type="info"
+                      class="btn btn-info pull-right"
                       [useSubmitBehavior]="true"
                       [disabled]="carritoLleno">
                   </dx-button>
@@ -765,40 +777,6 @@
                       </div>
                     </div>
 
-                    <!--<div class="row" *ngIf="formaPago.nombre == 'Tarjeta'">
-                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 left">
-                        <div class="form-group">
-                          <label>
-                            Fecha de Vencimiento:
-                            <span class="required">*</span>
-                          </label>
-                          <dx-text-box class="form-control"
-                              mask="00/00"
-                              [useMaskedValue]="true"
-                              name="factura.fecha_vencimiento_tarjeta"
-                              [(value)]="factura.fecha_vencimiento_tarjeta">
-                          </dx-text-box>
-                        </div>
-                      </div>
-
-                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 left">
-                        <div class="form-group">
-                          <label>
-                            Código de Seguridad:
-                            <span class="required">*</span>
-                          </label>
-                          <dx-text-box class="form-control"
-                              name="banco"
-                              mode="number"
-                              [(value)]="pago.seguridad_tarjeta">
-                            <dx-validator>
-                              <dxi-validation-rule type="required" message="Código de seguridad es requerido"></dxi-validation-rule>
-                            </dx-validator>
-                          </dx-text-box>
-                        </div>
-                      </div>
-                    </div>-->
-
                     <div class="row" *ngIf="formaPago.nombre == 'Tarjeta'">
                       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 left">
                         <div class="form-group">
@@ -822,7 +800,7 @@
                           <label>
                             Observación:
                           </label>
-                          <dx-text-box class="form-control"
+                          <dx-text-box class="form-control default"
                               name="banco"
                               [(value)]="pago.titular">
                           </dx-text-box>
@@ -878,7 +856,7 @@
                       </div>
 
                       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 left">
-                        <div class="form-group">
+                        <div class="form-group default">
                           <label>
                             Observación:
                           </label>
@@ -924,7 +902,7 @@
                           <label>
                             Observación:
                           </label>
-                          <dx-text-box class="form-control"
+                          <dx-text-box class="form-control default"
                               name="banco"
                               [(value)]="pago.titular">
                           </dx-text-box>
@@ -962,30 +940,18 @@
                           </dx-text-box>
                         </div>
                       </div>
-
-                      <!--<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 left">
-                        <div class="form-group">
-                          <label>Email:
-                            <span class="required">*</span>
-                          </label>
-                          <dx-text-box class="form-control"
-                              name="banco"
-                              [(value)]="pago.email">
-                            <dx-validator>
-                              <dxi-validation-rule type="email"></dxi-validation-rule>
-                            </dx-validator>
-                          </dx-text-box>
-                        </div>
-                      </div>-->
                     </div>
 
                     <div class="row" *ngIf="tabContent == 'Pago'">
                       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <dx-button
+                            style="color: #fff;
+                            background-color: #31b0d5;
+                            border-color: #269abc;"
                             icon="fa fa-plus"
-                            type="success"
+                            type="info"
                             [useSubmitBehavior]="true"
-                            class="btn btn-success pull-right">
+                            class="btn btn-info pull-right">
                         </dx-button>
                       </div>
                     </div>
@@ -1006,7 +972,11 @@
                       <tr *ngFor="let pago of registroPagos">
                         <td>{{pago.tipo_pago}}</td>
                         <td>{{pago.aporte}}</td>
-                        <td><a (click)="eliminarPago(pago)" >Eliminar</a></td>
+                        <td>
+                          <button class="btn btn-danger" (click)="eliminarPago(pago)">
+                            <i class="fa fa-trash"></i>
+                          </button>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -1019,7 +989,7 @@
                     Neto a pagar:
                   </label>
                   <div class="form-group">
-                    <div class="input-group has-success">
+                    <div class="input-group has-error">
                       <input id="txtImpuesto" type="text" class="form-control"
                         style="text-align:right;" [(value)]="factura.total"
                         name="factura.total" disabled>
@@ -1033,7 +1003,7 @@
                     Valor pagado:
                   </label>
                   <div class="form-group">
-                    <div class="input-group has-success">
+                    <div class="input-group has-error">
                       <input id="txtImpuesto" type="text" class="form-control"
                         style="text-align:right;" [(value)]="factura.cancela"
                         name="factura.cancela" disabled>
@@ -1047,7 +1017,7 @@
                     Vuelto:
                   </label>
                   <div class="form-group">
-                    <div class="input-group has-success">
+                    <div class="input-group has-error">
                       <input id="txtImpuesto" type="text" class="form-control"
                         style="text-align:right;" [(value)]="factura.vuelto"
                         name="factura.vuelto" disabled>
@@ -1061,8 +1031,8 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
                   <dx-button
                       text="Guardar"
-                      type="success"
-                      class="btn btn-success pull-right"
+                      type="info"
+                      class="btn btn-info pull-right"
                       [useSubmitBehavior]="true"
                       [disabled]="guardando"
                       (click)="guardar($event)">

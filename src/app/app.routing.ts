@@ -18,6 +18,7 @@ import { EgresosComponent } from './egresos/egresos/egresos.component';
 import { ProductosComponent } from './inventario/productos/productos.component';
 import { FisicoComponent } from './inventario/fisico/fisico.component';
 import { LoginComponent } from './login/login.component';
+import { ComprasComponent } from './egresos/compras/compras.component';
 
 const routes: Routes = [
     {
@@ -79,6 +80,9 @@ const routes: Routes = [
             }, {
               path: 'egresos',
               component: EgresosComponent
+            }, {
+              path: 'compras',
+              component: ComprasComponent
             }
           ]
         }, {

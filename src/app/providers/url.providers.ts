@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class ULRProvider {
 
-  public dominio: String = 'http://localhost/SGI/api/';
+  public dominio: String = './api/';
 
   /*Empresa*/
   public getAllEmpresa() {
@@ -43,6 +43,10 @@ export class ULRProvider {
 
   public getAllCuentas() {
     return this.dominio + 'cuentas/getAll.php';
+  }
+
+  public getCuentaById() {
+    return this.dominio + 'cuentas/getById.php';
   }
 
   public insertCuenta() {
@@ -324,6 +328,10 @@ export class ULRProvider {
     return this.dominio + 'tarjetas/getAll.php';
   }
 
+  public getTarjetaById() {
+    return this.dominio + 'tarjetas/getById.php';
+  }
+
   public updateTarjeta() {
     return this.dominio + 'tarjetas/update.php';
   }
@@ -339,6 +347,15 @@ export class ULRProvider {
 
   public updateProveedores() {
     return this.dominio + 'proveedores/update.php';
+  }
+
+  /*Compras*/
+  public insertCompra() {
+    return this.dominio + 'compras/insert.php';
+  }
+
+  public insertProductosCompra() {
+    return this.dominio + 'productos_compra/insert.php';
   }
 
 }
