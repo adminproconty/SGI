@@ -717,6 +717,71 @@
                   </table>
                 </div>
               </div>
+
+              <div class="row" *ngIf="tabContent == 'Pago'">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 left">
+                  <label>
+                    Neto a pagar:
+                  </label>
+                  <div class="form-group">
+                    <div class="input-group has-error">
+                      <input id="txtImpuesto" type="text" class="form-control"
+                        style="text-align:right;" [(value)]="compra.total"
+                        name="compra.total" disabled>
+                      <div class="input-group-addon">$</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 left">
+                  <label>
+                    Valor pagado:
+                  </label>
+                  <div class="form-group">
+                    <div class="input-group has-error">
+                      <input id="txtImpuesto" type="text" class="form-control"
+                        style="text-align:right;" [(value)]="compra.cancela"
+                        name="compra.cancela" disabled>
+                      <div class="input-group-addon">$</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 left">
+                  <label>
+                    Vuelto:
+                  </label>
+                  <div class="form-group">
+                    <div class="input-group has-error">
+                      <input id="txtImpuesto" type="text" class="form-control"
+                        style="text-align:right;" [(value)]="compra.vuelto"
+                        name="compra.vuelto" disabled>
+                      <div class="input-group-addon">$</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="tabContent == 'Pago'">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
+                  <dx-button
+                      text="Guardar"
+                      type="info"
+                      class="btn btn-info pull-right"
+                      [useSubmitBehavior]="true"
+                      [disabled]="guardando"
+                      (click)="guardar($event)">
+                  </dx-button>
+                  <dx-button
+                      type="danger"
+                      (click)="atras()"
+                      class="btn btn-danger pull-right"
+                      text="Atras"
+                      style="margin-right: 5px;">
+                  </dx-button>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>

@@ -10,7 +10,7 @@
   <div class="col-md-12">
     <div class="box">
       <div class="box-header with-border">
-        <h3 class="box-title">Categorías</h3>
+        <h3 class="box-title">Físico</h3>
       </div>
       <div class="box-body">
         <div class="row">
@@ -23,95 +23,6 @@
                     Nuevo Producto
                   </a>
                 </div>
-              </div>
-              <div class="row">
-                <form  name="frmSucursal" id="frmSucursal" (submit)="guardar($event)">
-                  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-                    <div class="form-group">
-                      <label>Locales:
-                        <span class="required">*</span>
-                      </label>
-                      <dx-select-box
-                          [dataSource]="locales"
-                          displayExpr="nombre"
-                          valueExpr="id"
-                          placeholder="Seleccione un local"
-                          [searchEnabled]="true"
-                          (onValueChanged)="cambioLocal($event)">
-                        <dx-validator>
-                          <dxi-validation-rule type="required" message="Local es requerido"></dxi-validation-rule>
-                        </dx-validator>
-                      </dx-select-box>
-                    </div>
-                  </div>
-
-                  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-                    <div class="form-group">
-                      <label>Productos:
-                        <span class="required">*</span>
-                      </label>
-                      <dx-select-box
-                          [dataSource]="productos"
-                          displayExpr="nombre"
-                          valueExpr="id"
-                          placeholder="Seleccione un producto"
-                          [searchEnabled]="true"
-                          (onValueChanged)="cambioProducto($event)">
-                        <dx-validator>
-                          <dxi-validation-rule type="required" message="Producto es requerido"></dxi-validation-rule>
-                        </dx-validator>
-                      </dx-select-box>
-                    </div>
-                  </div>
-
-                  <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
-                    <div class="form-group">
-                      <label>Cantidad:
-                        <span class="required">*</span>
-                      </label>
-                      <dx-text-box class="form-control"
-                          name="cantidad"
-                          mode="number"
-                          [(value)]="nuevo.cantidad">
-                        <dx-validator>
-                          <dxi-validation-rule type="required" message="Cantidad es requerida"></dxi-validation-rule>
-                        </dx-validator>
-                      </dx-text-box>
-                    </div>
-                  </div>
-
-                  <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
-                    <div class="form-group">
-                      <label>Mínimo Stock:
-                        <span class="required">*</span>
-                      </label>
-                      <dx-text-box class="form-control"
-                          name="cantidad"
-                          mode="number"
-                          [(value)]="nuevo.minimo_stock">
-                        <dx-validator>
-                          <dxi-validation-rule type="required" message="Cantidad es mínima requerida"></dxi-validation-rule>
-                        </dx-validator>
-                      </dx-text-box>
-                    </div>
-                  </div>
-
-                  <div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
-                    <div clas="form-group">
-                      <label>
-                      </label>
-                      <dx-button
-                          text="Guardar"
-                          icon="save"
-                          type="info"
-                          [useSubmitBehavior]="true"
-                          class="btn btn-info pull-right"
-                          [disabled]="guardando"
-                          style="margin-top: 20px;">
-                      </dx-button>
-                    </div>
-                  </div>
-                </form>
               </div>
               <div id="VerListado" class="dataTables_wrapper form-inline dt-bootstrap">
                 <dx-data-grid
@@ -136,8 +47,6 @@
                   </dxo-pager>
                   <dxo-editing
                       mode="row"
-                      [allowUpdating]="true"
-                      [allowDeleting]="true"
                       [texts]="{
                         cancelAllChanges: cancelAllChanges,
                         cancelRowChanges: cancelRowChanges,

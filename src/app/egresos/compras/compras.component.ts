@@ -69,7 +69,9 @@ export class ComprasComponent implements OnInit {
     total: 0,
     detalle_iva: 0,
     stock_inicial: 0,
-    proveedor_id: 0
+    proveedor_id: 0,
+    cancela: 0,
+    vuelto: 0
   };
   visualizar: boolean;
   pago: any = {};
@@ -222,6 +224,7 @@ export class ComprasComponent implements OnInit {
     this.service.allProveedores().subscribe(resp => {
       console.log('proveedores', resp.data);
       this.proveedores = resp.data;
+      this.compra.proveedor_id = resp.data[0].id;
     });
     this.carrito = [];
     this.service.getAllIVAS().subscribe(resp => {
@@ -259,6 +262,8 @@ export class ComprasComponent implements OnInit {
     this.compra.iva = 0;
     this.compra.total_iva = 0;
     this.compra.total = 0;
+    this.compra.cancela = '';
+    this.compra.vuelto = '';
     this.compra.detalle_iva = 0;
     this.pago.metodo = '';
     this.pago.compras_id = 0;
@@ -274,6 +279,7 @@ export class ComprasComponent implements OnInit {
     this.pago.institucion = '';
     this.pago.observacion = '';
     this.pagos = [];
+    this.guardando = false;
   }
 
   openModal(template: TemplateRef<any>) {
@@ -285,6 +291,7 @@ export class ComprasComponent implements OnInit {
 
   guardar(e) {
     e.preventDefault();
+    this.guardando = true;
     console.log('a guardar', this.compra);
     if (this.compra.stock_inicial === 1) {
       this.compra.proveedor_id = 'NULL';
@@ -300,6 +307,7 @@ export class ComprasComponent implements OnInit {
             msg: 'Error, por favor contacte al administrador del sistema'
           }
         );
+        this.ngOnInit();
       }
     });
   }
@@ -324,6 +332,109 @@ export class ComprasComponent implements OnInit {
       });
     }
     if (guardadoExitoso === 1) {
+      if (this.compra.stock_inicial === 1) {
+        this.alerts.push(
+          {
+            type: 'success',
+            msg: 'Insertado exitosamente'
+          }
+        );
+        this.ngOnInit();
+      } else {
+        this.guardarPagos(compraId);
+      }
+    }
+  }
+
+  guardarPagos(compra) {
+    let guardadoExitoso = 1;
+    for (let i = 0; i < this.pagos.length; i++) {
+      let registroPago = {};
+      if (this.pagos[i].metodo === 'Efectivo') {
+        registroPago = {
+          compras_id: compra,
+          cxp_id: 'NULL',
+          metodo_id: this.pagos[i].metodo_id,
+          cantidad_cancelada: this.pagos[i].cantidad_cancelada,
+          tarjeta_id: 'NULL',
+          autorizacion_tarjeta: 'NULL',
+          cuenta_id: 'NULL',
+          numero_cheque: 'NULL',
+          codigo_transferencia: 'NULL',
+          banco_receptor_id: 'NULL',
+          institucion: 'NULL',
+          observacion: 'NULL'
+        };
+      } else if (this.pagos[i].metodo === 'Tarjeta') {
+        registroPago = {
+          compras_id: compra,
+          cxp_id: 'NULL',
+          metodo_id: this.pagos[i].metodo_id,
+          cantidad_cancelada: this.pagos[i].cantidad_cancelada,
+          tarjeta_id: this.pagos[i].tarjeta_id,
+          autorizacion_tarjeta: this.pagos[i].autorizacion_tarjeta,
+          cuenta_id: 'NULL',
+          numero_cheque: 'NULL',
+          codigo_transferencia: 'NULL',
+          banco_receptor_id: 'NULL',
+          institucion: 'NULL',
+          observacion: this.pagos[i].observacion
+        };
+      } else if (this.pagos[i].metodo === 'Transferencia bancaria') {
+        registroPago = {
+          compras_id: compra,
+          cxp_id: 'NULL',
+          metodo_id: this.pagos[i].metodo_id,
+          cantidad_cancelada: this.pagos[i].cantidad_cancelada,
+          tarjeta_id: 'NULL',
+          autorizacion_tarjeta: 'NULL',
+          cuenta_id: this.pagos[i].cuenta_id,
+          numero_cheque: 'NULL',
+          codigo_transferencia: this.pagos[i].codigo_transferencia,
+          banco_receptor_id: this.pagos[i].banco_receptor_id,
+          institucion: 'NULL',
+          observacion: this.pagos[i].observacion
+        };
+      } else if (this.pagos[i].metodo === 'Cheque') {
+        registroPago = {
+          compras_id: compra,
+          cxp_id: 'NULL',
+          metodo_id: this.pagos[i].metodo_id,
+          cantidad_cancelada: this.pagos[i].cantidad_cancelada,
+          tarjeta_id: 'NULL',
+          autorizacion_tarjeta: 'NULL',
+          cuenta_id: this.pagos[i].cuenta_id,
+          numero_cheque: this.pagos[i].numero_cheque,
+          codigo_transferencia: 'NULL',
+          banco_receptor_id: 'NULL',
+          institucion: 'NULL',
+          observacion: this.pagos[i].observacion
+        };
+      } else if (this.pagos[i].metodo === 'Pago electrónico') {
+        registroPago = {
+          compras_id: compra,
+          cxp_id: 'NULL',
+          metodo_id: this.pagos[i].metodo_id,
+          cantidad_cancelada: this.pagos[i].cantidad_cancelada,
+          tarjeta_id: 'NULL',
+          autorizacion_tarjeta: 'NULL',
+          cuenta_id: 'NULL',
+          numero_cheque: 'NULL',
+          codigo_transferencia: 'NULL',
+          banco_receptor_id: 'NULL',
+          institucion: this.pagos[i].institucion,
+          observacion: this.pagos[i].observacion
+        };
+      }
+      console.log('pago a insertar', registroPago);
+      this.service.insertPagosCompra(registroPago).subscribe(resp => {
+        console.log('insert pago', resp['_body']);
+        if (resp['_body'] === 'false') {
+          guardadoExitoso = 0;
+        }
+      });
+    }
+    if (guardadoExitoso === 1) {
       this.alerts.push(
         {
           type: 'success',
@@ -331,98 +442,14 @@ export class ComprasComponent implements OnInit {
         }
       );
       this.ngOnInit();
-    }
-  }
-
-  guardarPagos(compra) {
-    let registroPago = {};
-    for (let i = 0; i < this.pagos.length; i++) {
-      switch (this.pagos[i].metodo) {
-        case 'Efectivo':
-          registroPago = {
-            compras_id: compra,
-            cxp_id: 'NULL',
-            metodo_id: this.pagos[i].metodo_id,
-            cantidad_cancelada: this.pagos[i].cantidad_cancelada,
-            tarjeta_id: 'NULL',
-            autorizacion_tarjeta: 'NULL',
-            cuenta_id: 'NULL',
-            numero_cheque: 'NULL',
-            codigo_transferencia: 'NULL',
-            banco_receptor_id: 'NULL',
-            institucion: 'NULL',
-            observacion: 'NULL'
-          };
-          break;
-
-        case 'Tarjeta':
-          registroPago = {
-            compras_id: compra,
-            cxp_id: 'NULL',
-            metodo_id: this.pagos[i].metodo_id,
-            cantidad_cancelada: this.pagos[i].cantidad_cancelada,
-            tarjeta_id: this.pagos[i].tarjeta_id,
-            autorizacion_tarjeta: this.pagos[i].autorizacion_tarjeta,
-            cuenta_id: 'NULL',
-            numero_cheque: 'NULL',
-            codigo_transferencia: 'NULL',
-            banco_receptor_id: 'NULL',
-            institucion: 'NULL',
-            observacion: this.pagos[i].observacion
-          };
-          break;
-
-        case 'Transferencia bancaria':
-          registroPago = {
-            compras_id: compra,
-            cxp_id: 'NULL',
-            metodo_id: this.pagos[i].metodo_id,
-            cantidad_cancelada: this.pagos[i].cantidad_cancelada,
-            tarjeta_id: 'NULL',
-            autorizacion_tarjeta: 'NULL',
-            cuenta_id: this.pagos[i].cuenta_id,
-            numero_cheque: 'NULL',
-            codigo_transferencia: this.pagos[i].codigo_transferencia,
-            banco_receptor_id: this.pagos[i].banco_receptor_id,
-            institucion: 'NULL',
-            observacion: this.pagos[i].observacion
-          };
-          break;
-
-        case 'Cheque':
-          registroPago = {
-            compras_id: compra,
-            cxp_id: 'NULL',
-            metodo_id: this.pagos[i].metodo_id,
-            cantidad_cancelada: this.pagos[i].cantidad_cancelada,
-            tarjeta_id: 'NULL',
-            autorizacion_tarjeta: 'NULL',
-            cuenta_id: this.pagos[i].cuenta_id,
-            numero_cheque: this.pagos[i].numero_cheque,
-            codigo_transferencia: 'NULL',
-            banco_receptor_id: 'NULL',
-            institucion: 'NULL',
-            observacion: this.pagos[i].observacion
-          };
-          break;
-
-        case 'Pago electrónico':
-          registroPago = {
-            compras_id: compra,
-            cxp_id: 'NULL',
-            metodo_id: this.pagos[i].metodo_id,
-            cantidad_cancelada: this.pagos[i].cantidad_cancelada,
-            tarjeta_id: 'NULL',
-            autorizacion_tarjeta: 'NULL',
-            cuenta_id: 'NULL',
-            numero_cheque: 'NULL',
-            codigo_transferencia: 'NULL',
-            banco_receptor_id: 'NULL',
-            institucion: this.pagos[i].institucion,
-            observacion: this.pagos[i].observacion
-          };
-          break;
-      }
+    } else {
+      this.alerts.push(
+        {
+          type: 'danger',
+          msg: 'Error, por favor contacte al administrador del sistema'
+        }
+      );
+      this.ngOnInit();
     }
   }
 
@@ -440,7 +467,11 @@ export class ComprasComponent implements OnInit {
 
   siguiente(e) {
     e.preventDefault();
-    this.tabContent = 'Pago';
+    if (this.compra.stock_inicial === 1) {
+      this.guardar(e);
+    } else {
+      this.tabContent = 'Pago';
+    }
   }
 
   cambioStockInicial(e) {
@@ -560,7 +591,7 @@ export class ComprasComponent implements OnInit {
       {
         compras_id: this.pago.compras_id,
         cxp_id: 'NULL',
-        metodo_id: 0,
+        metodo_id: this.pago.metodo_id,
         metodo: this.pago.metodo,
         cantidad_cancelada: this.pago.cantidad_cancelada,
         tarjeta_id: this.pago.tarjeta_id,
@@ -574,12 +605,14 @@ export class ComprasComponent implements OnInit {
       }
     );
     console.log('pagos', this.pagos);
+    this.calcularPagos();
   }
 
   cambioFormaPago(e) {
     const formaId = e.value * 1;
     this.service.getFormasPagoById({id: formaId}).subscribe(resp => {
       const forma = JSON.parse(resp['_body']);
+      console.log('get forma de pago', forma);
       this.formaPago = forma.data[0];
       this.pago.metodo_id = this.formaPago.id;
       this.pago.metodo = this.formaPago.nombre;
@@ -674,6 +707,7 @@ export class ComprasComponent implements OnInit {
     const index = this.pagos.indexOf(pago);
     this.pagos.splice(index, 1);
     console.log('pagos', this.pagos);
+    this.calcularPagos();
   }
 
   onContentReady(e) {
@@ -706,6 +740,32 @@ export class ComprasComponent implements OnInit {
             editLink.textContent = '';
         }
     }
+  }
+
+  calcularPagos() {
+    let paga = 0;
+    let vuelto = 0;
+    if (this.pagos.length > 0) {
+      const total = this.compra.total * 1;
+      for (let i = 0; i < this.pagos.length; i++) {
+        paga = paga + (this.pagos[i].cantidad_cancelada * 1);
+      }
+      this.compra.cancela = paga;
+      vuelto = paga - total;
+      this.compra.vuelto = vuelto;
+    } else {
+      this.compra.cancela = 0;
+      this.compra.vuelto = 0;
+    }
+    if (vuelto >= 0) {
+      this.guardando = false;
+    } else {
+      this.guardando = true;
+    }
+  }
+
+  atras() {
+    this.tabContent = 'Pedido';
   }
 
 }

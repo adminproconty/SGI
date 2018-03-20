@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class ULRProvider {
 
-  public dominio: String = './api/';
+  public dominio: String = 'http://localhost/SGI/api/';
 
   /*Empresa*/
   public getAllEmpresa() {
@@ -356,6 +356,10 @@ export class ULRProvider {
 
   public insertProductosCompra() {
     return this.dominio + 'productos_compra/insert.php';
+  }
+
+  public insertPagosCompra() {
+    return this.dominio + 'pagos_compra/insert.php';
   }
 
 }

@@ -104,10 +104,10 @@ export class  ComprasProvider {
       .map((resp: Response) => resp);
   }
 
-  public update(objeto: Object) {
-    return this.http.post(this.urlProvider.updateProveedores(), JSON.stringify(objeto), {
-      headers: new Headers({ 'Content-type': 'application/json' })
-      })
+  public insertPagosCompra(objeto: any) {
+    return this.http.post(this.urlProvider.insertPagosCompra(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-Type': 'application/json' })
+    })
       .map((resp: Response) => resp);
   }
 
