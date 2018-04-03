@@ -29,7 +29,6 @@ export class ProductosComponent implements OnInit {
   productos: any = [];
   alerts: any = [];
   categoria: any = {
-    tipo_producto: '',
     nombre: '',
     abreviatura: '',
     descripcion: ''
@@ -40,7 +39,9 @@ export class ProductosComponent implements OnInit {
     unidad: '',
     codigo: '',
     descripcion: '',
-    servicio: 0
+    materia_prima: 0,
+    producto_final: 1,
+    precio_final: 0.0
   };
   guardando: boolean;
   servicio: boolean;
@@ -48,6 +49,7 @@ export class ProductosComponent implements OnInit {
   ivas: any = [];
   tiposProducto: any = [];
   tipoProducto: any = {};
+  producto_ivas: any;
 
   constructor(
     private navegation: NavegationProvider,
@@ -153,9 +155,9 @@ export class ProductosComponent implements OnInit {
       codigo: '',
       descripcion: '',
       costo: undefined,
-      servicio: 0,
-      activo: 1,
-      iva_id: 0
+      materia_prima: 0,
+      producto_final: 1,
+      precio_final: 0.0
     };
     this.guardando = false;
     this.service.allCategorias().subscribe(resp => {
@@ -168,17 +170,7 @@ export class ProductosComponent implements OnInit {
     });
     this.servicio = false;
     this.activo = true;
-    this.tiposProducto = [];
-    this.service.allTiposProducto().subscribe(resp => {
-      console.log('tipos producto', resp.data);
-      this.tiposProducto = resp.data;
-    });
-    this.tipoProducto = {
-      empresa_id: 1,
-      nombre: '',
-      codigo: '',
-      descripcion: ''
-    };
+    this.producto_ivas = [];
   }
 
   openModal(template: TemplateRef<any>) {
@@ -186,33 +178,6 @@ export class ProductosComponent implements OnInit {
       template,
       Object.assign({}, {ignoreBackdropClick: this.backClick}, { })
     );
-  }
-
-  guardarTipoProducto(e) {
-    e.preventDefault();
-    this.guardando = true;
-    console.log('tipo producto a guardar', this.tipoProducto);
-    this.service.insertTipoProducto(this.tipoProducto).subscribe(resp => {
-      console.log('tipo producto guardado', resp['_body']);
-      if (resp['_body'] === 'true') {
-        this.alerts.push(
-          {
-            type: 'success',
-            msg: 'Guardado exitoso'
-          }
-        );
-        this.ngOnInit();
-        this.cancelar();
-      } else {
-        this.alerts.push(
-          {
-            type: 'danger',
-            msg: 'Error, por favor contacte al administrador del sistema'
-          }
-        );
-        this.guardando = false;
-      }
-    });
   }
 
   guardarCategoria(e) {
@@ -299,43 +264,13 @@ export class ProductosComponent implements OnInit {
     this.modalRef.hide();
   }
 
-  editarTipoProducto(e) {
-    console.log('editar', e);
-    const tipoProdModif = {
-      id: e.oldData.id,
-      nombre: e.newData.nombre !== undefined ? e.newData.nombre : e.oldData.nombre,
-      codigo: e.newData.codigo !== undefined ? e.newData.codigo : e.oldData.codigo,
-      descripcion: e.newData.descripcion !== undefined ? e.newData.descripcion : e.oldData.descripcion
-    };
-    this.service.updateTipoProducto(tipoProdModif).subscribe(resp => {
-      console.log('tipo producto modificado', resp['_body']);
-      if (resp['_body'] === 'true') {
-        this.alerts.push(
-          {
-            type: 'success',
-            msg: 'Modificado exitosamente'
-          }
-        );
-        this.ngOnInit();
-      } else {
-        this.alerts.push(
-          {
-            type: 'danger',
-            msg: 'Error, por favor contacte al administrador del sistema'
-          }
-        );
-      }
-    });
-  }
-
   editarCategoria(e) {
     console.log('editar', e);
     const catModif = {
       id: e.oldData.id,
       nombre: e.newData.nombre !== undefined ? e.newData.nombre : e.oldData.nombre,
       abreviatura: e.newData.abreviatura !== undefined ? e.newData.abreviatura : e.oldData.abreviatura,
-      descripcion: e.newData.descripcion !== undefined ? e.newData.descripcion : e.oldData.descripcion,
-      tipo_producto_id: e.newData.tipo_producto_id !== undefined ? e.newData.tipo_producto_id : e.oldData.tipo_producto_id
+      descripcion: e.newData.descripcion !== undefined ? e.newData.descripcion : e.oldData.descripcion
     };
     this.service.updateCategoria(catModif).subscribe(resp => {
       console.log('cat modificada', resp['_body']);
@@ -356,12 +291,6 @@ export class ProductosComponent implements OnInit {
         );
       }
     });
-  }
-
-  cambioTipoProducto(e) {
-    console.log('cambio tipo producto', e);
-    const tipo = e.value * 1;
-    this.categoria.tipo_producto = tipo;
   }
 
   cambioCategoria(e) {
@@ -465,23 +394,19 @@ export class ProductosComponent implements OnInit {
     this.categoria.abreviatura = e.value.substr(0, 4).toUpperCase();
   }
 
-  cambiarAbreviaturaTipoProducto(e) {
-    this.tipoProducto.codigo = e.value.substr(0, 4).toUpperCase();
-  }
-
-  cambioServicio(e) {
+  cambioMateriaPrima(e) {
     if (e.value === true) {
-      this.producto.servicio = 1;
+      this.producto.materia_prima = 1;
     } else {
-      this.producto.servicio = 0;
+      this.producto.materia_prima = 0;
     }
   }
 
-  cambioActivo(e) {
+  cambioProductoFinal(e) {
     if (e.value === true) {
-      this.producto.activo = 1;
+      this.producto.producto_final = 1;
     } else {
-      this.producto.activo = 0;
+      this.producto.producto_final = 0;
     }
   }
 
@@ -532,6 +457,42 @@ export class ProductosComponent implements OnInit {
             editLink.textContent = '';
           }
     }
+  }
+
+  changeImpuestos(e) {
+    console.log('cambio local', e);
+    if (e.value.length > 0) {
+      const data = [];
+      for (let i = 0; i < e.value.length; i++) {
+        const valor = e.value[i] * 1;
+        this.service.getIvaById(
+          {
+            id: valor
+          }
+        ).subscribe(resp => {
+          const respuesta = JSON.parse(resp['_body']);
+          console.log('ivas', respuesta);
+          data.push(respuesta);
+        });
+      }
+      this.producto_ivas = data;
+      console.log('producto_ivas', this.producto_ivas);
+      this.calcularPrecioFinal();
+    }
+  }
+
+  calcularPrecioFinal() {
+    let costoFinal = 0;
+    for (let i = 0; i < this.producto_ivas.length; i++) {
+      let iva = 0;
+      const costo = this.producto.costo * 1;
+      const producto_iva = this.producto_ivas[i].cantidad * 1;
+      iva = costo * producto_iva / 100;
+      costoFinal = costoFinal + iva;
+      console.log('costo final', costoFinal);
+      console.log('costo iva', iva);
+    }
+    this.producto.precio_final = costoFinal.toFixed(2);
   }
 
 }
