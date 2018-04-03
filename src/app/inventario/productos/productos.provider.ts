@@ -15,6 +15,11 @@ export class  ProductosProvider {
       .map((res: Response) => res.json());
   }
 
+  public allTiposProducto() {
+    return this.http.get(this.urlProvider.getAllTiposProducto())
+      .map((res: Response) => res.json());
+  }
+
   public getallIVA() {
     return this.http.get(this.urlProvider.getAllIVA())
       .map((res: Response) => res.json());
@@ -34,8 +39,22 @@ export class  ProductosProvider {
       .map((resp: Response) => resp);
   }
 
+  public insertTipoProducto(objeto: any) {
+    return this.http.post(this.urlProvider.insertTipoProducto(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-Type': 'application/json' })
+    })
+      .map((resp: Response) => resp);
+  }
+
   public updateCategoria(objeto: Object) {
     return this.http.post(this.urlProvider.updateCategoria(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-type': 'application/json' })
+      })
+      .map((resp: Response) => resp);
+  }
+
+  public updateTipoProducto(objeto: Object) {
+    return this.http.post(this.urlProvider.updateTipoProducto(), JSON.stringify(objeto), {
       headers: new Headers({ 'Content-type': 'application/json' })
       })
       .map((resp: Response) => resp);

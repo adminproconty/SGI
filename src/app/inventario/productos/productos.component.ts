@@ -29,7 +29,7 @@ export class ProductosComponent implements OnInit {
   productos: any = [];
   alerts: any = [];
   categoria: any = {
-    empresa_id: 1,
+    tipo_producto: '',
     nombre: '',
     abreviatura: '',
     descripcion: ''
@@ -46,6 +46,8 @@ export class ProductosComponent implements OnInit {
   servicio: boolean;
   activo: boolean;
   ivas: any = [];
+  tiposProducto: any = [];
+  tipoProducto: any = {};
 
   constructor(
     private navegation: NavegationProvider,
@@ -141,12 +143,9 @@ export class ProductosComponent implements OnInit {
     this.saveRowChanges = '';
     this.undeleteRow = 'No eliminar';
     this.validationCancelChanges = 'Cancelar';
-    this.categoria = {
-      empresa_id: 1,
-      nombre: '',
-      abreviatura: '',
-      descripcion: ''
-    };
+    this.categoria.nombre = '';
+    this.categoria.abreviatura = '';
+    this.categoria.descripcion = '';
     this.producto = {
       categoria_id: 0,
       nombre: '',
@@ -169,6 +168,17 @@ export class ProductosComponent implements OnInit {
     });
     this.servicio = false;
     this.activo = true;
+    this.tiposProducto = [];
+    this.service.allTiposProducto().subscribe(resp => {
+      console.log('tipos producto', resp.data);
+      this.tiposProducto = resp.data;
+    });
+    this.tipoProducto = {
+      empresa_id: 1,
+      nombre: '',
+      codigo: '',
+      descripcion: ''
+    };
   }
 
   openModal(template: TemplateRef<any>) {
@@ -176,6 +186,33 @@ export class ProductosComponent implements OnInit {
       template,
       Object.assign({}, {ignoreBackdropClick: this.backClick}, { })
     );
+  }
+
+  guardarTipoProducto(e) {
+    e.preventDefault();
+    this.guardando = true;
+    console.log('tipo producto a guardar', this.tipoProducto);
+    this.service.insertTipoProducto(this.tipoProducto).subscribe(resp => {
+      console.log('tipo producto guardado', resp['_body']);
+      if (resp['_body'] === 'true') {
+        this.alerts.push(
+          {
+            type: 'success',
+            msg: 'Guardado exitoso'
+          }
+        );
+        this.ngOnInit();
+        this.cancelar();
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+        this.guardando = false;
+      }
+    });
   }
 
   guardarCategoria(e) {
@@ -262,6 +299,35 @@ export class ProductosComponent implements OnInit {
     this.modalRef.hide();
   }
 
+  editarTipoProducto(e) {
+    console.log('editar', e);
+    const tipoProdModif = {
+      id: e.oldData.id,
+      nombre: e.newData.nombre !== undefined ? e.newData.nombre : e.oldData.nombre,
+      codigo: e.newData.codigo !== undefined ? e.newData.codigo : e.oldData.codigo,
+      descripcion: e.newData.descripcion !== undefined ? e.newData.descripcion : e.oldData.descripcion
+    };
+    this.service.updateTipoProducto(tipoProdModif).subscribe(resp => {
+      console.log('tipo producto modificado', resp['_body']);
+      if (resp['_body'] === 'true') {
+        this.alerts.push(
+          {
+            type: 'success',
+            msg: 'Modificado exitosamente'
+          }
+        );
+        this.ngOnInit();
+      } else {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+      }
+    });
+  }
+
   editarCategoria(e) {
     console.log('editar', e);
     const catModif = {
@@ -269,13 +335,8 @@ export class ProductosComponent implements OnInit {
       nombre: e.newData.nombre !== undefined ? e.newData.nombre : e.oldData.nombre,
       abreviatura: e.newData.abreviatura !== undefined ? e.newData.abreviatura : e.oldData.abreviatura,
       descripcion: e.newData.descripcion !== undefined ? e.newData.descripcion : e.oldData.descripcion,
-      activo: e.newData.activo !== undefined ? e.newData.activo : e.oldData.activo
+      tipo_producto_id: e.newData.tipo_producto_id !== undefined ? e.newData.tipo_producto_id : e.oldData.tipo_producto_id
     };
-    if (catModif.activo === true) {
-      catModif.activo = 1;
-    } else {
-      catModif.activo = 0;
-    }
     this.service.updateCategoria(catModif).subscribe(resp => {
       console.log('cat modificada', resp['_body']);
       if (resp['_body'] === 'true') {
@@ -295,6 +356,12 @@ export class ProductosComponent implements OnInit {
         );
       }
     });
+  }
+
+  cambioTipoProducto(e) {
+    console.log('cambio tipo producto', e);
+    const tipo = e.value * 1;
+    this.categoria.tipo_producto = tipo;
   }
 
   cambioCategoria(e) {
@@ -398,6 +465,10 @@ export class ProductosComponent implements OnInit {
     this.categoria.abreviatura = e.value.substr(0, 4).toUpperCase();
   }
 
+  cambiarAbreviaturaTipoProducto(e) {
+    this.tipoProducto.codigo = e.value.substr(0, 4).toUpperCase();
+  }
+
   cambioServicio(e) {
     if (e.value === true) {
       this.producto.servicio = 1;
@@ -457,10 +528,8 @@ export class ProductosComponent implements OnInit {
                 deleteLink = cellElement.querySelector('.dx-link-delete');
 
             editLink.classList.add('dx-icon-edit');
-            deleteLink.classList.add('dx-icon-trash');
 
             editLink.textContent = '';
-            deleteLink.textContent = '';
           }
     }
   }

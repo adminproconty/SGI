@@ -27,6 +27,7 @@ export class IvaComponent implements OnInit {
   alerts: any = [];
   guardando: boolean;
   ivas: any = [];
+  estado: boolean;
 
   constructor(
       private navegation: NavegationProvider,
@@ -121,13 +122,15 @@ export class IvaComponent implements OnInit {
     this.backClick = false;
     this.nuevo = {
       nombre: undefined,
-      valor: undefined
+      valor: undefined,
+      estado: 1
     };
     this.guardando = false;
     this.service.all().subscribe(resp => {
       this.ivas = resp.data;
       console.log('todos los ivas', resp.data);
     });
+    this.estado = true;
   }
 
   openModal(template: TemplateRef<any>) {
@@ -143,7 +146,8 @@ export class IvaComponent implements OnInit {
     const valoresGuardar = {
       empresa_id: 1,
       nombre: this.nuevo.nombre,
-      cantidad: this.nuevo.valor
+      cantidad: this.nuevo.valor,
+      estado: this.nuevo.estado
     };
     console.log('a guardar', valoresGuardar);
     this.service.insert(valoresGuardar).subscribe(resp => {
@@ -178,8 +182,14 @@ export class IvaComponent implements OnInit {
     const valoresModificar = {
       id: e.oldData.id * 1,
       nombre: e.newData.nombre !== undefined ? e.newData.nombre : e.oldData.nombre,
-      cantidad: e.newData.cantidad !== undefined ? e.newData.cantidad : e.oldData.cantidad
+      cantidad: e.newData.cantidad !== undefined ? e.newData.cantidad : e.oldData.cantidad,
+      estado: e.newData.estado !== undefined ? e.newData.estado : e.oldData.estado
     };
+    if (valoresModificar.estado === true) {
+      valoresModificar.estado = 1;
+    } else {
+      valoresModificar.estado = 0;
+    }
     valoresModificar.cantidad = valoresModificar.cantidad * 1;
     console.log('a guardar', valoresModificar);
     this.service.update(valoresModificar).subscribe(resp => {
@@ -236,6 +246,14 @@ export class IvaComponent implements OnInit {
 
             editLink.textContent = '';
         }
+    }
+  }
+
+  cambioEstado(e) {
+    if (e.value === true) {
+      this.nuevo.estado = 1;
+    } else {
+      this.nuevo.estado = 0;
     }
   }
 

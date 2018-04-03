@@ -62,6 +62,7 @@
                                     <dxi-column dataField="fecha" caption="Fecha" dataType="date" [allowEditing]="false"></dxi-column>
                                     <dxi-column dataField="nombre" caption="Nombre"></dxi-column>
                                     <dxi-column dataField="cantidad" caption="Cantidad (%)"></dxi-column>
+                                    <dxi-column dataField="estado" caption="Estado"></dxi-column>
 
                                 </dx-data-grid>
                             </div>
@@ -113,6 +114,19 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row">
+                          <div class="col-md-12 left">
+                              <div class="form-group">
+                                  <label>Estado:
+                                      <span class="required">*</span>
+                                  </label>
+                                  <dx-switch
+                                      [value]="estado"
+                                      (onValueChanged)="cambioEstado($event)"></dx-switch>
+                              </div>
+                          </div>
+                      </div>
 
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
                             <dx-button

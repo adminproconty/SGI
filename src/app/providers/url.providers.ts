@@ -166,6 +166,10 @@ export class ULRProvider {
     return this.dominio + 'categorias/getAll.php';
   }
 
+  public getAllTiposProducto() {
+    return this.dominio + 'tipo_producto/getAll.php';
+  }
+
   public insertCategoria() {
     return this.dominio + 'categorias/insert.php';
   }
@@ -198,8 +202,16 @@ export class ULRProvider {
     return this.dominio + 'productos/insert.php';
   }
 
+  public insertTipoProducto() {
+    return this.dominio + 'tipo_producto/insert.php';
+  }
+
   public updateProducto() {
     return this.dominio + 'productos/update.php';
+  }
+
+  public updateTipoProducto() {
+    return this.dominio + 'tipo_producto/update.php';
   }
 
   /*Costos*/
