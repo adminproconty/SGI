@@ -487,8 +487,8 @@ export class ProductosComponent implements OnInit {
         const costo = this.producto.costo * 1;
         const producto_iva = ivas[i].cantidad * 1;
         iva = costo * producto_iva / 100;
-        precio = this.producto.precio_final + iva;
-        this.producto.precio_final = precio;
+        precio = costo + iva;
+        this.producto.precio_final = precio.toFixed(2);
         console.log('costo final', this.producto.precio_final);
         console.log('costo iva', iva);
       }
@@ -535,6 +535,8 @@ export class ProductosComponent implements OnInit {
   openDetalle(modal, datos) {
     this.openModal(modal);
     this.detallesProducto = datos.data;
+    this.detallesProducto.mp = datos.data.materia_prima;
+    this.detallesProducto.pf = datos.data.producto_final;
     this.detallesProducto.impuestos = [];
     this.calcularPrecioFinalDetalle(this.detallesProducto.iva);
     console.log('detalle producto', this.detallesProducto);
@@ -574,8 +576,8 @@ export class ProductosComponent implements OnInit {
         const costo = this.detallesProducto.costo * 1;
         const producto_iva = ivas[i].cantidad * 1;
         iva = costo * producto_iva / 100;
-        precio = this.producto.precio_final + iva;
-        this.producto.precio_final = precio;
+        precio = costo + iva;
+        this.producto.precio_final = precio.toFixed(2);
         console.log('costo final', this.producto.precio_final);
         console.log('costo iva', iva);
       }
