@@ -181,10 +181,7 @@
                     [showColumnLines]="false"
                     [showRowLines]="true"
                     [showBorders]="false"
-                    [rowAlternationEnabled]="true"
-                    (onContentReady)="onContentReady($event)"
-                    (onCellPrepared)="onCellPrepared($event)"
-                    (onRowUpdating)="editarProducto($event)">
+                    [rowAlternationEnabled]="true">
                   <dxo-paging [pageSize]="10"></dxo-paging>
                   <dxo-pager
                       infoText="Mostrando {0} to {1} de {2} I.V.A."
@@ -193,7 +190,6 @@
                   </dxo-pager>
                   <dxo-editing
                       mode="row"
-                      [allowUpdating]="true"
                       [texts]="{
                         cancelAllChanges: cancelAllChanges,
                         cancelRowChanges: cancelRowChanges,
@@ -220,15 +216,13 @@
                   <dxi-column dataField="descripcion" caption="Descripción" [width]="250"></dxi-column>
                   <dxi-column dataField="unidad" caption="Unidad" [width]="100"></dxi-column>
                   <dxi-column dataField="costo" caption="Costo" [width]="100"></dxi-column>
-                  <dxi-column dataField="servicio" caption="Servicio" [width]="120"></dxi-column>
-                  <dxi-column dataField="activo" caption="Activo" [width]="120"></dxi-column>
-                  <dxi-column dataField="iva_id" caption="I.V.A." [width]="150">
-                    <dxo-lookup
-                        [dataSource]="ivas"
-                        displayExpr="cantidad"
-                        valueExpr="id">
-                    </dxo-lookup>
-                  </dxi-column>
+                  <dxi-column cellTemplate="detailTemplate"></dxi-column>
+
+                  <div *dxTemplate="let data of 'detailTemplate'">
+                    <button class="btn btn-info" (click)="openDetalle(detalles, data)">
+                      <i class="fa fa-eye"></i>
+                    </button>
+                  </div>
 
                 </dx-data-grid>
               </div>
@@ -249,7 +243,7 @@
             <div class="row">
               <div class="col-md-12 left">
                 <div class="form-group">
-                  <label>Tipo de categoría:
+                  <label>Categoría:
                     <span class="required">*</span>
                   </label>
                   <dx-select-box
@@ -275,7 +269,8 @@
                   </label>
                   <dx-text-box class="form-control"
                     name="nombre"
-                    [(value)]="producto.nombre">
+                    [(value)]="producto.nombre"
+                    (onValueChanged)="crearCodigoProducto($event)">
                       <dx-validator>
                         <dxi-validation-rule type="required" message="Nombre es requerido"></dxi-validation-rule>
                       </dx-validator>
@@ -407,6 +402,206 @@
                   <label>¿Producto Final?</label>
                   <dx-switch
                     [value]="activo"
+                    (onValueChanged)="cambioProductoFinal($event)"></dx-switch>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right">
+              <dx-button
+                  text="Guardar"
+                  icon="save"
+                  type="info"
+                  [useSubmitBehavior]="true"
+                  class="btn btn-info pull-right"
+                  [disabled]="guardando">
+              </dx-button>
+              <dx-button
+                  icon="fa fa-remove"
+                  type="danger"
+                  (click)="cancelar()"
+                  class="btn btn-danger pull-right"
+                  text="Cancelar"
+                  style="margin-right: 5px;"
+                  [disabled]="guardando">
+              </dx-button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #detalles>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="col-sm-14" id="VerForm" style="display: block;">
+          <form name="frmSucursal" id="frmSucursal" (submit)="editarProducto($event)">
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <label>Categoría:
+                    <span class="required">*</span>
+                  </label>
+                  <dx-select-box
+                      [dataSource]="categorias"
+                      displayExpr="nombre"
+                      valueExpr="id"
+                      placeholder="Seleccione una categoria"
+                      [searchEnabled]="true"
+                      (onValueChanged)="cambioCategoria($event)"
+                      [value]="detallesProducto.categoria_id">
+                    <dx-validator>
+                      <dxi-validation-rule type="required" message="Categoría es requerida"></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-select-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <label>Nombre:
+                    <span class="required">*</span>
+                  </label>
+                  <dx-text-box class="form-control"
+                    name="nombre"
+                    [(value)]="detallesProducto.nombre">
+                      <dx-validator>
+                        <dxi-validation-rule type="required" message="Nombre es requerido"></dxi-validation-rule>
+                      </dx-validator>
+                  </dx-text-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <label>Unidad:
+                    <span class="required">*</span>
+                  </label>
+                  <dx-text-box class="form-control"
+                      name="descripcion"
+                      [(value)]="detallesProducto.unidad">
+                    <dx-validator>
+                      <dxi-validation-rule type="required" message="Unidad es requerida"></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-text-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <label>Código:
+                    <span class="required">*</span>
+                  </label>
+                  <dx-text-box class="form-control"
+                      name="descripcion"
+                      [(value)]="detallesProducto.codigo">
+                    <dx-validator>
+                      <dxi-validation-rule type="required" message="Código es requerido"></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-text-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <label>Descripción:
+                    <span class="required">*</span>
+                  </label>
+                  <dx-text-box class="form-control"
+                      name="descripcion"
+                      [(value)]="detallesProducto.descripcion">
+                    <dx-validator>
+                      <dxi-validation-rule type="required" message="Descripción es requerida"></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-text-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <label>Costo sin Imp:
+                    <span class="required">*</span>
+                  </label>
+                  <dx-text-box class="form-control"
+                      name="costo"
+                      mode="float"
+                      [(value)]="detallesProducto.costo">
+                    <dx-validator>
+                      <dxi-validation-rule type="required" message="PVP es requerido"></dxi-validation-rule>
+                    </dx-validator>
+                  </dx-text-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Impuestos(%)
+                    <span class="required">*</span>
+                  </label>
+                  <dx-tag-box
+                      [dataSource]="ivas"
+                      [displayExpr]="displayIvas"
+                      valueExpr="id"
+                      [searchEnabled]="true"
+                      (onValueChanged)="changeImpuestosDetalle($event)"
+                      itemTemplate="ivasTemplate"
+                      [value]="detallesProducto.ivas"
+                      placeholder="Seleccione impuesto(s)">
+                    <dx-validator>
+                      <dxi-validation-rule type="required" message="Impuesto(s) es requerido"></dxi-validation-rule>
+                    </dx-validator>
+                    <div *dxTemplate="let iva of 'ivasTemplate'">
+                      {{iva.nombre}} - {{iva.cantidad}}
+                    </div>
+                  </dx-tag-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <label>
+                  Costo con Imp:
+                </label>
+                <div class="form-group">
+                  <div class="input-group has-error">
+                    <input id="txtImpuesto" type="text" class="form-control"
+                      style="text-align:right;" [(value)]="producto.precio_final" name="producto.precio_final" disabled>
+                    <div class="input-group-addon">$</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>¿Materia Prima?</label>
+                  <dx-switch
+                    [value]="detallesProducto.materia_prima"
+                    (onValueChanged)="cambioMateriaPrima($event)"></dx-switch>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>¿Producto Final?</label>
+                  <dx-switch
+                    [value]="detallesProducto.producto_final"
                     (onValueChanged)="cambioProductoFinal($event)"></dx-switch>
                 </div>
               </div>

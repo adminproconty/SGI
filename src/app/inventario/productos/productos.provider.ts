@@ -76,6 +76,13 @@ export class  ProductosProvider {
       .map((resp: Response) => resp);
   }
 
+  public insertProductoIvas(objeto: any) {
+    return this.http.post(this.urlProvider.insertProductoIvas(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-Type': 'application/json' })
+    })
+      .map((resp: Response) => resp);
+  }
+
   public allProductos() {
     return this.http.get(this.urlProvider.getAllProductos())
       .map((res: Response) => res.json());
@@ -83,6 +90,13 @@ export class  ProductosProvider {
 
   public updateProducto(objeto: any) {
     return this.http.post(this.urlProvider.updateProducto(), JSON.stringify(objeto), {
+      headers: new Headers({ 'Content-Type': 'application/json'})
+    })
+      .map((resp: Response) => resp);
+  }
+
+  public deleteProductoIvas(objeto: any) {
+    return this.http.post(this.urlProvider.deleteProductoIvas(), JSON.stringify(objeto), {
       headers: new Headers({ 'Content-Type': 'application/json'})
     })
       .map((resp: Response) => resp);

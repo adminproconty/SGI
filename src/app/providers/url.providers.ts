@@ -202,8 +202,16 @@ export class ULRProvider {
     return this.dominio + 'productos/insert.php';
   }
 
+  public insertProductoIvas() {
+    return this.dominio + 'producto_ivas/insert.php';
+  }
+
   public updateProducto() {
     return this.dominio + 'productos/update.php';
+  }
+
+  public deleteProductoIvas() {
+    return this.dominio + 'producto_ivas/delete.php';
   }
 
   /*Costos*/

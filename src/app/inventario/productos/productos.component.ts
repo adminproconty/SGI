@@ -50,6 +50,7 @@ export class ProductosComponent implements OnInit {
   tiposProducto: any = [];
   tipoProducto: any = {};
   producto_ivas: any;
+  detallesProducto: any;
 
   constructor(
     private navegation: NavegationProvider,
@@ -211,10 +212,12 @@ export class ProductosComponent implements OnInit {
     e.preventDefault();
     this.guardando = true;
     console.log('producto a guardar', this.producto);
+    console.log('producto ivas', this.producto_ivas);
     this.service.insertProducto(this.producto).subscribe(resp => {
       console.log('producto guardado', resp['_body']);
-      if (resp['_body'] === 'true') {
-        this.consultarId(this.producto.codigo, this.producto.categoria_id);
+      if (resp['_body'] !== 'false') {
+        this.insertCosto(resp['_body']);
+        this.insertarProductoIvas(resp['_body']);
       } else {
         this.alerts.push(
           {
@@ -227,28 +230,43 @@ export class ProductosComponent implements OnInit {
     });
   }
 
-  consultarId(cod, cat) {
-    this.service.getIdProductoByCodCategoria({codigo: cod, categoria_id: cat}).subscribe(resp => {
-      const respuesta = JSON.parse(resp['_body']);
-      console.log('respuesta get id', respuesta);
-      const id = respuesta.data[0].id * 1;
-      this.insertCosto(id);
-    });
+  insertarProductoIvas(producto) {
+    let save = 1;
+    for (let i = 0; i < this.producto_ivas.length; i++) {
+      this.service.insertProductoIvas(
+        {
+          producto_id: producto,
+          iva_id: this.producto_ivas[i].id
+        }
+      ).subscribe(resp => {
+        if (resp['_body'] === 'false') {
+          this.alerts.push(
+            {
+              type: 'danger',
+              msg: 'Error, por favor contacte al administrador del sistema'
+            }
+          );
+          this.guardando = false;
+          save = 0;
+        }
+      });
+    }
+    if (save === 1) {
+      this.alerts.push(
+        {
+          type: 'success',
+          msg: 'Guardado exitoso'
+        }
+      );
+      this.ngOnInit();
+      this.cancelar();
+    }
   }
 
   insertCosto(id) {
     this.service.insertCosto({producto_id: id, costo: this.producto.costo}).subscribe(resp => {
       console.log('insert costo', resp['_body']);
-      if (resp['_body'] === 'true') {
-        this.alerts.push(
-          {
-            type: 'success',
-            msg: 'Guardado exitoso'
-          }
-        );
-        this.ngOnInit();
-        this.cancelar();
-      } else {
+      if (resp['_body'] === 'false') {
         this.alerts.push(
           {
             type: 'danger',
@@ -297,72 +315,76 @@ export class ProductosComponent implements OnInit {
     console.log('cambio categoria', e);
     const tipo = e.value * 1;
     this.producto.categoria_id = tipo;
-    const env = {
-      categoria_id: tipo
-    };
-    this.service.getCodProducto(env).subscribe(resp => {
-      console.log('código producto', JSON.parse(resp['_body']));
-      const res = JSON.parse(resp['_body']);
-      this.producto.codigo = res.data[0];
-      console.log(this.producto.codigo);
-    });
+    this.detallesProducto.categoria_id = e.value;
   }
 
   editarProducto(e) {
-    const prodModif = {
-      categoria_id: e.newData.categoria_id !== undefined ? e.newData.categoria_id : e.oldData.categoria_id,
-      nombre: e.newData.nombre !== undefined ? e.newData.nombre : e.oldData.nombre,
-      unidad: e.newData.unidad !== undefined ? e.newData.unidad : e.oldData.unidad,
-      codigo: e.newData.codigo !== undefined ? e.newData.codigo : e.oldData.codigo,
-      descripcion: e.newData.descripcion !== undefined ? e.newData.descripcion : e.oldData.descripcion,
-      servicio: e.newData.servicio !== undefined ? e.newData.servicio : e.oldData.servicio,
-      activo: e.newData.activo !== undefined ? e.newData.activo : e.oldData.activo,
-      iva_id: e.newData.iva_id !== undefined ? e.newData.iva_id : e.oldData.iva_id,
-      id: e.oldData.id
-    };
-    if (prodModif.servicio === true) {
-      prodModif.servicio = 1;
-    } else {
-      prodModif.servicio = 0;
+    e.preventDefault();
+    console.log('a editar', this.detallesProducto);
+    if (this.detallesProducto.materia_prima === true) {
+      this.detallesProducto.materia_prima = 1;
+    } else if (this.detallesProducto.materia_prima === false) {
+      this.detallesProducto.materia_prima = 0;
     }
-    if (prodModif.activo === true) {
-      prodModif.activo = 1;
-    } else {
-      prodModif.activo = 0;
+    if (this.detallesProducto.producto_final === true) {
+      this.detallesProducto.producto_final = 1;
+    } else if (this.detallesProducto.producto_final === false) {
+      this.detallesProducto.producto_final = 0;
     }
-    if (e.newData.costo) {
-      this.service.updateProducto(prodModif).subscribe(resp => {
-        console.log('producto modificado', resp['_body']);
-        if (resp['_body'] === 'true') {
-          this.actualizarCosto(e.oldData.id, e.newData.costo);
-        } else {
+    if (this.detallesProducto.impuestos.length > 0) {
+      this.eliminarProductoIvas();
+    }
+    this.service.updateProducto(this.detallesProducto).subscribe(resp => {
+      if (resp['_body'] === 'false') {
+        this.alerts.push(
+          {
+            type: 'danger',
+            msg: 'Error, por favor contacte al administrador del sistema'
+          }
+        );
+      }
+    });
+    this.actualizarCosto(this.detallesProducto.id, this.detallesProducto.costo);
+  }
+
+  eliminarProductoIvas() {
+    let bien = 1;
+    for (let i = 0; i < this.detallesProducto.iva.length; i++) {
+      this.service.deleteProductoIvas({id: this.detallesProducto.iva[i].id}).subscribe(resp => {
+        if (resp['_body'] === 'false') {
           this.alerts.push(
             {
               type: 'danger',
               msg: 'Error, por favor contacte al administrador del sistema'
             }
           );
+          bien = 0;
         }
       });
-    } else {
-      console.log('producto modificar', prodModif);
-      this.service.updateProducto(prodModif).subscribe(resp => {
-        console.log('producto modificado', resp['_body']);
-        if (resp['_body'] === 'true') {
-          this.alerts.push(
-            {
-              type: 'success',
-              msg: 'Modificado exitosamente'
-            }
-          );
-          this.ngOnInit();
-        } else {
+    }
+    if (bien === 1) {
+      this.insertarProductoIvasDetalle();
+    }
+  }
+
+  insertarProductoIvasDetalle() {
+    let save = 1;
+    for (let i = 0; i < this.detallesProducto.impuestos.length; i++) {
+      this.service.insertProductoIvas(
+        {
+          producto_id: this.detallesProducto.id,
+          iva_id: this.detallesProducto.impuestos[i].id
+        }
+      ).subscribe(resp => {
+        if (resp['_body'] === 'false') {
           this.alerts.push(
             {
               type: 'danger',
               msg: 'Error, por favor contacte al administrador del sistema'
             }
           );
+          this.guardando = false;
+          save = 0;
         }
       });
     }
@@ -397,16 +419,20 @@ export class ProductosComponent implements OnInit {
   cambioMateriaPrima(e) {
     if (e.value === true) {
       this.producto.materia_prima = 1;
+      this.detallesProducto.materia_prima = 1;
     } else {
       this.producto.materia_prima = 0;
+      this.detallesProducto.materia_prima = 0;
     }
   }
 
   cambioProductoFinal(e) {
     if (e.value === true) {
       this.producto.producto_final = 1;
+      this.detallesProducto.producto_final = 1;
     } else {
       this.producto.producto_final = 0;
+      this.detallesProducto.producto_final = 1;
     }
   }
 
@@ -427,38 +453,6 @@ export class ProductosComponent implements OnInit {
     });
   }
 
-  onContentReady(e) {
-    e.component.columnOption('command:edit', {
-       visibleIndex: -1,
-       width: 80
-     });
-  }
-
-  onCellPrepared(e) {
-    if (e.rowType === 'data' && e.column.command === 'edit') {
-        const isEditing = e.row.isEditing,
-            cellElement = e.cellElement;
-
-          if (isEditing) {
-            const saveLink = cellElement.querySelector('.dx-link-save'),
-                cancelLink = cellElement.querySelector('.dx-link-cancel');
-
-            saveLink.classList.add('dx-icon-save');
-            cancelLink.classList.add('dx-icon-revert');
-
-            saveLink.textContent = '';
-            cancelLink.textContent = '';
-          } else {
-            const editLink = cellElement.querySelector('.dx-link-edit'),
-                deleteLink = cellElement.querySelector('.dx-link-delete');
-
-            editLink.classList.add('dx-icon-edit');
-
-            editLink.textContent = '';
-          }
-    }
-  }
-
   changeImpuestos(e) {
     console.log('cambio local', e);
     if (e.value.length > 0) {
@@ -473,26 +467,118 @@ export class ProductosComponent implements OnInit {
           const respuesta = JSON.parse(resp['_body']);
           console.log('ivas', respuesta);
           data.push(respuesta);
+          this.calcularPrecioFinal(data);
         });
       }
       this.producto_ivas = data;
       console.log('producto_ivas', this.producto_ivas);
-      this.calcularPrecioFinal();
+    } else {
+      this.producto.precio_final = 0.0;
     }
   }
 
-  calcularPrecioFinal() {
-    let costoFinal = 0;
-    for (let i = 0; i < this.producto_ivas.length; i++) {
-      let iva = 0;
-      const costo = this.producto.costo * 1;
-      const producto_iva = this.producto_ivas[i].cantidad * 1;
-      iva = costo * producto_iva / 100;
-      costoFinal = costoFinal + iva;
-      console.log('costo final', costoFinal);
-      console.log('costo iva', iva);
+  calcularPrecioFinal(ivas) {
+    let precio = 0;
+    if (ivas.length > 0) {
+      for (let i = 0; i < ivas.length; i++) {
+        console.log('iteración ', i);
+        let iva = 0;
+        const costo = this.producto.costo * 1;
+        const producto_iva = ivas[i].cantidad * 1;
+        iva = costo * producto_iva / 100;
+        precio = this.producto.precio_final + iva;
+        this.producto.precio_final = precio;
+        console.log('costo final', this.producto.precio_final);
+        console.log('costo iva', iva);
+      }
     }
-    this.producto.precio_final = costoFinal.toFixed(2);
+  }
+
+  crearCodigoProducto(e) {
+    this.service.getCodProducto(this.producto).subscribe(resp => {
+      const info = JSON.parse(resp['_body']);
+      this.producto.codigo = info.data.codigo + '-'
+        + e.value.substr(0, 4).toUpperCase() + '-' + info.data.numero;
+    });
+  }
+
+  onContentReady(e) {
+    e.component.columnOption('command:edit', {
+      visibleIndex: -1,
+      width: 80
+    });
+  }
+
+  onCellPrepared(e) {
+    if (e.rowType === 'data' && e.column.command === 'edit') {
+      const isEditing = e.row.isEditing,
+            cellElement = e.cellElement;
+
+      if (isEditing) {
+        const saveLink = cellElement.querySelector('.dx-link-save'),
+        cancelLink = cellElement.querySelector('.dx-link-cancel');
+
+        saveLink.classList.add('dx-icon-save');
+        cancelLink.classList.add('dx-icon-revert');
+        saveLink.textContent = '';
+        cancelLink.textContent = '';
+      } else {
+        const editLink = cellElement.querySelector('.dx-link-edit');
+        editLink.classList.add('dx-icon-edit');
+
+        editLink.textContent = '';
+      }
+    }
+  }
+
+  openDetalle(modal, datos) {
+    this.openModal(modal);
+    this.detallesProducto = datos.data;
+    this.detallesProducto.impuestos = [];
+    this.calcularPrecioFinalDetalle(this.detallesProducto.iva);
+    console.log('detalle producto', this.detallesProducto);
+  }
+
+  changeImpuestosDetalle(e) {
+    console.log('cambio impuesto', e);
+    this.detallesProducto.ivas = e.value;
+    if (e.value.length > 0) {
+      const data = [];
+      for (let i = 0; i < e.value.length; i++) {
+        const valor = e.value[i] * 1;
+        this.service.getIvaById(
+          {
+            id: valor
+          }
+        ).subscribe(resp => {
+          const respuesta = JSON.parse(resp['_body']);
+          console.log('ivas', respuesta);
+          data.push(respuesta);
+          this.calcularPrecioFinalDetalle(data);
+        });
+      }
+      this.detallesProducto.impuestos = data;
+      console.log('producto_ivas', this.detallesProducto.iva);
+    } else {
+      this.producto.precio_final = 0.0;
+    }
+  }
+
+  calcularPrecioFinalDetalle(ivas) {
+    let precio = 0;
+    if (ivas.length > 0) {
+      for (let i = 0; i < ivas.length; i++) {
+        console.log('iteración ', i);
+        let iva = 0;
+        const costo = this.detallesProducto.costo * 1;
+        const producto_iva = ivas[i].cantidad * 1;
+        iva = costo * producto_iva / 100;
+        precio = this.producto.precio_final + iva;
+        this.producto.precio_final = precio;
+        console.log('costo final', this.producto.precio_final);
+        console.log('costo iva', iva);
+      }
+    }
   }
 
 }
