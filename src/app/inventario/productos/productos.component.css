@@ -27,14 +27,25 @@ a{
   border-bottom: 1px solid #5bc0de;
 }
 
-dx-text-box {
+.input-group {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+span.input-group-addon {
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+/*dx-text-box {
   text-align: center;
   border-color: #269abc;
 }
 
 dx-text-box.form-control.default {
   border: 1px solid #ddd;
-}
+}*/
 
 /deep/ .dx-invalid.dx-texteditor {
   border-color: rgba(217, 83, 79, 0.4);
@@ -60,4 +71,14 @@ dx-button.btn.btn-info.pull-right.dx-button.dx-button-info.dx-widget.dx-button-h
 /deep/ .dx-scrollview-content {
   background-color: #eee;
   opacity: 1;
+}
+
+/deep/ dx-tag-box div.dx-dropdowneditor-input-wrapper.dx-selectbox-container {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/deep/ dx-tag-box div.dx-dropdowneditor-input-wrapper.dx-selectbox-container div.dx-tag-container,
+/deep/ dx-tag-box div.dx-dropdowneditor-input-wrapper.dx-selectbox-container div.dx-tag-container input {
+  background: #eee;
 }

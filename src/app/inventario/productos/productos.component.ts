@@ -401,6 +401,7 @@ export class ProductosComponent implements OnInit {
           }
         );
         this.ngOnInit();
+        this.cancelar();
       } else {
         this.alerts.push(
           {
