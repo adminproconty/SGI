@@ -29,7 +29,22 @@ export class ProveedoresComponent implements OnInit {
   tipoDocumentos: any = [];
   phonePattern: any;
   phoneRules: any;
-  proveedor: any = {};
+  proveedor: any = {
+    empresa_id: 1,
+    RUC: '',
+    nombre: '',
+    direccion: '',
+    email: '',
+    convencional: '',
+    celular: '',
+    opcional: '',
+    credito: '',
+    web: '',
+    contacto: '',
+    nota_pedido: 0,
+    parte_relacionada: 0,
+    automatico: 0
+  };
   guardando: boolean;
   alerts: any = [];
 
@@ -123,18 +138,7 @@ export class ProveedoresComponent implements OnInit {
     this.saveRowChanges = 'Guardar';
     this.undeleteRow = 'No eliminar';
     this.validationCancelChanges = 'Cancelar';
-    this.tipoDocumentos = [
-      {
-          id: 1,
-          nombre: 'Cédula de Identidad'
-      }, {
-          id: 2,
-          nombre: 'R.U.C.'
-      }, {
-          id: 3,
-          nombre: 'Pasaporte'
-      }
-    ];
+
     this.phonePattern = /^\+\s*1\s*\(\s*[02-9]\d{2}\)\s*\d{3}\s*-\s*\d{4}$/;
     this.phoneRules = {
         X: /[02-9]/
@@ -144,13 +148,16 @@ export class ProveedoresComponent implements OnInit {
       this.proveedores = resp.data;
     });
     this.proveedor.empresa_id = 1;
-    this.proveedor.documento = '';
+    this.proveedor.RUC = '';
     this.proveedor.nombre = '';
     this.proveedor.direccion = '';
     this.proveedor.email = '';
     this.proveedor.convencional = '';
     this.proveedor.celular = '';
     this.proveedor.opcional = '';
+    this.proveedor.credito = '';
+    this.proveedor.web = '';
+    this.proveedor.contacto = '';
     this.guardando = false;
   }
 
@@ -209,15 +216,36 @@ export class ProveedoresComponent implements OnInit {
     console.log('editar', e);
     const proveedorModif = {
       id: e.oldData.id,
-      tipo_documento_id: e.newData.tipo_documento_id !== undefined ? e.newData.tipo_documento_id : e.oldData.tipo_documento_id,
-      documento: e.newData.documento !== undefined ? e.newData.documento : e.oldData.documento,
+      RUC: e.newData.RUC !== undefined ? e.newData.RUC : e.oldData.RUC,
       nombre: e.newData.nombre !== undefined ? e.newData.nombre : e.oldData.nombre,
       direccion: e.newData.direccion !== undefined ? e.newData.direccion : e.oldData.direccion,
       email: e.newData.email !== undefined ? e.newData.email : e.oldData.email,
       convencional: e.newData.convencional !== undefined ? e.newData.convencional : e.oldData.convencional,
       celular: e.newData.celular !== undefined ? e.newData.celular : e.oldData.celular,
-      opcional: e.newData.opcional !== undefined ? e.newData.opcional : e.oldData.opcional
+      opcional: e.newData.opcional !== undefined ? e.newData.opcional : e.oldData.opcional,
+      credito: e.newData.credito !== undefined ? e.newData.credito : e.oldData.credito,
+      web: e.newData.web !== undefined ? e.newData.web : e.oldData.web,
+      contacto: e.newData.contacto !== undefined ? e.newData.contacto : e.oldData.contacto,
+      nota_pedido: e.newData.nota_pedido !== undefined ? e.newData.nota_pedido : e.oldData.nota_pedido,
+      parte_relacionada: e.newData.parte_relacionada !== undefined ? e.newData.parte_relacionada : e.oldData.parte_relacionada,
+      automatico: e.newData.automatico !== undefined ? e.newData.automatico : e.oldData.automatico
     };
+
+    if (proveedorModif.nota_pedido === true) {
+      proveedorModif.nota_pedido = 1;
+    } else {
+      proveedorModif.nota_pedido = 0;
+    }
+    if (proveedorModif.parte_relacionada === true) {
+      proveedorModif.parte_relacionada = 1;
+    } else {
+      proveedorModif.parte_relacionada = 0;
+    }
+    if (proveedorModif.automatico === true) {
+      proveedorModif.automatico = 1;
+    } else {
+      proveedorModif.automatico = 0;
+    }
     this.service.update(proveedorModif).subscribe(resp => {
       console.log('update', resp['_body']);
       if (resp['_body'] === 'true') {
@@ -275,6 +303,30 @@ export class ProveedoresComponent implements OnInit {
 
             editLink.textContent = '';
         }
+    }
+  }
+
+  cambioNotaPedido(e) {
+    if (e.value === true) {
+      this.proveedor.nota_pedido = 1;
+    } else {
+      this.proveedor.nota_pedido = 0;
+    }
+  }
+
+  cambioParteRelacionada(e) {
+    if (e.value === true) {
+      this.proveedor.parte_relacionada = 1;
+    } else {
+      this.proveedor.parte_relacionada = 0;
+    }
+  }
+
+  cambioAutomatico(e) {
+    if (e.value === true) {
+      this.proveedor.automatico = 1;
+    } else {
+      this.proveedor.automatico = 0;
     }
   }
 

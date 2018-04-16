@@ -132,10 +132,6 @@ export class ProductosComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.service.getallIVA().subscribe(resp => {
-      console.log('IVA', resp.data);
-      this.ivas = resp.data;
-    });
     this.noDataText = 'No hay data';
     this.cancelAllChanges = 'Cancelar';
     this.cancelRowChanges = 'Cancelar';
@@ -161,6 +157,10 @@ export class ProductosComponent implements OnInit {
       precio_final: 0.0
     };
     this.guardando = false;
+    this.service.getallIVA().subscribe(resp => {
+      console.log('IVA', resp.data);
+      this.ivas = resp.data;
+    });
     this.service.allCategorias().subscribe(resp => {
       console.log('categorias', resp.data);
       this.categorias = resp.data;

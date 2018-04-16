@@ -61,20 +61,20 @@
                   <dxo-search-panel placeholder="Buscar..." [visible]="true"></dxo-search-panel>
                   <dxo-scrolling mode="virtual"></dxo-scrolling>
 
-                  <dxi-column dataField="tipo_documento_id" caption="Tipo de Documento">
-                    <dxo-lookup
-                      [dataSource]="tipoDocumentos"
-                      displayExpr="nombre"
-                      valueExpr="id">
-                    </dxo-lookup>
-                  </dxi-column>
-                  <dxi-column dataField="documento" caption="Documento" [width]="150"></dxi-column>
+
+                  <dxi-column dataField="RUC" caption="R.U.C." [width]="150"></dxi-column>
                   <dxi-column dataField="nombre" caption="Nombre/Razón social" [width]="250"></dxi-column>
                   <dxi-column dataField="direccion" caption="Dirección"></dxi-column>
                   <dxi-column dataField="email" caption="Email" [width]="200"></dxi-column>
                   <dxi-column dataField="convencional" caption="Convencional" [width]="200"></dxi-column>
                   <dxi-column dataField="celular" caption="Celular" [width]="200"></dxi-column>
                   <dxi-column dataField="opcional" caption="Opcional" [width]="200"></dxi-column>
+                  <dxi-column dataField="credito" caption="Días de Crédito" [width]="150"></dxi-column>
+                  <dxi-column dataField="web" caption="Página Web" [width]="200"></dxi-column>
+                  <dxi-column dataField="contacto" caption="Contacto" [width]="150"></dxi-column>
+                  <dxi-column dataField="nota_pedido" caption="Nota de Pedido" [width]="150"></dxi-column>
+                  <dxi-column dataField="parte_relacionada" caption="Parte Relacionada" [width]="150"></dxi-column>
+                  <dxi-column dataField="automatico" caption="Automático" [width]="150"></dxi-column>
                 </dx-data-grid>
               </div>
             </div>
@@ -94,19 +94,20 @@
             <div class="row">
               <div class="col-md-12 left">
                 <div class="form-group">
-                  <label>Tipo de Documento:
+                  <label>R.U.C.
                     <span class="required">*</span>
                   </label>
-                  <dx-select-box
-                      [dataSource]="tipoDocumentos"
-                      displayExpr="nombre"
-                      valueExpr="id"
-                      placeholder="Seleccione el tipo de documento"
-                      (onValueChanged)="cambioTipoDocumento($event)">
+                  <div class="input-group">
+                    <span class="input-group-addon fa fa-barcode"></span>
+                    <dx-text-box
+                        class="form-control"
+                        mode="number"
+                        [(value)]="proveedor.RUC">
                       <dx-validator>
-                        <dxi-validation-rule type="required" message="Tipo documento es requerido"></dxi-validation-rule>
+                        <dxi-validation-rule type="required" message="RUC es requerido"></dxi-validation-rule>
                       </dx-validator>
-                  </dx-select-box>
+                    </dx-text-box>
+                  </div>
                 </div>
               </div>
             </div>
@@ -114,17 +115,19 @@
             <div class="row">
               <div class="col-md-12 left">
                 <div class="form-group">
-                  <label>Documento de Identidad:
+                  <label>Nombre y Apellido o Razón Social
                     <span class="required">*</span>
                   </label>
-                  <dx-text-box
-                      class="form-control"
-                      mode="number"
-                      [(value)]="proveedor.documento">
-                    <dx-validator>
-                      <dxi-validation-rule type="required" message="Documento de identidad es requerido"></dxi-validation-rule>
-                    </dx-validator>
-                  </dx-text-box>
+                  <div class="input-group">
+                    <span class="input-group-addon fa fa-align-justify"></span>
+                    <dx-text-box
+                        class="form-control"
+                        [(value)]="proveedor.nombre">
+                      <dx-validator>
+                        <dxi-validation-rule type="required" message="Nombre o Razón Social es requerido"></dxi-validation-rule>
+                      </dx-validator>
+                    </dx-text-box>
+                  </div>
                 </div>
               </div>
             </div>
@@ -132,33 +135,19 @@
             <div class="row">
               <div class="col-md-12 left">
                 <div class="form-group">
-                  <label>Nombre y Apellido o Razón Social:
+                  <label>Dirección
                     <span class="required">*</span>
                   </label>
-                  <dx-text-box
-                      class="form-control"
-                      [(value)]="proveedor.nombre">
-                    <dx-validator>
-                      <dxi-validation-rule type="required" message="Nombre es requerido"></dxi-validation-rule>
-                    </dx-validator>
-                  </dx-text-box>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-12 left">
-                <div class="form-group">
-                  <label>Dirección:
-                    <span class="required">*</span>
-                  </label>
-                  <dx-text-box
-                      class="form-control"
-                      [(value)]="proveedor.direccion">
-                    <dx-validator>
-                      <dxi-validation-rule type="required" message="Dirección es requerida"></dxi-validation-rule>
-                    </dx-validator>
-                  </dx-text-box>
+                  <div class="input-group">
+                    <span class="input-group-addon fa fa-map-marker"></span>
+                    <dx-text-box
+                        class="form-control"
+                        [(value)]="proveedor.direccion">
+                      <dx-validator>
+                        <dxi-validation-rule type="required" message="Dirección es requerida"></dxi-validation-rule>
+                      </dx-validator>
+                    </dx-text-box>
+                  </div>
                 </div>
               </div>
             </div>
@@ -167,16 +156,19 @@
               <div class="col-md-12 left">
                 <div class="form-group">
                   <label>
-                    Correo Electrónico:
+                    Correo Electrónico
                   </label>
-                  <dx-text-box
-                      class="form-control default"
-                      [(value)]="proveedor.email"
-                      mode="email">
-                    <dx-validator>
-                      <dxi-validation-rule type="email" message="No cumple el formato de correo electrónico"></dxi-validation-rule>
-                    </dx-validator>
-                  </dx-text-box>
+                  <div class="input-group">
+                    <span class="input-group-addon fa fa-envelope-o"></span>
+                    <dx-text-box
+                        class="form-control default"
+                        [(value)]="proveedor.email"
+                        mode="email">
+                      <dx-validator>
+                        <dxi-validation-rule type="email" message="No cumple el formato de correo electrónico"></dxi-validation-rule>
+                      </dx-validator>
+                    </dx-text-box>
+                  </div>
                 </div>
               </div>
             </div>
@@ -185,15 +177,18 @@
               <div class="col-md-12 left">
                 <div class="form-group">
                   <label>
-                    Número Celular:
+                    Número Celular
                   </label>
-                  <dx-text-box class="form-control default"
-                      mask="(X00)0000000"
-                      [maskRules]="phoneRules"
-                      maskInvalidMessage="No cumple con el formato telefónico celular"
-                      name="celular"
-                      [(value)]="proveedor.celular">
-                  </dx-text-box>
+                  <div class="input-group">
+                    <span class="input-group-addon fa fa-mobile"></span>
+                    <dx-text-box class="form-control default"
+                        mask="(X00)0000000"
+                        [maskRules]="phoneRules"
+                        maskInvalidMessage="No cumple con el formato telefónico celular"
+                        name="celular"
+                        [(value)]="proveedor.celular">
+                    </dx-text-box>
+                  </div>
                 </div>
               </div>
             </div>
@@ -204,13 +199,16 @@
                   <label>
                     Número Convencional
                   </label>
-                  <dx-text-box class="form-control default"
-                      mask="(X0)0000000"
-                      [maskRules]="phoneRules"
-                      maskInvalidMessage="No cumple con el formato telefónico convencional"
-                      name="celular"
-                      [(value)]="proveedor.convencional">
-                  </dx-text-box>
+                  <div class="input-group">
+                    <span class="input-group-addon fa fa-phone"></span>
+                    <dx-text-box class="form-control default"
+                        mask="(X0)0000000"
+                        [maskRules]="phoneRules"
+                        maskInvalidMessage="No cumple con el formato telefónico convencional"
+                        name="celular"
+                        [(value)]="proveedor.convencional">
+                    </dx-text-box>
+                  </div>
                 </div>
               </div>
             </div>
@@ -219,13 +217,104 @@
               <div class="col-md-12 left">
                 <div class="form-group">
                   <label>
-                    Numero Opcional:
+                    Numero Opcional
                   </label>
-                  <dx-text-box
+                  <div class="input-group">
+                    <span class="input-group-addon fa fa-phone"></span>
+                    <dx-text-box
                       class="form-control default"
                       mode="number"
                       [(value)]="proveedor.opcional">
-                  </dx-text-box>
+                    </dx-text-box>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <label>
+                    Días de crédito
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-addon fa fa-clock-o"></span>
+                    <dx-text-box
+                        class="form-control default"
+                        [(value)]="proveedor.credito"
+                        mode="number">
+                    </dx-text-box>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <label>
+                    Página Web
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-addon fa fa-globe"></span>
+                    <dx-text-box
+                        class="form-control default"
+                        [(value)]="proveedor.web">
+                    </dx-text-box>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <label>
+                    Contacto
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-addon fa fa-comments-o"></span>
+                    <dx-text-box
+                        class="form-control default"
+                        [(value)]="proveedor.contacto">
+                    </dx-text-box>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <dx-check-box
+                      [value]="false"
+                      text="Con Notas de Pedido"
+                      (onValueChanged)="cambioNotaPedido($event)">
+                  </dx-check-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <dx-check-box
+                      [value]="false"
+                      text="Parte Relacionada"
+                      (onValueChanged)="cambioParteRelacionada($event)">
+                  </dx-check-box>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 left">
+                <div class="form-group">
+                  <dx-check-box
+                    [value]="false"
+                    text="332 Automático (Dátil)"
+                    (onValueChanged)="cambioAutomatico($event)">
+                  </dx-check-box>
                 </div>
               </div>
             </div>
