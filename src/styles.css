@@ -2,3 +2,9 @@
 dx-text-box div.dx-texteditor-container {
   border-bottom: 0px;
 }
+
+.dx-texteditor-container {
+  border-bottom: 0;
+}
+
+

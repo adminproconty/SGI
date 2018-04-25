@@ -50,7 +50,16 @@ export class ProductosComponent implements OnInit {
   tiposProducto: any = [];
   tipoProducto: any = {};
   producto_ivas: any;
-  detallesProducto: any;
+  detallesProducto: any = {
+    categoria_id: 0,
+    nombre: '',
+    unidad: '',
+    codigo: '',
+    descripcion: '',
+    materia_prima: 0,
+    producto_final: 1,
+    precio_final: 0.0
+  };
 
   constructor(
     private navegation: NavegationProvider,
@@ -172,6 +181,17 @@ export class ProductosComponent implements OnInit {
     this.servicio = false;
     this.activo = true;
     this.producto_ivas = [];
+    this.detallesProducto = {
+      categoria_id: 0,
+      nombre: '',
+      unidad: '',
+      codigo: '',
+      descripcion: '',
+      costo: undefined,
+      materia_prima: 0,
+      producto_final: 1,
+      precio_final: 0.0
+    };
   }
 
   openModal(template: TemplateRef<any>) {

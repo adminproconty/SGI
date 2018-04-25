@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class ULRProvider {
 
-  public dominio: String = 'http://localhost/SGI/api/';
+  public dominio: String = './api/';
 
   /*Empresa*/
   public getAllEmpresa() {
